@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg
+  id="Loader"
+  version="1.1"
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  x="0px"
+  y="0px"
+  viewBox="0 0 871.8 871.8"
+  style="enable-background: new 0 0 871.8 871.8;"
+  xml:space="preserve"
+>
+  <g id="Base">
+    <g>
+      <circle class="circle-shadow" cx="435.9" cy="431" r="420.9" />
+      <circle class="st0" cx="435.9" cy="435.9" r="401" />
+    </g>
+  </g>
+  <g id="Dial">
+    <path
+      id="_x31_"
+      class="st1"
+      d="M619.6,101.9l9.3,5.5L601,156.2l-9.3-5.5L619.6,101.9z"
+    />
+    <path
+      id="_x32_"
+      class="st1"
+      d="M759.3,239.9l5.3,9.4l-48.1,28.2l-5.3-9.4L759.3,239.9z"
+    />
+    <rect
+      id="_x33_"
+      x="757"
+      y="430.5"
+      class="st1"
+      width="55.5"
+      height="10.9"
+    />
+    <path
+      id="_x34_"
+      class="st1"
+      d="M711.3,603.7l5.3-9.4l48.1,28.2l-5.3,9.4L711.3,603.7z"
+    />
+    <path
+      id="_x35_"
+      class="st1"
+      d="M591.8,721.1l9.3-5.5l27.8,48.8l-9.3,5.4L591.8,721.1z"
+    />
+    <rect
+      id="_x36_"
+      x="430.5"
+      y="762.1"
+      class="st1"
+      width="10.7"
+      height="56.4"
+    />
+    <path
+      id="_x37_"
+      class="st1"
+      d="M270.7,715.7l9.3,5.5L252.2,770l-9.3-5.4L270.7,715.7z"
+    />
+    <path
+      id="_x38_"
+      class="st1"
+      d="M155.1,594.3l5.3,9.4l-48,28.3l-5.3-9.4L155.1,594.3z"
+    />
+    <rect
+      id="_x39_"
+      x="59.3"
+      y="430.5"
+      class="st1"
+      width="55.5"
+      height="10.9"
+    />
+    <path
+      id="_x31_0"
+      class="st1"
+      d="M107.1,249.3l5.3-9.4l48.1,28.2l-5.3,9.4L107.1,249.3z"
+    />
+    <path
+      id="_x31_1"
+      class="st1"
+      d="M243,107.3l9.3-5.5l27.8,48.8l-9.3,5.5L243,107.3z"
+    />
+    <rect
+      id="_x31_2"
+      x="430.5"
+      y="53.4"
+      class="st1"
+      width="10.7"
+      height="56.4"
+    />
+  </g>
+  <circle class="loading-base" cx="435.9" cy="435.9" r="240" />
+  <circle class="loading-bar" cx="435.9" cy="435.9" r="240" />
+  <g id="Dollar_Base">
+    <g>
+      <circle class="st0" cx="435.9" cy="436" r="175.4" />
+    </g>
+  </g>
+  <path
+    id="Dolllar"
+    class="st1"
+    d="M511.5,498.2c2.9,37.2-23.8,70.2-60.8,75.2l0.1,37.4c-9.7,1-16.7,0.7-23.8,0.4l0.2-37
+c-25.3-3.4-48.8-15.1-66.7-33.3l14.9-24.6c15.8,17.2,37.5,27.5,60.8,28.9c22.1,2,41.6-14.2,43.6-36.2c0.3-2.7,0.2-5.5-0.1-8.2
+c0-70-109.4-54.9-109.4-139.1c-2.2-35,22.3-66.1,56.9-72.1v-29.1c6.7-0.3,18.3-0.4,23.5,0.7l0,27.8c22.2,3.2,42.2,15,55.6,32.8
+l-17.2,21.2c-11.2-15.2-28.9-24.3-47.9-24.6c-20.9-0.8-38.5,15.4-39.3,36.3c-0.1,1.7,0,3.4,0.2,5.2
+C402.1,422.6,511.5,405.3,511.5,498.2z"
+  />
+  <style>
+    .loading-base {
+      fill: transparent;
+      stroke: #e1e1e1;
+      stroke-width: 140px;
+      stroke-dasharray: 1508 0;
+      stroke-dashoffset: 377;
+    }
+    .loading-bar {
+      fill: transparent;
+      stroke: #1b7f7a;
+      stroke-width: 140px;
+      stroke-dasharray: 0 1508;
+      stroke-dashoffset: 377;
+      animation: clock-move 2s infinite;
+      animation-timing-function: linear;
+    }
+    @keyframes clock-move {
+      0% {
+        stroke-dasharray: 0 1508;
+        stroke-width: 140px;
+      }
+      90% {
+        stroke-dasharray: 1508 0;
+        stroke-width: 140px;
+      }
+      100% {
+        stroke-dasharray: 1508 0;
+        stroke-width: 0px;
+      }
+    }
+    .circle-shadow {
+      fill: rgba(42, 85, 127, 0.04);
+    }
+    .st0 {
+      fill: #ffffff;
+    }
+    .st1 {
+      fill: #1b7f7a;
+    }
+  </style>
+</svg>
