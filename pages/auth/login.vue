@@ -1,23 +1,12 @@
 <template>
-  <div class="main" :style="mainStyle">
+  <div class="main">
     <h1>Welcome!</h1>
-    <CustomInput
-      type="text"
-      name="username"
-      id="username"
-      placeholder="User Name"
-      :style="input"
-    />
+    <CustomInput v-model="form.email" type="text" placeholder="User Name" />
     <br />
-    <CustomInput
-      type="password"
-      name="password"
-      id="password"
-      placeholder="P@$$W0RD"
-      :style="input"
-    />
+    <CustomInput v-model="form.password" placeholder="P@$$W0RD" />
     <br />
-    <a-button type="primary"> login </a-button>
+    <a-button type="primary" @click="handleLogin()"> login </a-button>
+
     <br />
     <!-- <img src="../assets/google.svg" alt="Login using Google" />
       <img src="../assets/facebook.svg" alt="Login using Facebook" /> -->
@@ -28,10 +17,31 @@
 export default {
   name: "Login",
   layout: "Login",
-  //Custom style for main and input for make the page responsive:
-  props: {
-    mainStyle: String,
-    inputStyle: String,
+  data() {
+    return {
+      loadingBtn: false,
+      isInvalid: false,
+      form: {},
+    };
+  },
+  methods: {
+    async handleLogin() {
+      this.loadingBtn = true;
+      this.isInvalid = false;
+      //  let res= this.$axios.get('http://localhost:8000/user')
+      try {
+        await this.$auth.loginWith("local", {
+          data: {
+            email: this.form.email,
+            password: this.form.password,
+          },
+        });
+        this.$router.push({ name: "admin-dashboard" });
+      } catch (e) {
+        this.isInvalid = true;
+      }
+      this.loadingBtn = false;
+    },
   },
 };
 </script>

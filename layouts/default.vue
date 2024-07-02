@@ -29,7 +29,7 @@ export default {
 
 <style lang="scss">
 .ant-layout-header {
-  background-color: var(--theme-primary-bg-color);
+  background-color: var(--theme-secondary-bg-color);
   padding: 0;
 }
 .ant-layout-footer{
