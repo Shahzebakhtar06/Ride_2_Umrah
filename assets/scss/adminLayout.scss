@@ -1,0 +1,19 @@
+.admin-layout {
+  padding: 1rem;
+  .page-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+    .title {
+      font-size: 2rem;
+      font-weight: 900;
+    }
+  }
+  .page-content {
+    .ant-table-wrapper {
+      max-height: 75vh;
+      overflow: auto;
+    }
+  }
+}

@@ -5,6 +5,7 @@
     <br />
     <CustomInput v-model="form.password" placeholder="P@$$W0RD" />
     <br />
+    <a-button  @click="handleCancel()"> Cancel </a-button>
     <a-button type="primary" @click="handleLogin()"> login </a-button>
 
     <br />
@@ -24,6 +25,11 @@ export default {
       form: {},
     };
   },
+  mounted() {
+    if (this.$auth.loggedIn) {
+       this.$router.push({name:"admin-hotels"});
+    }
+  },
   methods: {
     async handleLogin() {
       this.loadingBtn = true;
@@ -36,12 +42,15 @@ export default {
             password: this.form.password,
           },
         });
-        this.$router.push({ name: "admin-dashboard" });
+        this.$router.push({ name: "admin-hotels" });
       } catch (e) {
         this.isInvalid = true;
       }
       this.loadingBtn = false;
     },
+    handleCancel(){
+      this.$router.push('/')
+    }
   },
 };
 </script>

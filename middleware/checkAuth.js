@@ -1,11 +1,12 @@
-const authRouteNames = ["admin-dashboard", "admin-location", "admin-hotels"];
-export default function ({ route, store, redirect }) {
-  debugger;
+const authRouteNames = ["admin-amenities","admin-cars", "admin-location", "admin-hotels"];
+export default function ({ $auth,route, store, redirect }) {
   if (authRouteNames.includes(route.name)) {
-    if (!store.state.auth.loggedIn) {
+    if (!$auth.loggedIn) {
       return redirect('/auth/login');
     }
+    
   }
+ 
   else{
     return true
   }

@@ -2,32 +2,42 @@
   <a-layout id="admin-layout">
     <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
       <div class="logo" />
-      <a-menu theme="dark" mode="inline" :default-selected-keys="['1']">
-        <a-menu-item key="1">
-          <i class="fa-solid fa-hotel"></i>
-          <span>Hotels</span>
+      <a-menu theme="dark" mode="inline" v-model="selectedKey">
+        <a-menu-item key="admin-hotels">
+          <nuxt-link :to="{ name: 'admin-hotels' }">
+            <i class="fa-solid fa-hotel"></i>
+            <span>Hotels</span>
+          </nuxt-link>
         </a-menu-item>
-        <a-menu-item key="2">
-          <i class="fa-solid fa-bed"></i>
-          <span>Rooms</span>
+        <a-menu-item key="admin-rooms">
+          <nuxt-link :to="{ name: 'admin-rooms' }">
+            <i class="fa-solid fa-bed"></i>
+            <span>Rooms</span>
+          </nuxt-link>
         </a-menu-item>
-        <a-menu-item key="3">
-          <i class="fa-solid fa-location-dot"></i>
-          <span>Location</span>
+        <a-menu-item key="admin-location">
+          <nuxt-link :to="{ name: 'admin-location' }">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Location</span>
+          </nuxt-link>
         </a-menu-item>
-        <a-menu-item key="4">
-          <i class="fa-solid fa-car-side"></i>
-          <span>Cars</span>
+        <a-menu-item key="admin-cars">
+          <nuxt-link :to="{ name: 'admin-cars' }">
+            <i class="fa-solid fa-car-side"></i>
+            <span>Cars</span>
+          </nuxt-link>
         </a-menu-item>
-        <a-menu-item key="5">
-          <i class="fa-solid fa-building-circle-check"></i>
-          <span>Amenities</span>
+        <a-menu-item key="admin-amenities">
+          <nuxt-link :to="{ name: 'admin-amenities' }">
+            <i class="fa-solid fa-building-circle-check"></i>
+            <span>Amenities</span>
+          </nuxt-link>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div class="row">
+        <div class="row nav-bar">
           <div class="col">
             <a-icon
               class="trigger"
@@ -36,19 +46,12 @@
             />
           </div>
           <div class="col fit-width">
-            <a-button type="primary" @click="handleLogout()"> logout </a-button>
+            <a-button type="primary" @click="handleLogout()"> Logout </a-button>
           </div>
         </div>
       </a-layout-header>
-      <a-layout-content
-        :style="{
-          margin: '24px 16px',
-          padding: '24px',
-          background: '#fff',
-          minHeight: '280px',
-        }"
-      >
-        Content
+      <a-layout-content>
+        <nuxt />
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -58,7 +61,11 @@ export default {
   data() {
     return {
       collapsed: false,
+      selectedKey: ["admin-hotels"],
     };
+  },
+  mounted() {
+    this.selectedKey = [this.$route.name];
   },
   methods: {
     handleLogout() {
@@ -73,7 +80,7 @@ export default {
         okType: "primary",
         onOk: async () => {
           await this.$auth.logout();
-          window.location.href = "auth/login";
+          window.location.replace("auth/login");
         },
       });
     },
@@ -90,15 +97,19 @@ export default {
     cursor: pointer;
     transition: color 0.3s;
   }
+  .ant-layout-header {
+    height: auto !important;
+    .nav-bar {
+      padding: 0.5rem;
+      align-items: center;
+      padding-right: 0.9rem;
+    }
+  }
+  .ant-layout-content {
+    margin: 24px 16px;
+    padding: 24px;
+    background: #fff !important;
+    min-height: 100%;
+  }
 }
-
-//   #components-layout-demo-custom-trigger .trigger:hover {
-//     color: #1890ff;
-//   }
-
-//   #components-layout-demo-custom-trigger .logo {
-//     height: 32px;
-//     background:var(--theme-primary-bg-color);
-//     margin: 16px;
-//   }
-</style>
+</style>  

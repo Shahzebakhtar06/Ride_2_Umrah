@@ -3,7 +3,17 @@
     <a-layout>
       <a-layout-header>
         <div class="container">
-          <default-header />
+          <div class="row">
+            <div class="col">
+              <img
+                src="https://www.expedia.com/_dms/header/logo.svg?locale=en_US&amp;siteid=1&amp;2&amp;6f9ec7db"
+                alt="Expedia logo"
+              />
+            </div>
+            <div class="col fit-width">
+              <a-button @click="$router.push('auth/login')">Sign In</a-button>
+            </div>
+          </div>
         </div>
       </a-layout-header>
       <a-layout-content>
@@ -19,11 +29,8 @@
 </template>
 
 <script>
-import DefaultHeader from "../components/Layouts/DefaultHeader.vue";
 export default {
-  components: {
-    DefaultHeader,
-  },
+  components: {},
 };
 </script>
 
@@ -32,8 +39,8 @@ export default {
   background-color: var(--theme-secondary-bg-color);
   padding: 0;
 }
-.ant-layout-footer{
-padding-left: 0;
-padding-right: 0;
+.ant-layout-footer {
+  padding-left: 0;
+  padding-right: 0;
 }
 </style>
