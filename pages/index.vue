@@ -1,12 +1,16 @@
 <template>
   <div>
-
-    <a-button type="primary"> Primary </a-button>
+    <hotels-page></hotels-page>
   </div>
 </template>
 
 <script>
+import hotelsPage from "./hotelsPage.vue";
+
 export default {
   name: "IndexPage",
+  components: {
+    hotelsPage,
+  },
 };
 </script>
