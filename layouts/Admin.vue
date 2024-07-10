@@ -16,9 +16,9 @@
           </nuxt-link>
         </a-menu-item>
         <a-menu-item key="admin-location">
-          <nuxt-link :to="{ name: 'admin-location' }">
+          <nuxt-link :to="{ name: 'admin-cities' }">
             <i class="fa-solid fa-location-dot"></i>
-            <span>Location</span>
+            <span>Cities</span>
           </nuxt-link>
         </a-menu-item>
         <a-menu-item key="admin-cars">

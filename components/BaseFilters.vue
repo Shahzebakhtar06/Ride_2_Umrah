@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="base-filters">
     <a-form-model ref="ruleForm" :model="formData" :rules="rules">
       <a-form-model-item
         v-for="field in fields"
@@ -36,31 +36,41 @@
         </div>
         <div class="field-wrapper" v-else-if="field.type === 'date'">
           <div class="icon">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fa-calendar-day"></i>
           </div>
 
           <div class="field">
             <div class="label" v-if="formData[field.name]">
-              >
               {{ field.label }}
             </div>
             <a-range-picker
               :disabled-date="disabledDate"
-              :value="formData[field.name]"
+              :value="formData[field.name] ? formData[field.name] : null"
               format="YYYY-MM-DD HH:mm"
               :placeholder="['Start Time', 'End Time']"
-              @change="onDateChange"
+              @change="(val, e) => onDateChange(field.name, val)"
             />
           </div>
         </div>
+        <div class="field-wrapper" v-if="field.type === 'roomSelect'">
+          <div class="icon">
+            <i class="fa-solid fa-user"></i>
+          </div>
+
+          <div class="field">
+            <div class="label" v-if="formData[field.name]">
+              {{ field.label }}
+            </div>
+            <CustomRoomSelect />
+          </div>
+        </div>
+      </a-form-model-item>
+      <a-form-model-item>
+        <a-button type="primary" customSize="large" @click="submitForm"
+          >Search</a-button
+        >
       </a-form-model-item>
     </a-form-model>
-    <!-- <div v-for="field in fields" :key="field.name">
-      <label :for="field.name">{{ field.label }}</label>
-        <input v-if="field.type === 'text'" :type="field.type" v-model="formData[field.name]" :placeholder="field.placeholder" />
-     
-    </div> -->
-    <button @click="submitForm">Submit</button>
   </div>
 </template>
 
@@ -152,70 +162,98 @@ export default {
       });
       this.formData[fieldName] = value;
     },
-    onDateChange() {},
+    onDateChange(name, val) {
+      this.formData[name] = val;
+    },
   },
 };
 </script>
 
 <style lang="scss">
-.ant-form{
-
-  display: flex;
-  .ant-form-item{
-    &:not(.ant-form-item:first-child){
-
-      margin: 0 1rem;
+#base-filters {
+  .ant-form {
+    display: flex;
+    justify-content: center;
+    .ant-form-item {
+      &:not(.ant-form-item:first-child) {
+        margin: 0 1rem;
+      }
     }
   }
-}
-.field-wrapper {
-  width: 30rem;
-  height: 4rem;
-  border: 0.1rem solid #969393;
-  display: flex;
-  align-items: center;
-  border-radius: 0.5rem;
-  transition: 0.5s all;
+  .field-wrapper {
+    width: 30rem;
+    height: 4.5rem;
+    border: 0.1rem solid #969393;
+    display: flex;
+    align-items: center;
+    border-radius: 0.5rem;
+    transition: 0.5s all;
 
-  .ant-input,
-  .ant-select,
-  .ant-select-selection,
-  .ant-calendar-picker,
-  .ant-select-open,
-  .ant-select-selection {
-    background: transparent;
-    border: none;
-    outline: none;
-    box-shadow: none !important;
-    line-height: normal;
-    height: 100%;
-    &:hover,
-    &:focus,
-    &:active {
-      box-shadow: none !important;
+    .ant-input,
+    .ant-select,
+    .ant-select-selection,
+    .ant-calendar-picker,
+    .ant-select-open,
+    .ant-select-selection {
+      background: transparent;
       border: none;
       outline: none;
-    }
-    .ant-calendar-range-picker-separator {
-      vertical-align: auto;
-    }
-  }
-  .icon {
-    padding: 1rem;
-    line-height: normal;
-    i {
-      font-size: 2rem;
-    }
-  }
-  .field {
-    .label{
+      box-shadow: none !important;
       line-height: normal;
-
+      input,
+      span {
+        font-weight: 600;
+      }
+      &:hover,
+      &:focus,
+      &:active {
+        box-shadow: none !important;
+        border: none;
+        outline: none;
+      }
     }
-    height: -webkit-fill-available;
-    height: -moz-available;
-    width: -webkit-fill-available;
-    width: -moz-available;
+    .ant-select {
+      padding-top: 1.2rem;
+      padding-bottom: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+      .ant-select-selection__rendered {
+        margin-left: 0;
+      }
+    }
+    .ant-calendar-picker {
+      padding-top: 1.2rem;
+      padding-bottom: 0.5rem;
+
+      .ant-calendar-picker-input {
+        padding-left: 0;
+        text-align: left;
+        margin-left: -1.2rem;
+      }
+      .ant-calendar-range-picker-separator {
+        vertical-align: text-top;
+      }
+    }
+    .icon {
+      padding: 1.2rem;
+      line-height: normal;
+      i {
+        font-size: 2rem;
+      }
+    }
+    .field {
+      position: relative;
+      .label {
+        line-height: normal;
+        position: absolute;
+        top: 0.3rem;
+        font-size: 1.1rem;
+      }
+      height: -webkit-fill-available;
+      height: -moz-available;
+      width: -webkit-fill-available;
+      width: -moz-available;
+    }
   }
 }
 </style>

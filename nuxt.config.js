@@ -1,5 +1,5 @@
-// let baseURl='https://www.expedia-api.savvyskymart.com/api/'
-let baseURl='http://localhost:8000/'
+let baseURl='https://expedia-api.savvyskymart.com/api/'
+// let baseURl='http://localhost:8000/'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
@@ -31,7 +31,7 @@ export default {
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    'ant-design-vue/dist/antd.css','~assets/scss/shortHandClasses.scss',
+    'ant-design-vue/dist/antd.css','~assets/scss/shortHandClasses.scss','~assets/scss/htmlTags.scss'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -66,11 +66,8 @@ export default {
         },
         endpoints: {
           login: {
-            // url: 'login',
-            // method: 'posts',
-
-            url: 'user',
-            method: 'get',
+            url: 'login',
+            method: 'post',
           },
           logout: false,
           user: false,

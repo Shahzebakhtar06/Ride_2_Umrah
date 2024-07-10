@@ -2,10 +2,10 @@
   <div>
     <div id="add-edit-hotels" class="admin-layout">
       <div class="page-header">
-        <div class="title">Manage Your Amenities</div>
+        <div class="title">Manage Your Cities</div>
         <div class="add-btn">
           <a-button type="primary" @click="showModal('Add')">
-            Add New Amenity
+            Add New City
           </a-button>
         </div>
       </div>
@@ -49,29 +49,12 @@
             :labelCol="{ span: 5 }"
             :wrapperCol="{ span: 18 }"
           >
-            <a-form-model-item has-feedback label="Amenity Name" prop="name">
+            <a-form-model-item has-feedback label="City Name" prop="name">
               <a-input
                 v-model="form.name"
                 type="text"
                 autocomplete="off"
-                placeholder="Amenity Name"
-              />
-            </a-form-model-item>
-            <a-form-model-item has-feedback label="Amenity Type" prop="type">
-              <a-select default-value="room" v-model="form.type">
-                <a-select-option value="room"> Room </a-select-option>
-                <a-select-option value="car"> Car </a-select-option>
-                <a-select-option value="hotel"> Hotel </a-select-option>
-              </a-select>
-            </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Amenity Description"
-              prop="description"
-            >
-              <a-textarea
-                v-model="form.description"
-                placeholder="Amenity Description"
+                placeholder="City Name"
               />
             </a-form-model-item>
           </a-form-model>
@@ -90,18 +73,6 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "Type",
-    dataIndex: "type",
-    sorter: true,
-    ellipsis: true,
-  },
-  {
-    title: "Description",
-    dataIndex: "description",
-    sorter: true,
-    ellipsis: true,
-  },
-  {
     title: "Actions",
     dataIndex: "",
     width: "11rem",
@@ -113,9 +84,7 @@ export default {
   middleware: "checkAuth",
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add"
-        ? "Add New Amenity"
-        : "Edit Your Amenity";
+      return this.renderingFor == "Add" ? "Add New City" : "Edit Your City";
     },
   },
   data() {
@@ -128,21 +97,12 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      form: {
-        description:''
-      },
+      form: {},
       rules: {
         name: [
           {
             required: true,
-            message: "Amenity Name is required!",
-            trigger: "blur",
-          },
-        ],
-        type: [
-          {
-            required: true,
-            message: "Amenity Type is required!",
+            message: "City Name is required!",
             trigger: "blur",
           },
         ],
@@ -184,7 +144,7 @@ export default {
       });
     },
     queryData(params) {
-      return this.$axios.get("amenity", { params: params });
+      return this.$axios.get("city", { params: params });
     },
     showModal() {
       this.visible = true;
@@ -197,46 +157,44 @@ export default {
           if (form.id >= 0) {
             try {
               let res = await this.$axios.put(
-                `amenity/${form.id}?name=${this.form.name}&&type=${this.form.type}&&description=${this.form.description}`
+                `city/${form.id}?name=${this.form.name}`
               );
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Amenity Updated Successfully",
+                  message: "City Updated Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Amenity Updating Failed",
-              });
+                  message: "City Updating Failed",
+                });
               this.handleCancel();
             }
           }
           if (!form.id) {
             try {
-              let res = await this.$axios.post(
-                `amenity?name=${this.form.name}`
-              );
+              let res = await this.$axios.post(`city?name=${this.form.name}`);
               if (res.status == 201) {
                 this.$notification.success({
-                  message: "Amenity Created Successfully",
+                  message: "City Created Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Amenity Creation Failed",
-              });
+                  message: "City Creation Failed",
+                });
               this.handleCancel();
             }
           }
           this.confirmLoading = false;
-          this.fetch();
+          this.fetch()
         }
       });
     },
     handleCancel(e) {
-      this.form = {};
+      this.form={}
       this.visible = false;
     },
     handleItemEdit(val) {
@@ -244,21 +202,21 @@ export default {
       this.showModal();
     },
     async handleItemDelete(val) {
-      if (val.id) {
+      if(val.id){
         try {
-          let res = await this.$axios.put(
-            `amenity/${form.id}?name=${this.form.name}`
-          );
-          if (res.status == 200) {
-            this.$notification.success({
-              message: "Amenity Deleted Successfully",
-            });
-          }
-        } catch (e) {
-          this.$notification.error({
-            message: "Amenity Deletion Failed",
-          });
-        }
+              let res = await this.$axios.put(
+                `city/${form.id}?name=${this.form.name}`
+              );
+              if (res.status == 200) {
+                this.$notification.success({
+                  message: "City Deleted Successfully",
+                });
+              }
+            } catch (e) {
+              this.$notification.error({
+                  message: "City Deletion Failed",
+                });
+            }
       }
     },
   },
