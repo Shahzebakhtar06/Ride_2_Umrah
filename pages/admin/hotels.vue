@@ -13,15 +13,29 @@
         <div class="table">
           <a-table
             :columns="columns"
-            :row-key="(record) => record.login.uuid"
+            :row-key="(record) => record.id"
             :data-source="data"
             :pagination="pagination"
             :loading="loading"
             @change="handleTableChange"
           >
-            <template slot="name" slot-scope="name">
-              {{ name.first }} {{ name.last }}
-            </template>
+            <div slot="actions" slot-scope="item">
+              <div class="row">
+                <div class="col pr-1">
+                  <a-button @click="handleItemEdit(item)"
+                    ><a-icon type="edit"
+                  /></a-button>
+                </div>
+                <div class="col">
+                  <a-button type="danger" @click="handleItemDelete(item)"
+                    ><a-icon type="delete"
+                  /></a-button>
+                </div>
+              </div>
+            </div>
+            <div slot="image" slot-scope="item">
+              <img :src="getImageUrl(item)" width="6rem" height="6rem" alt="" />
+            </div>
           </a-table>
         </div>
         <a-modal
@@ -31,69 +45,81 @@
           @ok="handleOk"
           @cancel="handleCancel"
         >
-          <div>
-            <a-form-model
-              ref="ruleForm"
-              :model="form"
-              :rules="rules"
-              :label-col="labelCol"
-              :wrapper-col="wrapperCol"
+          <a-form-model
+            ref="loginForm"
+            :model="form"
+            :rules="rules"
+            :labelCol="{ span: 24 }"
+            :wrapperCol="{ span: 24 }"
+          >
+            <a-form-model-item has-feedback label="Hotel Name" prop="name">
+              <a-input
+                v-model="form.name"
+                type="text"
+                autocomplete="off"
+                placeholder="Hotel Name"
+              />
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Hotel Rating" prop="rating">
+              <a-input-number
+                v-model="form.rating"
+                autocomplete="off"
+                placeholder="Hotel Rating"
+              />
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Hotel City" prop="city">
+              <a-select default-value="room" v-model="form.city_id">
+                <a-select-option value="room"> Room </a-select-option>
+                <a-select-option value="car"> Car </a-select-option>
+                <a-select-option value="hotel"> Hotel </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item
+              has-feedback
+              label="Hotel Amenities"
+              prop="amenities"
             >
-              <a-form-model-item ref="name" label="Activity name" prop="name">
-                <a-input
-                  v-model="form.name"
-                  @blur="
-                    () => {
-                      $refs.name.onFieldBlur();
-                    }
-                  "
-                />
-              </a-form-model-item>
-              <a-form-model-item label="Activity zone" prop="region">
-                <a-select
-                  v-model="form.region"
-                  placeholder="please select your zone"
-                >
-                  <a-select-option value="shanghai"> Zone one </a-select-option>
-                  <a-select-option value="beijing"> Zone two </a-select-option>
-                </a-select>
-              </a-form-model-item>
-              <a-form-model-item label="Activity time" required prop="date1">
-                <a-date-picker
-                  v-model="form.date1"
-                  show-time
-                  type="date"
-                  placeholder="Pick a date"
-                  style="width: 100%"
-                />
-              </a-form-model-item>
-              <a-form-model-item label="Instant delivery" prop="delivery">
-                <a-switch v-model="form.delivery" />
-              </a-form-model-item>
-              <a-form-model-item label="Activity type" prop="type">
-                <a-checkbox-group v-model="form.type">
-                  <a-checkbox value="1" name="type"> Online </a-checkbox>
-                  <a-checkbox value="2" name="type"> Promotion </a-checkbox>
-                  <a-checkbox value="3" name="type"> Offline </a-checkbox>
-                </a-checkbox-group>
-              </a-form-model-item>
-              <a-form-model-item label="Resources" prop="resource">
-                <a-radio-group v-model="form.resource">
-                  <a-radio value="1"> Sponsor </a-radio>
-                  <a-radio value="2"> Venue </a-radio>
-                </a-radio-group>
-              </a-form-model-item>
-              <a-form-model-item label="Activity form" prop="desc">
-                <a-input v-model="form.desc" type="textarea" />
-              </a-form-model-item>
-              <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-                <a-button type="primary" @click="onSubmit"> Create </a-button>
-                <a-button style="margin-left: 10px" @click="resetForm">
-                  Reset
-                </a-button>
-              </a-form-model-item>
-            </a-form-model>
-          </div>
+              <a-select default-value="room" v-model="form.amenities">
+                <a-select-option value="room"> Room </a-select-option>
+                <a-select-option value="car"> Car </a-select-option>
+                <a-select-option value="hotel"> Hotel </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item
+              has-feedback
+              label="Hotel Short Description"
+              prop="short_description"
+            >
+              <a-textarea
+                v-model="form.short_description"
+                placeholder="Hotel Short Description"
+              />
+            </a-form-model-item>
+            <a-form-model-item
+              has-feedback
+              label="Hotel Featured Images"
+              prop="featured_image"
+            >
+              <input type="file" @change="handleFeaturedImageChange" />
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Hotel Images" prop="images">
+              <div class="image-uploader">
+                <input type="file" @change="onFileChange" multiple />
+                <div v-if="form.images.length" class="images-box">
+                  <h3>Selected Images:</h3>
+                  <ul>
+                    <li v-for="(image, index) in form.images" :key="index">
+                      <img
+                        :src="image.url"
+                        :alt="'Image ' + (index + 1)"
+                        width="100"
+                      />
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </a-form-model-item>
+          </a-form-model>
         </a-modal>
       </div>
     </div>
@@ -106,21 +132,31 @@ const columns = [
     title: "Name",
     dataIndex: "name",
     sorter: true,
-    width: "20%",
-    scopedSlots: { customRender: "name" },
+    ellipsis: true,
   },
   {
-    title: "Gender",
-    dataIndex: "gender",
-    filters: [
-      { text: "Male", value: "male" },
-      { text: "Female", value: "female" },
-    ],
-    width: "20%",
+    title: "Type",
+    dataIndex: "type",
+    sorter: true,
+    ellipsis: true,
   },
   {
-    title: "Email",
-    dataIndex: "email",
+    title: "Description",
+    dataIndex: "description",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Image",
+    dataIndex: "image",
+    sorter: true,
+    scopedSlots: { customRender: "image" },
+  },
+  {
+    title: "Actions",
+    dataIndex: "",
+    width: "11rem",
+    scopedSlots: { customRender: "actions" },
   },
 ];
 export default {
@@ -134,6 +170,8 @@ export default {
   data() {
     return {
       data: [],
+      image: "",
+      imgLoading: "",
       pagination: {},
       loading: false,
       columns,
@@ -141,61 +179,23 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
-      other: "",
       form: {
-        name: "",
-        region: undefined,
-        date1: undefined,
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
+        description: "",
+        images: [],
+        featured_image: null,
       },
       rules: {
         name: [
           {
             required: true,
-            message: "Please input Activity name",
+            message: "Hotel Name is required!",
             trigger: "blur",
           },
-          {
-            min: 3,
-            max: 5,
-            message: "Length should be 3 to 5",
-            trigger: "blur",
-          },
-        ],
-        region: [
-          {
-            required: true,
-            message: "Please select Activity zone",
-            trigger: "change",
-          },
-        ],
-        date1: [
-          { required: true, message: "Please pick a date", trigger: "change" },
         ],
         type: [
           {
-            type: "array",
             required: true,
-            message: "Please select at least one activity type",
-            trigger: "change",
-          },
-        ],
-        resource: [
-          {
-            required: true,
-            message: "Please select activity resource",
-            trigger: "change",
-          },
-        ],
-        desc: [
-          {
-            required: true,
-            message: "Please input activity form",
+            message: "Hotel Type is required!",
             trigger: "blur",
           },
         ],
@@ -207,8 +207,28 @@ export default {
     this.fetch();
   },
   methods: {
+    getImageUrl(imagePath) {
+      let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
+      return url;
+    },
+    handleFeaturedImageChange(event) {
+      this.form.featured_image = event.target.files[0];
+    },
+    handleImagesChange(event) {
+      this.form.images = event.target.files;
+    },
+    onFileChange(event) {
+      const files = event.target.files;
+      this.form.images = []; // Clear previous images
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.form.images.push({ file: files[i], url: e.target.result });
+        };
+        reader.readAsDataURL(files[i]);
+      }
+    },
     handleTableChange(pagination, filters, sorter) {
-      console.log(pagination);
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
@@ -227,41 +247,124 @@ export default {
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
+        let result = data.data.response;
         // Read total count from server
         // pagination.total = data.totalCount;
-        pagination.total = 200;
+        pagination.total = result.meta.total_pages;
         this.loading = false;
-        this.data = data.results;
+        console.log(data.data.response.data);
+        this.data = result.data;
         this.pagination = pagination;
       });
     },
     queryData(params) {
-      return this.$axios.get("https://randomuser.me/api", { params: params });
+      return this.$axios.get("hotel", { params: params });
     },
     showModal() {
       this.visible = true;
     },
     handleOk(e) {
-      this.confirmLoading = true;
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          setTimeout(() => {
-            this.visible = false;
-            this.confirmLoading = false;
-          }, 2000);
-        } else {
-          console.log("error submit!!");
-          return false;
+          this.confirmLoading = true;
+          let form = this.form;
+          if (form.id >= 0) {
+            const formData = new FormData();
+            this.form.images.forEach((image) => {
+              formData.append("image[]", image.file);
+            });
+            formData.append("featured_image", this.form.image);
+            formData.append("name", this.form.name);
+            formData.append("type", this.form.type);
+            formData.append("description", this.form.description);
+            try {
+              console.log(data, this.form.image);
+              // let res = await this.$axios.put(
+              //   `hotel/${form.id}?name=${this.form.name}&&type=${form.type}&&description=${form.description}&&image=${form.image}`
+              // );
+              let res = await this.$axios.put(`hotel/${form.id}`, formData);
+              if (res.status == 200) {
+                this.$notification.success({
+                  message: "Hotel Updated Successfully",
+                });
+              }
+              this.handleCancel();
+            } catch (e) {
+              this.$notification.error({
+                message: "Hotel Updating Failed",
+              });
+              this.handleCancel();
+            }
+          }
+          if (!form.id) {
+            const formData = new FormData();
+            formData.append("image", this.form.image);
+            formData.append("name", this.form.name);
+            formData.append("type", this.form.type);
+            formData.append("description", this.form.description);
+            try {
+              let res = await this.$axios.post("hotel", formData);
+
+              if (res.status == 201) {
+                this.$notification.success({
+                  message: "Hotel Created Successfully",
+                });
+              }
+              this.handleCancel();
+            } catch (e) {
+              this.$notification.error({
+                message: "Hotel Creation Failed",
+              });
+              this.handleCancel();
+            }
+          }
+          this.confirmLoading = false;
+          this.fetch();
         }
       });
     },
     handleCancel(e) {
-      this.resetForm();
+      this.form = {};
       this.visible = false;
     },
-    onSubmit() {},
-    resetForm() {
-      this.$refs.ruleForm.resetFields();
+    handleItemEdit(val) {
+      this.form = val;
+      this.showModal();
+    },
+    async handleItemDelete(val) {
+      let isDeleting = false;
+      if (val.id) {
+        this.$confirm({
+          title: "Are you sure delete this Hotel?",
+          okText: "Yes",
+          okType: "danger",
+          okButtonProps: {
+            loading: isDeleting,
+          },
+          cancelText: "No",
+          onOk: async () => {
+            isDeleting = true; // Set loading to true
+            try {
+              let res = await this.$axios.delete(`hotel/${val.id}`);
+              if (res.status == 200) {
+                this.$notification.success({
+                  message: "Hotel Deleted Successfully",
+                });
+              }
+              this.fetch();
+            } catch (e) {
+              console.log(e);
+              this.$notification.error({
+                message: "Hotel Deletion Failed",
+              });
+            }
+            isDeleting = false; // Set loading to true
+          },
+          onCancel() {
+            isDeleting = false; // Ensure loading is reset on cancel
+          },
+        });
+      }
     },
   },
 };
@@ -269,4 +372,22 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
+.images-box {
+  display: flex;
+  list-style-type: none;
+  ul{
+    padding: 0.5rem;
+    li{
+      margin: 1rem;
+    }
+  }
+}
+.image-uploader {
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.image-uploader img {
+  margin: 5px;
+}
 </style>

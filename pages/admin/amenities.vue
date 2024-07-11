@@ -33,6 +33,9 @@
                 </div>
               </div>
             </div>
+            <div slot="image" slot-scope="item">
+              <img :src="getImageUrl(item)" width="6rem" height="6rem" alt="" />
+            </div>
           </a-table>
         </div>
         <a-modal
@@ -46,8 +49,8 @@
             ref="loginForm"
             :model="form"
             :rules="rules"
-            :labelCol="{ span: 5 }"
-            :wrapperCol="{ span: 18 }"
+            :labelCol="{ span: 24 }"
+            :wrapperCol="{ span: 24 }"
           >
             <a-form-model-item has-feedback label="Amenity Name" prop="name">
               <a-input
@@ -73,6 +76,13 @@
                 v-model="form.description"
                 placeholder="Amenity Description"
               />
+            </a-form-model-item>
+            <a-form-model-item
+              has-feedback
+              label="Amenity Description"
+              prop="description"
+            >
+              <input type="file" @change="onFileChange" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -102,6 +112,12 @@ const columns = [
     ellipsis: true,
   },
   {
+    title: "Image",
+    dataIndex: "image",
+    sorter: true,
+    scopedSlots: { customRender: "image" },
+  },
+  {
     title: "Actions",
     dataIndex: "",
     width: "11rem",
@@ -121,6 +137,8 @@ export default {
   data() {
     return {
       data: [],
+      image: "",
+      imgLoading: "",
       pagination: {},
       loading: false,
       columns,
@@ -129,7 +147,8 @@ export default {
       visible: false,
       confirmLoading: false,
       form: {
-        description:''
+        description: "",
+        image: null,
       },
       rules: {
         name: [
@@ -154,6 +173,14 @@ export default {
     this.fetch();
   },
   methods: {
+    getImageUrl(imagePath) {
+      let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
+      return url;
+    },
+    onFileChange(event) {
+      this.form.image = event.target.files[0];
+    },
+
     handleTableChange(pagination, filters, sorter) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
@@ -195,10 +222,17 @@ export default {
           this.confirmLoading = true;
           let form = this.form;
           if (form.id >= 0) {
+            const formData = new FormData();
+            formData.append("image", this.form.image);
+            formData.append("name", this.form.name);
+            formData.append("type", this.form.type);
+            formData.append("description", this.form.description);
             try {
-              let res = await this.$axios.put(
-                `amenity/${form.id}?name=${this.form.name}&&type=${this.form.type}&&description=${this.form.description}`
-              );
+              console.log(data, this.form.image);
+              // let res = await this.$axios.put(
+              //   `amenity/${form.id}?name=${this.form.name}&&type=${form.type}&&description=${form.description}&&image=${form.image}`
+              // );
+              let res = await this.$axios.put(`amenity/${form.id}`, formData);
               if (res.status == 200) {
                 this.$notification.success({
                   message: "Amenity Updated Successfully",
@@ -213,10 +247,14 @@ export default {
             }
           }
           if (!form.id) {
+            const formData = new FormData();
+            formData.append("image", this.form.image);
+            formData.append("name", this.form.name);
+            formData.append("type", this.form.type);
+            formData.append("description", this.form.description);
             try {
-              let res = await this.$axios.post(
-                `amenity?name=${this.form.name}`
-              );
+              let res = await this.$axios.post("amenity", formData);
+
               if (res.status == 201) {
                 this.$notification.success({
                   message: "Amenity Created Successfully",
@@ -244,21 +282,38 @@ export default {
       this.showModal();
     },
     async handleItemDelete(val) {
+      let isDeleting = false;
       if (val.id) {
-        try {
-          let res = await this.$axios.put(
-            `amenity/${form.id}?name=${this.form.name}`
-          );
-          if (res.status == 200) {
-            this.$notification.success({
-              message: "Amenity Deleted Successfully",
-            });
-          }
-        } catch (e) {
-          this.$notification.error({
-            message: "Amenity Deletion Failed",
-          });
-        }
+        this.$confirm({
+          title: "Are you sure delete this Amenity?",
+          okText: "Yes",
+          okType: "danger",
+          okButtonProps: {
+            loading: isDeleting,
+          },
+          cancelText: "No",
+          onOk: async () => {
+            isDeleting = true; // Set loading to true
+            try {
+              let res = await this.$axios.delete(`amenity/${val.id}`);
+              if (res.status == 200) {
+                this.$notification.success({
+                  message: "Amenity Deleted Successfully",
+                });
+              }
+              this.fetch();
+            } catch (e) {
+              console.log(e);
+              this.$notification.error({
+                message: "Amenity Deletion Failed",
+              });
+            }
+            isDeleting = false; // Set loading to true
+          },
+          onCancel() {
+            isDeleting = false; // Ensure loading is reset on cancel
+          },
+        });
       }
     },
   },

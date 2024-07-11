@@ -203,9 +203,19 @@ export default {
     },
     async handleItemDelete(val) {
       if(val.id){
-        try {
-              let res = await this.$axios.put(
-                `city/${form.id}?name=${this.form.name}`
+        this.$confirm({
+          title: "Are you sure delete this City?",
+          okText: "Yes",
+          okType: "danger",
+          okButtonProps: {
+            loading: isDeleting,
+          },
+          cancelText: "No",
+          onOk: async () => {
+            isDeleting = true; // Set loading to true
+            try {
+              let res = await this.$axios.delete(
+                `city/${val.id}`
               );
               if (res.status == 200) {
                 this.$notification.success({
@@ -217,6 +227,14 @@ export default {
                   message: "City Deletion Failed",
                 });
             }
+            isDeleting = false; // Set loading to true
+          },
+          onCancel() {
+            isDeleting = false; // Ensure loading is reset on cancel
+          },
+        });
+      
+       
       }
     },
   },

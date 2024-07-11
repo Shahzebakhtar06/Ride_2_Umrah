@@ -34,11 +34,13 @@
             </div>
           </div>
         </div>
-        <div style="text-align: right;">
-            <div class="add-room" @click="addRoom">Add another room</div>
-        <a-button type="primary" class="done-btn" @click="closeDropdown">Done</a-button>
+        <div style="text-align: right">
+          <div class="add-room" @click="addRoom">Add another room</div>
+          <a-button type="primary" class="done-btn" @click="closeDropdown"
+            >Done</a-button
+          >
         </div>
-        </template>
+      </template>
     </a-popover>
   </div>
   <!-- </div> -->
@@ -49,8 +51,11 @@ export default {
   data() {
     return {
       isOpen: false,
-      rooms: [{ adults: 1, children: 0 }],
+      rooms: [],
     };
+  },
+  props: {
+    value: { type: Array },
   },
   computed: {
     summary() {
@@ -68,11 +73,24 @@ export default {
       }`;
     },
   },
+  watch: {
+    value: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        // debugger;
+        if (val.length) {
+          this.rooms = val;
+        }
+      },
+    },
+  },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
     },
     closeDropdown() {
+      this.$emit("setRooms", this.rooms);
       this.isOpen = false;
     },
     addRoom() {

@@ -26,7 +26,7 @@
       </a-form-model-item>
     </a-form-model>
     <a-button @click="handleCancel()"> Cancel </a-button>
-    <a-button type="primary" @click="handleLogin()"> login </a-button>
+    <a-button :loading="loadingBtn" type="primary" @click="handleLogin()"> login </a-button>
 
     <br />
   </div>
@@ -70,6 +70,7 @@ export default {
         if (valid) {
           let res={}
           try {
+            this.loadingBtn=true
             res = await this.$auth.loginWith("local", {
               data: {
                 email: this.form.email,
@@ -87,6 +88,7 @@ export default {
                 description: res.data.data.statusMessage,
               });
             }
+            this.loadingBtn=false
           } catch (e) {
             console.log(res)
             this.$notification.error({

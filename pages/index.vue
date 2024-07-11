@@ -2,7 +2,7 @@
   <div>
     <div>
       <a-tabs v-model="activeTab">
-        <a-tab-pane key="stays" tab="stays" >
+        <a-tab-pane key="stays" tab="stays">
           <BaseFilters :fields="staysFilters" @submit="handleSubmit" />
         </a-tab-pane>
         <a-tab-pane key="cars" tab="Cars" force-render>
@@ -17,42 +17,45 @@
 </template>
 
 <script>
+
 export default {
   name: "IndexPage",
-  components: {
-  },
+  components: {},
   data() {
     return {
-      activeTab:'stays',
+      activeTab: "stays",
       staysFilters: [
         {
-          name: "location",
+          key: "location",
           label: "Location",
           type: "select",
+          value: "pakistan",
           placeholder: "Search Location",
         },
         {
-          name: "Dates",
+          key: "dates",
           label: "Dates",
           type: "date",
+          value:null,
           placeholder: "Search Date",
         },
         {
-          name:"roomSelect",
-          type:"roomSelect",
-          label:'Room Select',
-          placeholder:'select Your rooms'
-        }
+          key: "room",
+          type: "roomSelect",
+          label: "Travelers",
+          value: [{ adults: 1, children: 0 }],
+          placeholder: "select Your rooms",
+        },
       ],
       carsFilters: [
         {
-          name: "location",
-          label: "Location",
+          key: "location",
+          label: "Where to",
           type: "select",
           placeholder: "Search Location",
         },
         {
-          name: "Dates",
+          key: "dates",
           label: "Dates",
           type: "date",
           placeholder: "Search Date",
@@ -60,13 +63,13 @@ export default {
       ],
       visaFilters: [
         {
-          name: "location",
+          key: "location",
           label: "Location",
           type: "select",
           placeholder: "Search Location",
         },
         {
-          name: "Dates",
+          key: "dates",
           label: "Dates",
           type: "date",
           placeholder: "Search Date",
@@ -76,11 +79,16 @@ export default {
   },
   methods: {
     handleSubmit(formData) {
-        if(this.activeTab=='stays'){
-            let query=encodeURIComponent(formData)
-            console.log(query)
-          // this.$router.push({name:'hotels':query:})
+      if (this.activeTab == "stays") {
+        const queryObj = {
+          location: formData.location,
+          from: formData.dates[0].format("YYYY-MM-DD"),
+          to: formData.dates[1].format("YYYY-MM-DD"),
+          rooms: JSON.stringify(formData.room),
         }
+        
+        this.$router.push({ name: "hotels", query: queryObj});
+      }
     },
   },
 };

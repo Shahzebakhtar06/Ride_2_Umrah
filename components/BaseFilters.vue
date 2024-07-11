@@ -3,9 +3,9 @@
     <a-form-model ref="ruleForm" :model="formData" :rules="rules">
       <a-form-model-item
         v-for="field in fields"
-        :key="field.name"
+        :key="field.key"
         :required="field.required ? true : false"
-        :prop="field.name"
+        :prop="field.key"
       >
         <div class="field-wrapper" v-if="field.type === 'select'">
           <div class="icon">
@@ -13,19 +13,18 @@
           </div>
 
           <div class="field">
-            <div class="label" v-if="formData[field.name]">
+            <div class="label" v-if="formData[field.key]">
               {{ field.label }}
             </div>
             <a-select
-              label-in-value
-              :value="formData[field.name]"
+              :value="formData[field.key]"
               placeholder="Select Location"
               style="width: 100%"
               :filter-option="true"
               :show-search="true"
               :not-found-content="fetching ? undefined : null"
               @search="fetchUser"
-              @change="(e, value) => handleLocationChange(e, field.name)"
+              @change="(e, value) => handleLocationChange(e, field.key)"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
               <a-select-option v-for="d in data" :key="d.value">
@@ -40,15 +39,15 @@
           </div>
 
           <div class="field">
-            <div class="label" v-if="formData[field.name]">
+            <div class="label" v-if="formData[field.key]">
               {{ field.label }}
             </div>
             <a-range-picker
               :disabled-date="disabledDate"
-              :value="formData[field.name] ? formData[field.name] : null"
-              format="YYYY-MM-DD HH:mm"
+              :value="formData[field.key] ? formData[field.key] : null"
+              format="YYYY-MM-DD"
               :placeholder="['Start Time', 'End Time']"
-              @change="(val, e) => onDateChange(field.name, val)"
+              @change="(val, e) => onDateChange(field.key, val)"
             />
           </div>
         </div>
@@ -58,10 +57,17 @@
           </div>
 
           <div class="field">
-            <div class="label" v-if="formData[field.name]">
+            <div class="label" v-if="formData[field.key]">
               {{ field.label }}
             </div>
-            <CustomRoomSelect />
+            <CustomRoomSelect
+              @setRooms="
+                (val) => {
+                  formData[field.key] = val;
+                }
+              "
+              :value="formData[field.key] ? formData[field.key] : []"
+            />
           </div>
         </div>
       </a-form-model-item>
@@ -92,9 +98,9 @@ export default {
         location: undefined,
       },
       data: [
-        { text: "pakistan", value: 1 },
-        { text: "islamabad", value: 2 },
-        { text: "Rawalpindi", value: 3 },
+        { text: "pakistan", value: "pakistan" },
+        { text: "islamabad", value: "islamabad" },
+        { text: "Rawalpindi", value: "Rawalpindi" },
       ],
       rules: {
         name: [
@@ -119,11 +125,11 @@ export default {
       immediate: true,
       handler(newFields) {
         newFields.forEach((field) => {
-          this.$set(this.formData, field.name, field.value || "");
+          this.$set(this.formData, field.key, field.value || "");
         });
       },
     },
-  },
+  },  
   methods: {
     disabledDate(current) {
       // Can not select days before today and today
@@ -164,6 +170,7 @@ export default {
     },
     onDateChange(name, val) {
       this.formData[name] = val;
+      console.log(name, val, this.formData);
     },
   },
 };
