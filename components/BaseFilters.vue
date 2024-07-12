@@ -160,7 +160,7 @@ export default {
         });
     },
     handleLocationChange(value, fieldName) {
-      debugger;
+     
       console.log(value, fieldName);
       Object.assign(this, {
         data: [],

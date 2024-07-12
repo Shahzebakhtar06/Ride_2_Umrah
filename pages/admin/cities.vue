@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="add-edit-hotels" class="admin-layout">
+    <div id="add-edit-city" class="admin-layout">
       <div class="page-header">
         <div class="title">Manage Your Cities</div>
         <div class="add-btn">
@@ -154,11 +154,13 @@ export default {
         if (valid) {
           this.confirmLoading = true;
           let form = this.form;
-          if (form.id >= 0) {
+          if (this.renderingFor == "Edit") {
             try {
-              let res = await this.$axios.put(
-                `city/${form.id}?name=${this.form.name}`
-              );
+              // ${form.id}?name=${this.form.name}
+              const formData = new FormData();
+              formData.append("id", form.id);
+              formData.append("name", form.name);
+              let res = await this.$axios.post(`city/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
                   message: "City Updated Successfully",
@@ -167,12 +169,12 @@ export default {
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                  message: "City Updating Failed",
-                });
+                message: "City Updating Failed",
+              });
               this.handleCancel();
             }
           }
-          if (!form.id) {
+          if (this.renderingFor == "Add") {
             try {
               let res = await this.$axios.post(`city?name=${this.form.name}`);
               if (res.status == 201) {
@@ -183,26 +185,27 @@ export default {
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                  message: "City Creation Failed",
-                });
+                message: "City Creation Failed",
+              });
               this.handleCancel();
             }
           }
           this.confirmLoading = false;
-          this.fetch()
+          this.fetch();
         }
       });
     },
     handleCancel(e) {
-      this.form={}
+      this.form = {};
       this.visible = false;
     },
     handleItemEdit(val) {
+      this.renderingFor = "Edit"
       this.form = val;
       this.showModal();
     },
     async handleItemDelete(val) {
-      if(val.id){
+      if (val.id) {
         this.$confirm({
           title: "Are you sure delete this City?",
           okText: "Yes",
@@ -214,9 +217,7 @@ export default {
           onOk: async () => {
             isDeleting = true; // Set loading to true
             try {
-              let res = await this.$axios.delete(
-                `city/${val.id}`
-              );
+              let res = await this.$axios.delete(`city/${val.id}`);
               if (res.status == 200) {
                 this.$notification.success({
                   message: "City Deleted Successfully",
@@ -224,8 +225,8 @@ export default {
               }
             } catch (e) {
               this.$notification.error({
-                  message: "City Deletion Failed",
-                });
+                message: "City Deletion Failed",
+              });
             }
             isDeleting = false; // Set loading to true
           },
@@ -233,8 +234,6 @@ export default {
             isDeleting = false; // Ensure loading is reset on cancel
           },
         });
-      
-       
       }
     },
   },

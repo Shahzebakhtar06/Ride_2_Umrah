@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="add-edit-hotels" class="admin-layout">
+    <div id="add-edit-amenities" class="admin-layout">
       <div class="page-header">
         <div class="title">Manage Your Amenities</div>
         <div class="add-btn">
@@ -34,7 +34,7 @@
               </div>
             </div>
             <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="6rem" height="6rem" alt="" />
+              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
             </div>
           </a-table>
         </div>
@@ -77,12 +77,8 @@
                 placeholder="Amenity Description"
               />
             </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Amenity Description"
-              prop="description"
-            >
-              <input type="file" @change="onFileChange" />
+            <a-form-model-item has-feedback label="Amenity Image" prop="image">
+              <input type="file"  @change="onFileChange" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -205,7 +201,6 @@ export default {
         // pagination.total = data.totalCount;
         pagination.total = result.meta.total_pages;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
@@ -221,18 +216,17 @@ export default {
         if (valid) {
           this.confirmLoading = true;
           let form = this.form;
-          if (form.id >= 0) {
+          if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            formData.append("image", this.form.image);
-            formData.append("name", this.form.name);
-            formData.append("type", this.form.type);
-            formData.append("description", this.form.description);
+            if (form.image) {
+              formData.append("image", form.image);
+            }
+            formData.append("id", form.id);
+            formData.append("name", form.name);
+            formData.append("type", form.type);
+            formData.append("description", form.description);
             try {
-              console.log(data, this.form.image);
-              // let res = await this.$axios.put(
-              //   `amenity/${form.id}?name=${this.form.name}&&type=${form.type}&&description=${form.description}&&image=${form.image}`
-              // );
-              let res = await this.$axios.put(`amenity/${form.id}`, formData);
+              let res = await this.$axios.post(`amenity/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
                   message: "Amenity Updated Successfully",
@@ -246,7 +240,7 @@ export default {
               this.handleCancel();
             }
           }
-          if (!form.id) {
+          if (this.renderingFor == "Add") {
             const formData = new FormData();
             formData.append("image", this.form.image);
             formData.append("name", this.form.name);
@@ -274,10 +268,17 @@ export default {
       });
     },
     handleCancel(e) {
-      this.form = {};
+      this.form = {
+        name: "",
+        image: null,
+        description: "",
+        id: undefined,
+        price: "",
+      };
       this.visible = false;
     },
     handleItemEdit(val) {
+      this.renderingFor = "Edit";
       this.form = val;
       this.showModal();
     },

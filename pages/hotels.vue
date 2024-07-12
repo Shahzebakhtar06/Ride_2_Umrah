@@ -6,13 +6,20 @@
         :fieldsValue="selectedFilters"
         @submit="handleSubmit"
       />
+
     </div>
-    <div></div>
+    <div>
+      <hotels-card/>
+    </div>
   </div>
 </template>
 
 <script>
+import hotelsCard from '@/components/hotelsCard.vue';
 export default {
+  components:{
+    hotelsCard
+  },
   data() {
     return {
       staysFilters: [

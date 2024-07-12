@@ -33,9 +33,6 @@
                 </div>
               </div>
             </div>
-            <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="6rem" height="6rem" alt="" />
-            </div>
           </a-table>
         </div>
         <a-modal
@@ -62,16 +59,22 @@
             </a-form-model-item>
             <a-form-model-item has-feedback label="Hotel Rating" prop="rating">
               <a-input-number
+                style="width: 100%"
                 v-model="form.rating"
                 autocomplete="off"
                 placeholder="Hotel Rating"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Hotel City" prop="city">
-              <a-select default-value="room" v-model="form.city_id">
-                <a-select-option value="room"> Room </a-select-option>
-                <a-select-option value="car"> Car </a-select-option>
-                <a-select-option value="hotel"> Hotel </a-select-option>
+            <a-form-model-item has-feedback label="Hotel City" prop="city_id">
+              <a-select
+                v-model="form.city_id"
+                style="width: 100%"
+                placeholder="Please select"
+                @change="handleAmenitiesChange"
+              >
+                <a-select-option v-for="item in cities" :key="item.id">
+                  {{ item.name }}
+                </a-select-option>
               </a-select>
             </a-form-model-item>
             <a-form-model-item
@@ -79,10 +82,16 @@
               label="Hotel Amenities"
               prop="amenities"
             >
-              <a-select default-value="room" v-model="form.amenities">
-                <a-select-option value="room"> Room </a-select-option>
-                <a-select-option value="car"> Car </a-select-option>
-                <a-select-option value="hotel"> Hotel </a-select-option>
+              <a-select
+                mode="multiple"
+                v-model="form.amenities"
+                style="width: 100%"
+                placeholder="Please select"
+                @change="handleAmenitiesChange"
+              >
+                <a-select-option v-for="item in amenities" :key="item.id">
+                  {{ item.name }}
+                </a-select-option>
               </a-select>
             </a-form-model-item>
             <a-form-model-item
@@ -102,23 +111,30 @@
             >
               <input type="file" @change="handleFeaturedImageChange" />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Hotel Images" prop="images">
-              <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
-                <div v-if="form.images.length" class="images-box">
-                  <h3>Selected Images:</h3>
-                  <ul>
-                    <li v-for="(image, index) in form.images" :key="index">
-                      <img
-                        :src="image.url"
-                        :alt="'Image ' + (index + 1)"
-                        width="100"
-                      />
-                    </li>
-                  </ul>
+            <div v-if="renderingFor == 'Add'">
+              <a-form-model-item
+                has-feedback
+                label="Hotel Images"
+                prop="images"
+              >
+                <div class="image-uploader">
+                  <input type="file" @change="onFileChange" multiple />
+                  <div v-if="form.images.length" class="images-box">
+                    <h3>Selected Images:</h3>
+                    <ul>
+                      <li v-for="(image, index) in form.images" :key="index">
+                        <!-- getImageUrl(image.url) -->
+                        <img
+                          :src="image.url"
+                          :alt="'Image ' + (index + 1)"
+                          width="100"
+                        />
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </a-form-model-item>
+              </a-form-model-item>
+            </div>
           </a-form-model>
         </a-modal>
       </div>
@@ -135,22 +151,24 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "Type",
-    dataIndex: "type",
+    title: "Short Description",
+    dataIndex: "short_description",
     sorter: true,
     ellipsis: true,
   },
   {
-    title: "Description",
-    dataIndex: "description",
+    title: "City",
+    dataIndex: "city.name",
+
     sorter: true,
     ellipsis: true,
+    // scopedSlots: { customRender: "city" },
   },
   {
-    title: "Image",
-    dataIndex: "image",
+    title: "Rating",
+    dataIndex: "rating",
     sorter: true,
-    scopedSlots: { customRender: "image" },
+    ellipsis: true,
   },
   {
     title: "Actions",
@@ -173,6 +191,8 @@ export default {
       image: "",
       imgLoading: "",
       pagination: {},
+      amenities: [],
+      cities: [],
       loading: false,
       columns,
       renderingFor: "Add",
@@ -192,10 +212,17 @@ export default {
             trigger: "blur",
           },
         ],
-        type: [
+        city_id: [
           {
             required: true,
-            message: "Hotel Type is required!",
+            message: "Hotel city is required!",
+            trigger: "blur",
+          },
+        ],
+        short_description: [
+          {
+            required: true,
+            message: "Hotel short description is required!",
             trigger: "blur",
           },
         ],
@@ -205,8 +232,23 @@ export default {
   mounted() {
     // console.log(this.$axios);
     this.fetch();
+    this.fetchAmenities();
+    this.fetchCities();
   },
   methods: {
+    handleAmenitiesChange(value) {
+      console.log(`selected ${value}`);
+    },
+    async fetchAmenities() {
+      let res = await this.$axios.get("amenity/all?type=hotel");
+      let amenities = res.data.data.response.amenities;
+      this.amenities = amenities;
+    },
+    async fetchCities() {
+      let res = await this.$axios.get("city");
+      let cities = res.data.data.response.data;
+      this.cities = cities;
+    },
     getImageUrl(imagePath) {
       let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
       return url;
@@ -267,22 +309,20 @@ export default {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           this.confirmLoading = true;
-          let form = this.form;
-          if (form.id >= 0) {
+          if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            this.form.images.forEach((image) => {
-              formData.append("image[]", image.file);
-            });
-            formData.append("featured_image", this.form.image);
+            formData.append("id", this.form.id);
+            formData.append("featured_image", this.form.featured_image);
+            formData.append("city_id", this.form.city_id);
+            formData.append("amenities[]", this.form.amenities);
             formData.append("name", this.form.name);
-            formData.append("type", this.form.type);
-            formData.append("description", this.form.description);
+            formData.append("rating", this.form.rating);
+            formData.append("short_description", this.form.short_description);
+            for (let [key, value] of formData.entries()) {
+              console.log(`${key}:  ${typeof value}`);
+            }
             try {
-              console.log(data, this.form.image);
-              // let res = await this.$axios.put(
-              //   `hotel/${form.id}?name=${this.form.name}&&type=${form.type}&&description=${form.description}&&image=${form.image}`
-              // );
-              let res = await this.$axios.put(`hotel/${form.id}`, formData);
+              let res = await this.$axios.post(`hotel/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
                   message: "Hotel Updated Successfully",
@@ -296,12 +336,22 @@ export default {
               this.handleCancel();
             }
           }
-          if (!form.id) {
+          if (this.renderingFor == "Add") {
             const formData = new FormData();
-            formData.append("image", this.form.image);
+            // this.form.images.forEach((image, index) => {
+            //   formData.append(`images[${index}]`, image.file);
+            // });
+            formData.append(`images[]`, JSON.stringify(this.form.images));
+
+            formData.append("city_id", this.form.city_id);
+            formData.append("featured_image", this.form.featured_image);
+            formData.append("amenities[]", JSON.stringify(this.form.amenities));
             formData.append("name", this.form.name);
-            formData.append("type", this.form.type);
-            formData.append("description", this.form.description);
+            formData.append("rating", this.form.rating);
+            formData.append("short_description", this.form.short_description);
+            for (let [key, value] of formData.entries()) {
+              console.log(`${key}:  ${typeof value}`);
+            }
             try {
               let res = await this.$axios.post("hotel", formData);
 
@@ -324,11 +374,27 @@ export default {
       });
     },
     handleCancel(e) {
-      this.form = {};
+      this.form = {
+        name: "",
+        rating: undefined,
+        city_id: undefined,
+        amenities: [],
+        short_description: "",
+        images: [],
+        featured_image: null,
+      };
       this.visible = false;
     },
     handleItemEdit(val) {
-      this.form = val;
+      this.renderingFor = "Edit";
+      this.form = {
+        id: val.id,
+        name: val.name,
+        rating: Number(val.rating),
+        city_id: val.city_id,
+        amenities: val.amenities,
+        short_description: val.short_description,
+      };
       this.showModal();
     },
     async handleItemDelete(val) {
@@ -373,12 +439,21 @@ export default {
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
 .images-box {
-  display: flex;
-  list-style-type: none;
-  ul{
+  ul {
     padding: 0.5rem;
-    li{
+    list-style: none;
+    display: flex;
+    max-width: 100%;
+    flex-wrap: wrap;
+    li {
       margin: 1rem;
+
+      img {
+        box-shadow: -1px 0px 5px 6px #cbc8c8;
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+      }
     }
   }
 }

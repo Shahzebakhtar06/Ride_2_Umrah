@@ -33,6 +33,12 @@
             <span>Amenities</span>
           </nuxt-link>
         </a-menu-item>
+        <a-menu-item key="admin-addons">
+          <nuxt-link :to="{ name: 'admin-addons' }">
+            <i class="fa-solid fa-building-circle-check"></i>
+            <span>Addons</span>
+          </nuxt-link>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
