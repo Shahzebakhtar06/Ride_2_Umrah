@@ -254,6 +254,7 @@ export default {
       return url;
     },
     handleFeaturedImageChange(event) {
+      this.form.featured_image = null;
       this.form.featured_image = event.target.files[0];
     },
     handleImagesChange(event) {
@@ -314,7 +315,7 @@ export default {
             formData.append("id", this.form.id);
             formData.append("featured_image", this.form.featured_image);
             formData.append("city_id", this.form.city_id);
-            formData.append("amenities[]", this.form.amenities);
+            formData.append("amenities[]", [this.form.amenities]);
             formData.append("name", this.form.name);
             formData.append("rating", this.form.rating);
             formData.append("short_description", this.form.short_description);
@@ -338,20 +339,15 @@ export default {
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            // this.form.images.forEach((image, index) => {
-            //   formData.append(`images[${index}]`, image.file);
-            // });
-            formData.append(`images[]`, JSON.stringify(this.form.images));
-
+            this.form.images.forEach((image, index) => {
+              formData.append(`images[${index}]`, image.file);
+            });
             formData.append("city_id", this.form.city_id);
             formData.append("featured_image", this.form.featured_image);
-            formData.append("amenities[]", JSON.stringify(this.form.amenities));
+            // formData.append("amenities[]",  JSON.stringify(this.form.amenities));
             formData.append("name", this.form.name);
             formData.append("rating", this.form.rating);
             formData.append("short_description", this.form.short_description);
-            for (let [key, value] of formData.entries()) {
-              console.log(`${key}:  ${typeof value}`);
-            }
             try {
               let res = await this.$axios.post("hotel", formData);
 
