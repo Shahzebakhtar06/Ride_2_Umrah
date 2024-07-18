@@ -33,9 +33,6 @@
                 </div>
               </div>
             </div>
-            <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
-            </div>
           </a-table>
         </div>
         <a-modal
@@ -96,11 +93,7 @@
                 placeholder="short Description"
               />
             </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Visa Images"
-              prop="images"
-            >
+            <a-form-model-item has-feedback label="Visa Images" prop="images">
               <div class="image-uploader">
                 <input type="file" @change="onFileChange" multiple />
                 <div v-if="packageImages.length" class="images-box">
@@ -133,8 +126,20 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "Type",
-    dataIndex: "type",
+    title: "Price",
+    dataIndex: "price",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Rating",
+    dataIndex: "rating",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Short Description",
+    dataIndex: "short_description",
     sorter: true,
     ellipsis: true,
   },
@@ -143,12 +148,6 @@ const columns = [
     dataIndex: "description",
     sorter: true,
     ellipsis: true,
-  },
-  {
-    title: "Image",
-    dataIndex: "image",
-    sorter: true,
-    scopedSlots: { customRender: "image" },
   },
   {
     title: "Actions",
@@ -162,9 +161,7 @@ export default {
   middleware: "checkAuth",
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add"
-        ? "Add New Visa"
-        : "Edit Your Visa";
+      return this.renderingFor == "Add" ? "Add New Visa" : "Edit Your Visa";
     },
   },
   data() {

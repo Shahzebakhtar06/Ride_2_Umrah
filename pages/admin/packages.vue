@@ -133,8 +133,20 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "Type",
-    dataIndex: "type",
+    title: "Price",
+    dataIndex: "price",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Rating",
+    dataIndex: "rating",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Short Description",
+    dataIndex: "short_description",
     sorter: true,
     ellipsis: true,
   },
@@ -143,12 +155,6 @@ const columns = [
     dataIndex: "description",
     sorter: true,
     ellipsis: true,
-  },
-  {
-    title: "Image",
-    dataIndex: "image",
-    sorter: true,
-    scopedSlots: { customRender: "image" },
   },
   {
     title: "Actions",
@@ -336,7 +342,13 @@ export default {
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
-      this.form = val;
+      this.form = {
+        id: val.id,
+        from: val.from.id,
+        to: val.to.id,
+        price: val.price,
+        car: val.car_id,
+      };
       this.showModal();
     },
     async handleItemDelete(val) {

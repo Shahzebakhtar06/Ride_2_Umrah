@@ -33,6 +33,9 @@
                 </div>
               </div>
             </div>
+            <div slot="Cars" slot-scope="item">
+              {{ item.model }} ({{ item.type }})
+            </div>
           </a-table>
         </div>
         <a-modal
@@ -90,7 +93,7 @@
                   :value="item.id"
                   :key="item.id"
                 >
-                  {{ item.model }}   ({{ item.type }})
+                  {{ item.model }} ({{ item.type }})
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -114,8 +117,28 @@ import Cities from "./cities.vue";
 
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "From",
+    dataIndex: "from.name",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "To",
+    dataIndex: "to.name",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Car",
+    dataIndex: "car",
+    sorter: true,
+    ellipsis: true,
+    scopedSlots: { customRender: "Cars" },
+  },
+
+  {
+    title: "Price",
+    dataIndex: "price",
     sorter: true,
     ellipsis: true,
   },
@@ -219,7 +242,10 @@ export default {
               // ${form.id}?name=${this.form.name}
               const formData = new FormData();
               formData.append("id", form.id);
-              formData.append("name", form.name);
+              formData.append("from", form.from);
+              formData.append("to", form.to);
+              formData.append("price", form.price);
+              formData.append("car", form.car);
               let res = await this.$axios.post(`fare/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -228,15 +254,30 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Fare Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Fare Updating Failed",
+                message: errorMessage,
               });
               this.handleCancel();
             }
           }
           if (this.renderingFor == "Add") {
             try {
-              let res = await this.$axios.post(`fare?name=${this.form.name}`);
+              const formData = new FormData();
+
+              formData.append("from", form.from);
+              formData.append("to", form.to);
+              formData.append("price", form.price);
+              formData.append("car_id", form.car);
+              let res = await this.$axios.post(`fare`, formData);
               if (res.status == 201) {
                 this.$notification.success({
                   message: "Fare Created Successfully",
@@ -244,8 +285,17 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Fare Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Fare Creation Failed",
+                message: errorMessage,
               });
               this.handleCancel();
             }
@@ -261,7 +311,13 @@ export default {
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
-      this.form = val;
+      this.form = {
+        id: val.id,
+        from: val.from.id,
+        to: val.to.id,
+        price: val.price,
+        car: val.car_id,
+      };
       this.showModal();
     },
     async handleItemDelete(val) {
