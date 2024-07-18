@@ -89,7 +89,11 @@
                 placeholder="Please select"
                 @change="handleAmenitiesChange"
               >
-                <a-select-option v-for="item in amenities" :key="item.id">
+                <a-select-option
+                  v-for="item in amenities"
+                  :value="item.id"
+                  :key="item.id"
+                >
                   {{ item.name }}
                 </a-select-option>
               </a-select>
@@ -111,30 +115,25 @@
             >
               <input type="file" @change="handleFeaturedImageChange" />
             </a-form-model-item>
-            <div v-if="renderingFor == 'Add'">
-              <a-form-model-item
-                has-feedback
-                label="Hotel Images"
-                prop="images"
-              >
-                <div class="image-uploader">
-                  <input type="file" @change="onFileChange" multiple />
-                  <div v-if="form.images.length" class="images-box">
-                    <h3>Selected Images:</h3>
-                    <ul>
-                      <li v-for="(image, index) in form.images" :key="index">
-                        <!-- getImageUrl(image.url) -->
-                        <img
-                          :src="image.url"
-                          :alt="'Image ' + (index + 1)"
-                          width="100"
-                        />
-                      </li>
-                    </ul>
-                  </div>
+
+            <a-form-model-item has-feedback label="Hotel Images" prop="images">
+              <div class="image-uploader">
+                <input type="file" @change="onFileChange" multiple />
+                <div v-if="hotelImages.length" class="images-box">
+                  <h3>Selected Images:</h3>
+                  <ul>
+                    <li v-for="(image, index) in hotelImages" :key="index">
+                      <!-- getImageUrl(image.url) -->
+                      <img
+                        :src="image.url"
+                        :alt="'Image ' + (index + 1)"
+                        width="100"
+                      />
+                    </li>
+                  </ul>
                 </div>
-              </a-form-model-item>
-            </div>
+              </div>
+            </a-form-model-item>
           </a-form-model>
         </a-modal>
       </div>
@@ -193,6 +192,7 @@ export default {
       pagination: {},
       amenities: [],
       cities: [],
+      hotelImages: [],
       loading: false,
       columns,
       renderingFor: "Add",
@@ -258,15 +258,15 @@ export default {
       this.form.featured_image = event.target.files[0];
     },
     handleImagesChange(event) {
-      this.form.images = event.target.files;
+      this.hotelImages = event.target.files;
     },
     onFileChange(event) {
       const files = event.target.files;
-      this.form.images = []; // Clear previous images
+      this.hotelImages = []; // Clear previous images
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.form.images.push({ file: files[i], url: e.target.result });
+          this.hotelImages.push({ file: files[i], url: e.target.result });
         };
         reader.readAsDataURL(files[i]);
       }
@@ -315,10 +315,16 @@ export default {
             formData.append("id", this.form.id);
             formData.append("featured_image", this.form.featured_image);
             formData.append("city_id", this.form.city_id);
-            this.form.amenities.map((el,index)=>{
-              formData.append(`amenities[${index}]`,el)
-            })
-            // formData.append("amenities[]", [this.form.amenities]);
+
+            this.form.amenities.map((el, index) => {
+              formData.append(`amenities[${index}]`, el);
+            });
+
+            if (this.hotelImages.length) {
+              this.hotelImages.forEach((image, index) => {
+                formData.append(`images[${index}]`, image.file);
+              });
+            }
             formData.append("name", this.form.name);
             formData.append("rating", this.form.rating);
             formData.append("short_description", this.form.short_description);
@@ -342,12 +348,15 @@ export default {
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            this.form.images.forEach((image, index) => {
-              formData.append(`images[${index}]`, image.file);
+            if (this.hotelImages.length) {
+              this.hotelImages.forEach((image, index) => {
+                formData.append(`images[${index}]`, image.file);
+              });
+            }
+
+            this.form.amenities.map((el, index) => {
+              formData.append(`amenities[${index}]`, el);
             });
-            this.form.amenities.map((el,index)=>{
-              formData.append(`amenities[${index}]`,el)
-            })
             formData.append("city_id", this.form.city_id);
             formData.append("featured_image", this.form.featured_image);
 
@@ -395,7 +404,7 @@ export default {
         name: val.name,
         rating: Number(val.rating),
         city_id: val.city_id,
-        amenities: val.amenities,
+        amenities: val.amenities.map((el) => el.id),
         short_description: val.short_description,
       };
       this.showModal();

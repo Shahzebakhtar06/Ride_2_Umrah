@@ -175,7 +175,7 @@
     },
     methods: {
       getImageUrl(imagePath) {
-        let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
+        let url = "https://expedia-api.savvyskymart.com/uploads/addons/" + imagePath;
         return url;
       },
       onFileChange(event) {

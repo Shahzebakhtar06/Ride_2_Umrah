@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div id="add-edit-room" class="admin-layout">
+    <div id="add-edit-fare" class="admin-layout">
       <div class="page-header">
-        <div class="title">Manage Your Rooms</div>
+        <div class="title">Manage Your Fares</div>
         <div class="add-btn">
           <a-button type="primary" @click="showModal('Add')">
-            Add New Room
+            Add New Fare
           </a-button>
         </div>
       </div>
@@ -49,58 +49,58 @@
             :labelCol="{ span: 5 }"
             :wrapperCol="{ span: 18 }"
           >
-            <a-form-model-item has-feedback label="Room Name" prop="name">
-              <a-input
-                v-model="form.name"
-                type="text"
-                autocomplete="off"
-                placeholder="Room Name"
-              />
-            </a-form-model-item>
-            <a-form-model-item has-feedback label="Hotel" prop="hotel_id">
+            <a-form-model-item has-feedback label="From" prop="from">
               <a-select
-                v-model="form.hotel_id"
+                v-model="form.from"
                 style="width: 100%"
                 placeholder="Please select"
-                @change="handleAmenitiesChange"
               >
-                <a-select-option v-for="item in hotels" :key="item.id">
+                <a-select-option
+                  v-for="item in cities"
+                  :value="item.id"
+                  :key="item.id"
+                >
                   {{ item.name }}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Room Rating" prop="rating">
-              <a-input-number
+            <a-form-model-item has-feedback label="To" prop="to">
+              <a-select
+                v-model="form.to"
                 style="width: 100%"
-                v-model="form.rating"
-                autocomplete="off"
-                placeholder="Hotel Rating"
-              />
+                placeholder="Please select"
+              >
+                <a-select-option
+                  v-for="item in cities"
+                  :value="item.id"
+                  :key="item.id"
+                >
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Room Price" prop="price">
+            <a-form-model-item has-feedback label="Car" prop="car">
+              <a-select
+                v-model="form.car"
+                style="width: 100%"
+                placeholder="Please select"
+              >
+                <a-select-option
+                  v-for="item in cars"
+                  :value="item.id"
+                  :key="item.id"
+                >
+                  {{ item.model }}   ({{ item.type }})
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Price" prop="price">
               <a-input
-                style="width: 100%"
                 v-model="form.price"
+                type="text"
                 autocomplete="off"
-                placeholder="Hotel Price"
+                placeholder="Price"
               />
-            </a-form-model-item>
-            <a-form-model-item has-feedback label="Room Images" prop="images">
-              <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
-                <div v-if="roomImages.length" class="images-box">
-                  <h3>Selected Images:</h3>
-                  <ul>
-                    <li v-for="(image, index) in roomImages" :key="index">
-                      <img
-                        :src="image.url"
-                        :alt="'Image ' + (index + 1)"
-                        width="100"
-                      />
-                    </li>
-                  </ul>
-                </div>
-              </div>
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -110,28 +110,12 @@
 </template>
 
 <script>
+import Cities from "./cities.vue";
+
 const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
-    ellipsis: true,
-  },
-  {
-    title: "Hotel Name",
-    dataIndex: "hotel.name",
-    sorter: true,
-    ellipsis: true,
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
-    sorter: true,
-    ellipsis: true,
-  },
-  {
-    title: "Rating",
-    dataIndex: "rating",
     sorter: true,
     ellipsis: true,
   },
@@ -147,19 +131,18 @@ export default {
   middleware: "checkAuth",
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add" ? "Add New Room" : "Edit Your Room";
+      return this.renderingFor == "Add" ? "Add New Fare" : "Edit Your Fare";
     },
   },
   data() {
     return {
       data: [],
-      hotels: [],
       pagination: {},
-      roomImages: [],
       loading: false,
       columns,
+      cars: [],
       renderingFor: "Add",
-      ModalText: "Content of the modal",
+      cities: [],
       visible: false,
       confirmLoading: false,
       form: {},
@@ -167,7 +150,7 @@ export default {
         name: [
           {
             required: true,
-            message: "Room Name is required!",
+            message: "Fare Name is required!",
             trigger: "blur",
           },
         ],
@@ -177,25 +160,10 @@ export default {
   mounted() {
     // console.log(this.$axios);
     this.fetch();
-    this.fetchHotels();
+    this.fetchCities();
+    this.fetchCars();
   },
   methods: {
-    onFileChange(event) {
-      const files = event.target.files;
-      this.roomImages = []; // Clear previous images
-      for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.roomImages.push({ file: files[i], url: e.target.result });
-        };
-        reader.readAsDataURL(files[i]);
-      }
-    },
-    async fetchHotels() {
-      let res = await this.$axios.get("hotel");
-      let hotels = res.data.data.response.data;
-      this.hotels = hotels;
-    },
     handleTableChange(pagination, filters, sorter) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
@@ -207,6 +175,16 @@ export default {
         sortOrder: sorter.order,
         ...filters,
       });
+    },
+    async fetchCities() {
+      let res = await this.$axios.get("city");
+      let cities = res.data.data.response.data;
+      this.cities = cities;
+    },
+    async fetchCars() {
+      let res = await this.$axios.get("car");
+      let cars = res.data.data.response.data;
+      this.cars = cars;
     },
     fetch(params = {}) {
       this.loading = true;
@@ -226,7 +204,7 @@ export default {
       });
     },
     queryData(params) {
-      return this.$axios.get("room", { params: params });
+      return this.$axios.get("fare", { params: params });
     },
     showModal() {
       this.visible = true;
@@ -238,54 +216,36 @@ export default {
           let form = this.form;
           if (this.renderingFor == "Edit") {
             try {
+              // ${form.id}?name=${this.form.name}
               const formData = new FormData();
               formData.append("id", form.id);
-              if (this.roomImages.length) {
-                this.roomImages.forEach((image, index) => {
-                  formData.append(`images[${index}]`, image.file);
-                });
-              }
               formData.append("name", form.name);
-              formData.append("hotel_id", form.hotel_id);
-              formData.append("rating", form.rating);
-              formData.append("price", form.price);
-              let res = await this.$axios.post(`room/update`, formData);
+              let res = await this.$axios.post(`fare/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Room Updated Successfully",
+                  message: "Fare Updated Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Room Updating Failed",
+                message: "Fare Updating Failed",
               });
               this.handleCancel();
             }
           }
           if (this.renderingFor == "Add") {
             try {
-              const formData = new FormData();
-              if (this.roomImages.length) {
-                this.roomImages.forEach((image, index) => {
-                  formData.append(`images[${index}]`, image.file);
-                });
-              }
-
-              formData.append("name", form.name);
-              formData.append("rating", form.rating);
-              formData.append("hotel_id", form.hotel_id);
-              formData.append("price", form.price);
-              let res = await this.$axios.post(`room`, formData);
-              if (res.status == 200) {
+              let res = await this.$axios.post(`fare?name=${this.form.name}`);
+              if (res.status == 201) {
                 this.$notification.success({
-                  message: "Room Created Successfully",
+                  message: "Fare Created Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Room Creation Failed",
+                message: "Fare Creation Failed",
               });
               this.handleCancel();
             }
@@ -296,7 +256,6 @@ export default {
       });
     },
     handleCancel(e) {
-      this.roomImages = [];
       this.form = {};
       this.visible = false;
     },
@@ -308,7 +267,7 @@ export default {
     async handleItemDelete(val) {
       if (val.id) {
         this.$confirm({
-          title: "Are you sure delete this Room?",
+          title: "Are you sure delete this Fare?",
           okText: "Yes",
           okType: "danger",
           okButtonProps: {
@@ -318,15 +277,15 @@ export default {
           onOk: async () => {
             isDeleting = true; // Set loading to true
             try {
-              let res = await this.$axios.delete(`room/${val.id}`);
+              let res = await this.$axios.delete(`fare/${val.id}`);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Room Deleted Successfully",
+                  message: "Fare Deleted Successfully",
                 });
               }
             } catch (e) {
               this.$notification.error({
-                message: "Room Deletion Failed",
+                message: "Fare Deletion Failed",
               });
             }
             isDeleting = false; // Set loading to true
@@ -343,31 +302,4 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
-.images-box {
-  ul {
-    padding: 0.5rem;
-    list-style: none;
-    display: flex;
-    max-width: 100%;
-    flex-wrap: wrap;
-    li {
-      margin: 1rem;
-
-      img {
-        box-shadow: -1px 0px 5px 6px #cbc8c8;
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-      }
-    }
-  }
-}
-.image-uploader {
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.image-uploader img {
-  margin: 5px;
-}
 </style>

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div id="add-edit-hotels" class="admin-layout">
+    <div id="add-edit-cars" class="admin-layout">
       <div class="page-header">
-        <div class="title">Manage Your Hotels</div>
+        <div class="title">Manage Your Cars</div>
         <div class="add-btn">
           <a-button type="primary" @click="showModal('Add')">
-            Add New Hotel
+            Add New Car
           </a-button>
         </div>
       </div>
@@ -33,6 +33,9 @@
                 </div>
               </div>
             </div>
+            <div slot="image" slot-scope="item">
+              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
+            </div>
           </a-table>
         </div>
         <a-modal
@@ -49,92 +52,80 @@
             :labelCol="{ span: 24 }"
             :wrapperCol="{ span: 24 }"
           >
-            <a-form-model-item has-feedback label="Hotel Name" prop="name">
+            <a-form-model-item has-feedback label="Modal" prop="model">
               <a-input
-                v-model="form.name"
+                v-model="form.model"
                 type="text"
                 autocomplete="off"
-                placeholder="Hotel Name"
+                placeholder="Car Model"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Hotel Rating" prop="rating">
-              <a-input-number
-                style="width: 100%"
-                v-model="form.rating"
+            <a-form-model-item has-feedback label="Type" prop="type">
+              <a-input
+                v-model="form.type"
+                type="text"
                 autocomplete="off"
-                placeholder="Hotel Rating"
+                placeholder="Car Type"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Hotel City" prop="city_id">
-              <a-select
-                v-model="form.city_id"
-                style="width: 100%"
-                placeholder="Please select"
-                @change="handleAmenitiesChange"
-              >
-                <a-select-option v-for="item in cities" :key="item.id">
-                  {{ item.name }}
-                </a-select-option>
+            <a-form-model-item has-feedback label="Sets" prop="seats">
+              <a-input-number
+                v-model="form.seats"
+                type="text"
+                autocomplete="off"
+                placeholder="Car seats"
+              />
+            </a-form-model-item>
+
+            <a-form-model-item
+              has-feedback
+              label="Transmission Type"
+              prop="transmission_type"
+            >
+              <a-select default-value="manual" v-model="form.transmission_type">
+                <a-select-option value="manual"> Manual </a-select-option>
+                <a-select-option value="auto"> auto </a-select-option>
               </a-select>
             </a-form-model-item>
             <a-form-model-item
               has-feedback
-              label="Hotel Amenities"
-              prop="amenities"
+              label="Luggage Capacity"
+              prop="luggage_capacity"
             >
-              <a-select
-                mode="multiple"
-                v-model="form.amenities"
-                style="width: 100%"
-                placeholder="Please select"
-                @change="handleAmenitiesChange"
-              >
-                <a-select-option v-for="item in amenities" :key="item.id">
-                  {{ item.name }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Hotel Short Description"
-              prop="short_description"
-            >
-              <a-textarea
-                v-model="form.short_description"
-                placeholder="Hotel Short Description"
+              <a-input
+                v-model="form.luggage_capacity"
+                type="text"
+                autocomplete="off"
+                placeholder="Luggage Capacity"
               />
             </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Hotel Featured Images"
-              prop="featured_image"
-            >
-              <input type="file" @change="handleFeaturedImageChange" />
+            <a-form-model-item has-feedback label="Mile Age" prop="mile_age">
+              <a-input
+                v-model="form.mile_age"
+                type="text"
+                autocomplete="off"
+                placeholder="Mile Age"
+              />
             </a-form-model-item>
-            <div v-if="renderingFor == 'Add'">
-              <a-form-model-item
-                has-feedback
-                label="Hotel Images"
-                prop="images"
-              >
-                <div class="image-uploader">
-                  <input type="file" @change="onFileChange" multiple />
-                  <div v-if="form.images.length" class="images-box">
-                    <h3>Selected Images:</h3>
-                    <ul>
-                      <li v-for="(image, index) in form.images" :key="index">
-                        <!-- getImageUrl(image.url) -->
-                        <img
-                          :src="image.url"
-                          :alt="'Image ' + (index + 1)"
-                          width="100"
-                        />
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </a-form-model-item>
-            </div>
+            <a-form-model-item has-feedback label="Address" prop="address">
+              <a-input
+                v-model="form.address"
+                type="text"
+                autocomplete="off"
+                placeholder="Address"
+              />
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="rating" prop="rating">
+              <a-input-number
+                v-model="form.rating"
+                type="text"
+                autocomplete="off"
+                placeholder="Rating"
+              />
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Car Image" prop="image">
+              <input type="file" @change="onFileChange" />
+            </a-form-model-item>
           </a-form-model>
         </a-modal>
       </div>
@@ -145,30 +136,46 @@
 <script>
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name",
+    title: "Model",
+    dataIndex: "model",
     sorter: true,
     ellipsis: true,
   },
   {
-    title: "Short Description",
-    dataIndex: "short_description",
+    title: "Type",
+    dataIndex: "type",
     sorter: true,
     ellipsis: true,
   },
   {
-    title: "City",
-    dataIndex: "city.name",
-
+    title: "Address",
+    dataIndex: "address",
     sorter: true,
     ellipsis: true,
-    // scopedSlots: { customRender: "city" },
   },
   {
     title: "Rating",
     dataIndex: "rating",
     sorter: true,
     ellipsis: true,
+  },
+  {
+    title: "Seats",
+    dataIndex: "seats",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Transmission Type",
+    dataIndex: "transmission_type",
+    sorter: true,
+    ellipsis: true,
+  },
+  {
+    title: "Image",
+    dataIndex: "image",
+    sorter: true,
+    scopedSlots: { customRender: "image" },
   },
   {
     title: "Actions",
@@ -182,7 +189,7 @@ export default {
   middleware: "checkAuth",
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add" ? "Add New Hotel" : "Edit Your Hotel";
+      return this.renderingFor == "Add" ? "Add New Car" : "Edit Your Car";
     },
   },
   data() {
@@ -191,8 +198,6 @@ export default {
       image: "",
       imgLoading: "",
       pagination: {},
-      amenities: [],
-      cities: [],
       loading: false,
       columns,
       renderingFor: "Add",
@@ -201,28 +206,21 @@ export default {
       confirmLoading: false,
       form: {
         description: "",
-        images: [],
-        featured_image: null,
+        image: null,
+        transmission_type: "manual",
       },
       rules: {
         name: [
           {
             required: true,
-            message: "Hotel Name is required!",
+            message: "Car Name is required!",
             trigger: "blur",
           },
         ],
-        city_id: [
+        type: [
           {
             required: true,
-            message: "Hotel city is required!",
-            trigger: "blur",
-          },
-        ],
-        short_description: [
-          {
-            required: true,
-            message: "Hotel short description is required!",
+            message: "Car Type is required!",
             trigger: "blur",
           },
         ],
@@ -232,45 +230,17 @@ export default {
   mounted() {
     // console.log(this.$axios);
     this.fetch();
-    this.fetchAmenities();
-    this.fetchCities();
   },
   methods: {
-    handleAmenitiesChange(value) {
-      console.log(`selected ${value}`);
-    },
-    async fetchAmenities() {
-      let res = await this.$axios.get("amenity/all?type=hotel");
-      let amenities = res.data.data.response.amenities;
-      this.amenities = amenities;
-    },
-    async fetchCities() {
-      let res = await this.$axios.get("city");
-      let cities = res.data.data.response.data;
-      this.cities = cities;
-    },
     getImageUrl(imagePath) {
-      let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
+      let url =
+        "https://expedia-api.savvyskymart.com/uploads/cars/" + imagePath;
       return url;
     },
-    handleFeaturedImageChange(event) {
-      this.form.featured_image = null;
-      this.form.featured_image = event.target.files[0];
-    },
-    handleImagesChange(event) {
-      this.form.images = event.target.files;
-    },
     onFileChange(event) {
-      const files = event.target.files;
-      this.form.images = []; // Clear previous images
-      for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.form.images.push({ file: files[i], url: e.target.result });
-        };
-        reader.readAsDataURL(files[i]);
-      }
+      this.form.image = event.target.files[0];
     },
+
     handleTableChange(pagination, filters, sorter) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
@@ -291,17 +261,14 @@ export default {
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
         pagination.total = result.meta.total_pages;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
     },
     queryData(params) {
-      return this.$axios.get("hotel", { params: params });
+      return this.$axios.get("car", { params: params });
     },
     showModal() {
       this.visible = true;
@@ -310,63 +277,59 @@ export default {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
           this.confirmLoading = true;
+          let form = this.form;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            formData.append("id", this.form.id);
-            formData.append("featured_image", this.form.featured_image);
-            formData.append("city_id", this.form.city_id);
-            this.form.amenities.map((el,index)=>{
-              formData.append(`amenities[${index}]`,el)
-            })
-            // formData.append("amenities[]", [this.form.amenities]);
-            formData.append("name", this.form.name);
-            formData.append("rating", this.form.rating);
-            formData.append("short_description", this.form.short_description);
-            for (let [key, value] of formData.entries()) {
-              console.log(`${key}:  ${typeof value}`);
+            if (form.image) {
+              formData.append("image", form.image);
             }
+            formData.append("id", form.id);
+            formData.append("type", this.form.type);
+            formData.append("model", this.form.model);
+            formData.append("seats", this.form.seats);
+            formData.append("luggage_capacity", this.form.luggage_capacity);
+            formData.append("transmission_type", this.form.transmission_type);
+            formData.append("mileage", this.form.mile_age);
+            formData.append("address", this.form.address);
+            formData.append("rating", this.form.rating);
             try {
-              let res = await this.$axios.post(`hotel/update`, formData);
+              let res = await this.$axios.post(`car/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Hotel Updated Successfully",
+                  message: "Car Updated Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Hotel Updating Failed",
+                message: "Car Updating Failed",
               });
               this.handleCancel();
             }
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            this.form.images.forEach((image, index) => {
-              formData.append(`images[${index}]`, image.file);
-            });
-            this.form.amenities.map((el,index)=>{
-              formData.append(`amenities[${index}]`,el)
-            })
-            formData.append("city_id", this.form.city_id);
-            formData.append("featured_image", this.form.featured_image);
-
-            // formData.append("amenities[]",  JSON.stringify(this.form.amenities));
-            formData.append("name", this.form.name);
+            formData.append("image", this.form.image);
+            formData.append("type", this.form.type);
+            formData.append("model", this.form.model);
+            formData.append("seats", this.form.seats);
+            formData.append("luggage_capacity", this.form.luggage_capacity);
+            formData.append("transmission_type", this.form.transmission_type);
+            formData.append("mileage", this.form.mile_age);
+            formData.append("address", this.form.address);
             formData.append("rating", this.form.rating);
-            formData.append("short_description", this.form.short_description);
             try {
-              let res = await this.$axios.post("hotel", formData);
+              let res = await this.$axios.post("car", formData);
 
               if (res.status == 201) {
                 this.$notification.success({
-                  message: "Hotel Created Successfully",
+                  message: "Car Created Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.$notification.error({
-                message: "Hotel Creation Failed",
+                message: "Car Creation Failed",
               });
               this.handleCancel();
             }
@@ -379,32 +342,23 @@ export default {
     handleCancel(e) {
       this.form = {
         name: "",
-        rating: undefined,
-        city_id: undefined,
-        amenities: [],
-        short_description: "",
-        images: [],
-        featured_image: null,
+        image: null,
+        description: "",
+        id: undefined,
+        price: "",
       };
       this.visible = false;
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
-      this.form = {
-        id: val.id,
-        name: val.name,
-        rating: Number(val.rating),
-        city_id: val.city_id,
-        amenities: val.amenities,
-        short_description: val.short_description,
-      };
+      this.form = val;
       this.showModal();
     },
     async handleItemDelete(val) {
       let isDeleting = false;
       if (val.id) {
         this.$confirm({
-          title: "Are you sure delete this Hotel?",
+          title: "Are you sure delete this Car?",
           okText: "Yes",
           okType: "danger",
           okButtonProps: {
@@ -414,17 +368,17 @@ export default {
           onOk: async () => {
             isDeleting = true; // Set loading to true
             try {
-              let res = await this.$axios.delete(`hotel/${val.id}`);
+              let res = await this.$axios.delete(`car/${val.id}`);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Hotel Deleted Successfully",
+                  message: "Car Deleted Successfully",
                 });
               }
               this.fetch();
             } catch (e) {
               console.log(e);
               this.$notification.error({
-                message: "Hotel Deletion Failed",
+                message: "Car Deletion Failed",
               });
             }
             isDeleting = false; // Set loading to true
@@ -441,31 +395,4 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
-.images-box {
-  ul {
-    padding: 0.5rem;
-    list-style: none;
-    display: flex;
-    max-width: 100%;
-    flex-wrap: wrap;
-    li {
-      margin: 1rem;
-
-      img {
-        box-shadow: -1px 0px 5px 6px #cbc8c8;
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-      }
-    }
-  }
-}
-.image-uploader {
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.image-uploader img {
-  margin: 5px;
-}
 </style>

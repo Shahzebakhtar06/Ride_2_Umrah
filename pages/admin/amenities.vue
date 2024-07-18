@@ -170,7 +170,7 @@ export default {
   },
   methods: {
     getImageUrl(imagePath) {
-      let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
+      let url = "https://expedia-api.savvyskymart.com/uploads/amenities/" + imagePath;
       return url;
     },
     onFileChange(event) {

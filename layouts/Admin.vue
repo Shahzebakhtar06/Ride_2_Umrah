@@ -39,6 +39,24 @@
             <span>Addons</span>
           </nuxt-link>
         </a-menu-item>
+        <a-menu-item key="admin-packages">
+          <nuxt-link :to="{ name: 'admin-packages' }">
+            <i class="fa-solid fa-box-open"></i>
+            <span>Packages</span>
+          </nuxt-link>
+        </a-menu-item>
+        <a-menu-item key="admin-visas">
+          <nuxt-link :to="{ name: 'admin-visas' }">
+            <i class="fa-brands fa-cc-visa"></i>
+            <span>Visas</span>
+          </nuxt-link>
+        </a-menu-item>
+        <a-menu-item key="admin-fares">
+          <nuxt-link :to="{ name: 'admin-fares' }">
+            <i class="fa-solid fa-comment-dollar"></i>
+            <span>Fares</span>
+          </nuxt-link>
+        </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
@@ -118,4 +136,4 @@ export default {
     min-height: 100%;
   }
 }
-</style>  
+</style>
