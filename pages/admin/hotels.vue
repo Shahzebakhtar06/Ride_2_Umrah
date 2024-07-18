@@ -315,7 +315,10 @@ export default {
             formData.append("id", this.form.id);
             formData.append("featured_image", this.form.featured_image);
             formData.append("city_id", this.form.city_id);
-            formData.append("amenities[]", [this.form.amenities]);
+            this.form.amenities.map((el,index)=>{
+              formData.append(`amenities[${index}]`,el)
+            })
+            // formData.append("amenities[]", [this.form.amenities]);
             formData.append("name", this.form.name);
             formData.append("rating", this.form.rating);
             formData.append("short_description", this.form.short_description);
@@ -342,8 +345,12 @@ export default {
             this.form.images.forEach((image, index) => {
               formData.append(`images[${index}]`, image.file);
             });
+            this.form.amenities.map((el,index)=>{
+              formData.append(`amenities[${index}]`,el)
+            })
             formData.append("city_id", this.form.city_id);
             formData.append("featured_image", this.form.featured_image);
+
             // formData.append("amenities[]",  JSON.stringify(this.form.amenities));
             formData.append("name", this.form.name);
             formData.append("rating", this.form.rating);

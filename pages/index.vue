@@ -82,9 +82,9 @@ export default {
       if (this.activeTab == "stays") {
         const queryObj = {
           location: formData.location,
-          from: formData.dates[0].format("YYYY-MM-DD"),
-          to: formData.dates[1].format("YYYY-MM-DD"),
-          rooms: JSON.stringify(formData.room),
+          from: formData.dates[0]?.format("YYYY-MM-DD"),
+          to: formData.dates[1]?.format("YYYY-MM-DD"),
+          rooms: JSON.stringify(formData?.room),
         }
         
         this.$router.push({ name: "hotels", query: queryObj});

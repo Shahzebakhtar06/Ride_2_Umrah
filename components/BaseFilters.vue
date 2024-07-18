@@ -160,8 +160,6 @@ export default {
         });
     },
     handleLocationChange(value, fieldName) {
-     
-      console.log(value, fieldName);
       Object.assign(this, {
         data: [],
         fetching: false,
@@ -170,7 +168,6 @@ export default {
     },
     onDateChange(name, val) {
       this.formData[name] = val;
-      console.log(name, val, this.formData);
     },
   },
 };

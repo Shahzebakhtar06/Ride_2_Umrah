@@ -4,11 +4,11 @@
       <a-layout-header>
         <div class="container">
           <div class="row">
-            <div class="col">
-              <img
-                src="https://www.expedia.com/_dms/header/logo.svg?locale=en_US&amp;siteid=1&amp;2&amp;6f9ec7db"
-                alt="Expedia logo"
-              />
+            <div
+              class="col"
+              style="font-size: x-large; color: red; font-weight: 900"
+            >
+              <small>Ride</small>2<small>Umrah</small>
             </div>
             <div class="col fit-width">
               <a-button @click="$router.push('auth/login')">Sign In</a-button>
@@ -21,9 +21,9 @@
           <nuxt />
         </div>
       </a-layout-content>
-      <a-layout-footer>
+      <!-- <a-layout-footer>
         <div class="container">Footer</div>
-      </a-layout-footer>
+      </a-layout-footer> -->
     </a-layout>
   </div>
 </template>

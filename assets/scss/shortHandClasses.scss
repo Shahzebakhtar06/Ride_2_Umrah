@@ -1,6 +1,6 @@
-
+@import '../css/variables.css';
 .container{
-  width: 80%;
+  width: 65%;
   margin: auto;
 }
 .pointer {
@@ -165,7 +165,12 @@
 .text-uppercase {
   text-transform: uppercase;
 }
-
+.text-success{
+  color: var(--theme-success-color) ;
+}
+.bg-success{
+  background-color: var(--theme-success-color) ;
+}
 .col-divider-v {
   > div:not(:last-child) {
     padding-right: 2rem;
