@@ -226,6 +226,27 @@ export default {
             trigger: "blur",
           },
         ],
+        rating: [
+          {
+            required: true,
+            message: "Hotel Rating is required!",
+            trigger: "blur",
+          },
+          {
+            type: "number",
+            max: 10,
+            min: 0,
+            message: "Hotel Rating should be between 0 to 10!",
+            trigger: "change",
+          },
+        ],
+        amenities: [
+          {
+            required: true,
+            message: "Hotel Rating is required!",
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
@@ -340,8 +361,17 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Hotel Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Hotel Updating Failed",
+                message: errorMessage,
               });
               this.handleCancel();
             }
@@ -374,8 +404,17 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Hotel Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Hotel Creation Failed",
+                message: errorMessage,
               });
               this.handleCancel();
             }

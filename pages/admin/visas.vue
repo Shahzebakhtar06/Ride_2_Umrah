@@ -241,8 +241,7 @@ export default {
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
+
         pagination.total = result.meta.total_pages;
         this.loading = false;
         this.data = result.data;
@@ -282,9 +281,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Visa Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Visa Updating Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }
@@ -310,9 +319,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Visa Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Visa Creation Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }

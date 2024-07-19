@@ -291,9 +291,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Package Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Package Updating Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }
@@ -319,9 +329,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Package Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Package Creation Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }

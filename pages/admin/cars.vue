@@ -301,9 +301,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Car Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Car Updating Failed",
+                message: errorMessage,
               });
+           
               this.handleCancel();
             }
           }
@@ -328,9 +338,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Car Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Car Creation Failed",
+                message: errorMessage,
               });
+    
               this.handleCancel();
             }
           }

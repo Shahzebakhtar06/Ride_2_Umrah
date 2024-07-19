@@ -78,7 +78,7 @@
               />
             </a-form-model-item>
             <a-form-model-item has-feedback label="Amenity Image" prop="image">
-              <input type="file"  @change="onFileChange" />
+              <input type="file" @change="onFileChange" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -170,7 +170,8 @@ export default {
   },
   methods: {
     getImageUrl(imagePath) {
-      let url = "https://expedia-api.savvyskymart.com/uploads/amenities/" + imagePath;
+      let url =
+        "https://expedia-api.savvyskymart.com/uploads/amenities/" + imagePath;
       return url;
     },
     onFileChange(event) {
@@ -234,9 +235,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Amenity Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Amenity Updating Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }
@@ -256,9 +267,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Amenity Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Amenity Creation Failed",
+                message: errorMessage,
               });
+
               this.handleCancel();
             }
           }

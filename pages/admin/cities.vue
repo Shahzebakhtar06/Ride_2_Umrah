@@ -168,9 +168,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "City Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "City Updating Failed",
+                message: errorMessage,
               });
+            
               this.handleCancel();
             }
           }
@@ -184,9 +194,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "City Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "City Creation Failed",
+                message: errorMessage,
               });
+            
               this.handleCancel();
             }
           }

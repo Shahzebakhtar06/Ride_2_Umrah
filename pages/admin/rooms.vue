@@ -257,9 +257,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Room Updating Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Room Updating Failed",
+                message: errorMessage,
               });
+           
               this.handleCancel();
             }
           }
@@ -284,9 +294,19 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              let errorMessage = "Room Creation Failed";
+              if (
+                e.response &&
+                e.response.data &&
+                e.response.data.data.response
+              ) {
+                errorMessage = e.response.data.data.response.join(", \n");
+              }
+
               this.$notification.error({
-                message: "Room Creation Failed",
+                message: errorMessage,
               });
+            
               this.handleCancel();
             }
           }
