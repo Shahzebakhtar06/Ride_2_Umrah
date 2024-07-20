@@ -95,11 +95,16 @@
             </a-form-model-item>
             <a-form-model-item has-feedback label="Visa Images" prop="images">
               <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
-                <div v-if="packageImages.length" class="images-box">
+                <input
+                  type="file"
+                  ref="visa_images"
+                  @change="onFileChange"
+                  multiple
+                />
+                <div v-if="visaImages.length" class="images-box">
                   <h3>Selected Images:</h3>
                   <ul>
-                    <li v-for="(image, index) in packageImages" :key="index">
+                    <li v-for="(image, index) in visaImages" :key="index">
                       <img
                         :src="image.url"
                         :alt="'Image ' + (index + 1)"
@@ -122,31 +127,26 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "Price",
     dataIndex: "price",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "Rating",
     dataIndex: "rating",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "Short Description",
     dataIndex: "short_description",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "Description",
     dataIndex: "description",
-    sorter: true,
     ellipsis: true,
   },
   {
@@ -170,7 +170,7 @@ export default {
       image: "",
       imgLoading: "",
       pagination: {},
-      packageImages: [],
+      visaImages: [],
 
       loading: false,
       columns,
@@ -196,6 +196,41 @@ export default {
             trigger: "blur",
           },
         ],
+        description: [
+          {
+            required: true,
+            message: "Visa description is required!",
+            trigger: "blur",
+          },
+        ],
+        rating: [
+          {
+            required: true,
+            message: "Visa rating is required!",
+            trigger: "blur",
+          },
+          {
+            type: "number",
+            max: 10,
+
+            message: "Visa Rating is Should be between 0 to 10!",
+            trigger: "change",
+          },
+        ],
+        price: [
+          {
+            required: true,
+            message: "Visa price is required!",
+            trigger: "blur",
+          },
+        ],
+        short_description: [
+          {
+            required: true,
+            message: "Visa Short Description is required!",
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
@@ -211,38 +246,36 @@ export default {
     },
     onFileChange(event) {
       const files = event.target.files;
-      this.packageImages = []; // Clear previous images
+      this.visaImages = []; // Clear previous images
       for (let i = 0; i < files.length; i++) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          this.packageImages.push({ file: files[i], url: e.target.result });
+          this.visaImages.push({ file: files[i], url: e.target.result });
         };
         reader.readAsDataURL(files[i]);
       }
     },
 
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange(pagination, filters) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
       this.fetch({
         results: pagination.pageSize,
         page: pagination.current,
-        sortField: sorter.field,
-        sortOrder: sorter.order,
         ...filters,
       });
     },
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
         this.data = result.data;
         this.pagination = pagination;
@@ -261,17 +294,26 @@ export default {
           let form = this.form;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            if (this.packageImages.length) {
-              this.packageImages.forEach((image, index) => {
+            if (this.visaImages.length) {
+              this.visaImages.forEach((image, index) => {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-            formData.append("id", form.id);
-            formData.append("name", form.name);
-            formData.append("price", form.price);
-            formData.append("rating", form.rating);
-            formData.append("description", form.description);
-            formData.append("short_description", form.short_description);
+
+            const fields = {
+              id: form.id,
+              price: form.price,
+              name: form.name,
+              rating: form.rating,
+              description: form.description,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post(`visa/update`, formData);
               if (res.status == 200) {
@@ -299,16 +341,25 @@ export default {
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            if (this.packageImages.length) {
-              this.packageImages.forEach((image, index) => {
+            if (this.visaImages.length) {
+              this.visaImages.forEach((image, index) => {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-            formData.append("name", form.name);
-            formData.append("price", form.price);
-            formData.append("rating", form.rating);
-            formData.append("description", form.description);
-            formData.append("short_description", form.short_description);
+            const fields = {
+              price: form.price,
+              name: form.name,
+              rating: form.rating,
+              description: form.description,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
+
             try {
               let res = await this.$axios.post("visa", formData);
 
@@ -341,6 +392,9 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
+      this.$refs.visa_images.value = "";
+      this.visaImages = [];
       this.form = {
         name: "",
         image: null,
@@ -353,6 +407,7 @@ export default {
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
+      this.form.rating = Number(val.rating);
       this.showModal();
     },
     async handleItemDelete(val) {

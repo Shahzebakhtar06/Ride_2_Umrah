@@ -119,19 +119,19 @@ const columns = [
   {
     title: "From",
     dataIndex: "from.name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "To",
     dataIndex: "to.name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Car",
     dataIndex: "car",
-    sorter: true,
+
     ellipsis: true,
     scopedSlots: { customRender: "Cars" },
   },
@@ -139,7 +139,7 @@ const columns = [
   {
     title: "Price",
     dataIndex: "price",
-    sorter: true,
+
     ellipsis: true,
   },
   {
@@ -170,10 +170,31 @@ export default {
       confirmLoading: false,
       form: {},
       rules: {
-        name: [
+        from: [
           {
             required: true,
-            message: "Fare Name is required!",
+            message: "Fare From field is required!",
+            trigger: "blur",
+          },
+        ],
+        to: [
+          {
+            required: true,
+            message: "Fare To field is required!",
+            trigger: "blur",
+          },
+        ],
+        car: [
+          {
+            required: true,
+            message: "Fare Car field is required!",
+            trigger: "blur",
+          },
+        ],
+        price: [
+          {
+            required: true,
+            message: "Fare Price is required!",
             trigger: "blur",
           },
         ],
@@ -200,28 +221,26 @@ export default {
       });
     },
     async fetchCities() {
-      let res = await this.$axios.get("city");
-      let cities = res.data.data.response.data;
+      let res = await this.$axios.get("city/all");
+      let cities = res.data.data.response.cities;
       this.cities = cities;
     },
     async fetchCars() {
-      let res = await this.$axios.get("car");
-      let cars = res.data.data.response.data;
+      let res = await this.$axios.get("car/all");
+      let cars = res.data.data.response.cars;
       this.cars = cars;
     },
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
@@ -241,11 +260,19 @@ export default {
             try {
               // ${form.id}?name=${this.form.name}
               const formData = new FormData();
-              formData.append("id", form.id);
-              formData.append("from", form.from);
-              formData.append("to", form.to);
-              formData.append("price", form.price);
-              formData.append("car", form.car);
+              const fields = {
+                id: form.id,
+                from: form.from,
+                to: form.to,
+                price: form.price,
+                car_id: form.car,
+              };
+
+              Object.entries(fields).forEach(([key, value]) => {
+                if (value) {
+                  formData.append(key, value);
+                }
+              });
               let res = await this.$axios.post(`fare/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -272,11 +299,18 @@ export default {
           if (this.renderingFor == "Add") {
             try {
               const formData = new FormData();
+              const fields = {
+                from: form.from,
+                to: form.to,
+                price: form.price,
+                car_id: form.car,
+              };
 
-              formData.append("from", form.from);
-              formData.append("to", form.to);
-              formData.append("price", form.price);
-              formData.append("car_id", form.car);
+              Object.entries(fields).forEach(([key, value]) => {
+                if (value) {
+                  formData.append(key, value);
+                }
+              });
               let res = await this.$axios.post(`fare`, formData);
               if (res.status == 201) {
                 this.$notification.success({
@@ -306,22 +340,26 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
       this.form = {};
       this.visible = false;
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = {
-        id: val.id,
         from: val.from.id,
         to: val.to.id,
         price: val.price,
         car: val.car_id,
       };
+      if (val.id) {
+        this.form.id = val.id;
+      }
       this.showModal();
     },
     async handleItemDelete(val) {
       if (val.id) {
+        let isDeleting=false;
         this.$confirm({
           title: "Are you sure delete this Fare?",
           okText: "Yes",
@@ -345,6 +383,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
+            this.fetch()
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel

@@ -63,11 +63,11 @@
       <a-layout-header style="background: #fff; padding: 0">
         <div class="row nav-bar">
           <div class="col">
-            <a-icon
+            <!-- <a-icon
               class="trigger"
               :type="collapsed ? 'menu-unfold' : 'menu-fold'"
               @click="() => (collapsed = !collapsed)"
-            />
+            /> -->
           </div>
           <div class="col fit-width">
             <a-button type="primary" @click="handleLogout()"> Logout </a-button>

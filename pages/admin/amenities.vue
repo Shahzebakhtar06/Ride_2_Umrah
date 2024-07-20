@@ -78,7 +78,7 @@
               />
             </a-form-model-item>
             <a-form-model-item has-feedback label="Amenity Image" prop="image">
-              <input type="file" @change="onFileChange" />
+              <input type="file" ref="amenity_image" @change="onFileChange" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -92,25 +92,25 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Type",
     dataIndex: "type",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Description",
     dataIndex: "description",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Image",
     dataIndex: "image",
-    sorter: true,
+
     scopedSlots: { customRender: "image" },
   },
   {
@@ -161,6 +161,13 @@ export default {
             trigger: "blur",
           },
         ],
+        image: [
+          {
+            required: true,
+            message: "Amenity Image is required!",
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
@@ -193,14 +200,13 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
         this.data = result.data;
         this.pagination = pagination;
@@ -219,13 +225,19 @@ export default {
           let form = this.form;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            if (form.image) {
-              formData.append("image", form.image);
-            }
-            formData.append("id", form.id);
-            formData.append("name", form.name);
-            formData.append("type", form.type);
-            formData.append("description", form.description);
+            const fields = {
+              id: form.id,
+              image: form.image,
+              name: form.name,
+              description: form.description,
+              type: form.type,
+            };
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
+
             try {
               let res = await this.$axios.post(`amenity/update`, formData);
               if (res.status == 200) {
@@ -253,10 +265,17 @@ export default {
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            formData.append("image", this.form.image);
-            formData.append("name", this.form.name);
-            formData.append("type", this.form.type);
-            formData.append("description", this.form.description);
+            const fields = {
+              image: form.image,
+              name: form.name,
+              description: form.description,
+              type: form.type,
+            };
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post("amenity", formData);
 
@@ -289,6 +308,8 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
+      this.$refs.amenity_image.value = "";
       this.form = {
         name: "",
         image: null,

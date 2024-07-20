@@ -99,9 +99,9 @@
                 placeholder="Luggage Capacity"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Mile Age" prop="mile_age">
+            <a-form-model-item has-feedback label="Mile Age" prop="mileage">
               <a-input
-                v-model="form.mile_age"
+                v-model="form.mileage"
                 type="text"
                 autocomplete="off"
                 placeholder="Mile Age"
@@ -124,7 +124,7 @@
               />
             </a-form-model-item>
             <a-form-model-item has-feedback label="Car Image" prop="image">
-              <input type="file" @change="onFileChange" />
+              <input type="file" ref="car_image" @change="onFileChange" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -138,43 +138,43 @@ const columns = [
   {
     title: "Model",
     dataIndex: "model",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Type",
     dataIndex: "type",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Address",
     dataIndex: "address",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Rating",
     dataIndex: "rating",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Seats",
     dataIndex: "seats",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Transmission Type",
     dataIndex: "transmission_type",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Image",
     dataIndex: "image",
-    sorter: true,
+
     scopedSlots: { customRender: "image" },
   },
   {
@@ -210,17 +210,52 @@ export default {
         transmission_type: "manual",
       },
       rules: {
-        name: [
+        model: [
           {
             required: true,
-            message: "Car Name is required!",
+            message: "Car Model is required!",
             trigger: "blur",
+          },
+        ],
+        seats: [
+          {
+            required: true,
+            message: "Car Seats is required!",
+            trigger: "blur",
+          },
+        ],
+        mileage: [
+          {
+            required: true,
+            message: "Car MileAge is required!",
+            trigger: "blur",
+          },
+        ],
+        rating: [
+          {
+            required: true,
+            message: "Car Rating is required!",
+            trigger: "blur",
+          },
+          {
+            type: "number",
+            max: 10,
+
+            message: "Car Rating is Should be between 0 to 10!",
+            trigger: "change",
           },
         ],
         type: [
           {
             required: true,
             message: "Car Type is required!",
+            trigger: "blur",
+          },
+        ],
+        image: [
+          {
+            required: true,
+            message: "Car Image is required!",
             trigger: "blur",
           },
         ],
@@ -256,12 +291,13 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
         this.data = result.data;
         this.pagination = pagination;
@@ -280,18 +316,25 @@ export default {
           let form = this.form;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            if (form.image) {
-              formData.append("image", form.image);
-            }
-            formData.append("id", form.id);
-            formData.append("type", this.form.type);
-            formData.append("model", this.form.model);
-            formData.append("seats", this.form.seats);
-            formData.append("luggage_capacity", this.form.luggage_capacity);
-            formData.append("transmission_type", this.form.transmission_type);
-            formData.append("mileage", this.form.mile_age);
-            formData.append("address", this.form.address);
-            formData.append("rating", this.form.rating);
+
+            const fields = {
+              image: form.image,
+              id: form.id,
+              type: form.type,
+              model: form.model,
+              seats: form.seats,
+              luggage_capacity: form.luggage_capacity,
+              transmission_type: form.transmission_type,
+              mileage: form.mileage,
+              address: form.address,
+              rating: form.rating,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post(`car/update`, formData);
               if (res.status == 200) {
@@ -313,21 +356,29 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-           
+
               this.handleCancel();
             }
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            formData.append("image", this.form.image);
-            formData.append("type", this.form.type);
-            formData.append("model", this.form.model);
-            formData.append("seats", this.form.seats);
-            formData.append("luggage_capacity", this.form.luggage_capacity);
-            formData.append("transmission_type", this.form.transmission_type);
-            formData.append("mileage", this.form.mile_age);
-            formData.append("address", this.form.address);
-            formData.append("rating", this.form.rating);
+            const fields = {
+              image: form.image,
+              type: form.type,
+              model: form.model,
+              seats: form.seats,
+              luggage_capacity: form.luggage_capacity,
+              transmission_type: form.transmission_type,
+              mileage: form.mileage,
+              address: form.address,
+              rating: form.rating,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post("car", formData);
 
@@ -350,7 +401,7 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-    
+
               this.handleCancel();
             }
           }
@@ -360,6 +411,8 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
+      this.$refs.car_image.value = "";
       this.form = {
         name: "",
         image: null,
@@ -372,6 +425,7 @@ export default {
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
+      this.form.rating = Number(val.rating);
       this.showModal();
     },
     async handleItemDelete(val) {

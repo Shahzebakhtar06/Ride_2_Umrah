@@ -69,7 +69,7 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
+    
     ellipsis: true,
   },
   {
@@ -129,16 +129,14 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
@@ -158,8 +156,16 @@ export default {
             try {
               // ${form.id}?name=${this.form.name}
               const formData = new FormData();
-              formData.append("id", form.id);
-              formData.append("name", form.name);
+              const fields = {
+              id: form.id,
+              name: form.name,
+            };
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
+         
               let res = await this.$axios.post(`city/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -216,6 +222,7 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
       this.form = {};
       this.visible = false;
     },
@@ -226,6 +233,7 @@ export default {
     },
     async handleItemDelete(val) {
       if (val.id) {
+        let isDeleting=false;
         this.$confirm({
           title: "Are you sure delete this City?",
           okText: "Yes",
@@ -249,6 +257,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
+            this.fetch()
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel

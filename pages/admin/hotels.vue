@@ -70,7 +70,6 @@
                 v-model="form.city_id"
                 style="width: 100%"
                 placeholder="Please select"
-                @change="handleAmenitiesChange"
               >
                 <a-select-option v-for="item in cities" :key="item.id">
                   {{ item.name }}
@@ -87,7 +86,6 @@
                 v-model="form.amenities"
                 style="width: 100%"
                 placeholder="Please select"
-                @change="handleAmenitiesChange"
               >
                 <a-select-option
                   v-for="item in amenities"
@@ -113,12 +111,21 @@
               label="Hotel Featured Images"
               prop="featured_image"
             >
-              <input type="file" @change="handleFeaturedImageChange" />
+              <input
+                type="file"
+                ref="featured_image"
+                @change="handleFeaturedImageChange"
+              />
             </a-form-model-item>
 
             <a-form-model-item has-feedback label="Hotel Images" prop="images">
               <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
+                <input
+                  type="file"
+                  ref="hotel_images"
+                  @change="onFileChange"
+                  multiple
+                />
                 <div v-if="hotelImages.length" class="images-box">
                   <h3>Selected Images:</h3>
                   <ul>
@@ -146,27 +153,23 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "Short Description",
     dataIndex: "short_description",
-    sorter: true,
     ellipsis: true,
   },
   {
     title: "City",
     dataIndex: "city.name",
 
-    sorter: true,
     ellipsis: true,
     // scopedSlots: { customRender: "city" },
   },
   {
     title: "Rating",
     dataIndex: "rating",
-    sorter: true,
     ellipsis: true,
   },
   {
@@ -240,13 +243,13 @@ export default {
             trigger: "change",
           },
         ],
-        amenities: [
-          {
-            required: true,
-            message: "Hotel Rating is required!",
-            trigger: "blur",
-          },
-        ],
+        // amenities: [
+        //   {
+        //     required: true,
+        //     message: "Hotel Rating is required!",
+        //     trigger: "blur",
+        //   },
+        // ],
       },
     };
   },
@@ -257,17 +260,14 @@ export default {
     this.fetchCities();
   },
   methods: {
-    handleAmenitiesChange(value) {
-      console.log(`selected ${value}`);
-    },
     async fetchAmenities() {
       let res = await this.$axios.get("amenity/all?type=hotel");
       let amenities = res.data.data.response.amenities;
       this.amenities = amenities;
     },
     async fetchCities() {
-      let res = await this.$axios.get("city");
-      let cities = res.data.data.response.data;
+      let res = await this.$axios.get("city/all");
+      let cities = res.data.data.response.cities;
       this.cities = cities;
     },
     getImageUrl(imagePath) {
@@ -307,16 +307,14 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
@@ -330,12 +328,24 @@ export default {
     handleOk(e) {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
+          let form=this.form
           this.confirmLoading = true;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            formData.append("id", this.form.id);
-            formData.append("featured_image", this.form.featured_image);
-            formData.append("city_id", this.form.city_id);
+            const fields = {
+              id: form.id,
+              featured_image: form.featured_image,
+              city_id: form.city_id,
+              name: form.name,
+              rating: form.rating,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
 
             this.form.amenities.map((el, index) => {
               formData.append(`amenities[${index}]`, el);
@@ -346,12 +356,7 @@ export default {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-            formData.append("name", this.form.name);
-            formData.append("rating", this.form.rating);
-            formData.append("short_description", this.form.short_description);
-            for (let [key, value] of formData.entries()) {
-              console.log(`${key}:  ${typeof value}`);
-            }
+
             try {
               let res = await this.$axios.post(`hotel/update`, formData);
               if (res.status == 200) {
@@ -387,13 +392,20 @@ export default {
             this.form.amenities.map((el, index) => {
               formData.append(`amenities[${index}]`, el);
             });
-            formData.append("city_id", this.form.city_id);
-            formData.append("featured_image", this.form.featured_image);
 
-            // formData.append("amenities[]",  JSON.stringify(this.form.amenities));
-            formData.append("name", this.form.name);
-            formData.append("rating", this.form.rating);
-            formData.append("short_description", this.form.short_description);
+            const fields = {
+              featured_image: form.featured_image,
+              city_id: form.city_id,
+              name: form.name,
+              rating: form.rating,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post("hotel", formData);
 
@@ -425,6 +437,10 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
+      this.$refs.featured_image.value = "";
+      this.$refs.hotel_images.value = "";
+      this.hotelImages = [];
       this.form = {
         name: "",
         rating: undefined,

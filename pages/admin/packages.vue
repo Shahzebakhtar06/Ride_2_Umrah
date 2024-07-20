@@ -129,31 +129,31 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Price",
     dataIndex: "price",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Rating",
     dataIndex: "rating",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Short Description",
     dataIndex: "short_description",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Description",
     dataIndex: "description",
-    sorter: true,
+
     ellipsis: true,
   },
   {
@@ -205,6 +205,34 @@ export default {
             trigger: "blur",
           },
         ],
+        description: [
+          {
+            required: true,
+            message: "Package description is required!",
+            trigger: "blur",
+          },
+        ],
+        rating: [
+          {
+            required: true,
+            message: "Package rating is required!",
+            trigger: "blur",
+          },
+        ],
+        price: [
+          {
+            required: true,
+            message: "Package price is required!",
+            trigger: "blur",
+          },
+        ],
+        short_description: [
+          {
+            required: true,
+            message: "Package Short Description is required!",
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
@@ -245,14 +273,13 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
         this.data = result.data;
         this.pagination = pagination;
@@ -276,12 +303,21 @@ export default {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-            formData.append("id", form.id);
-            formData.append("name", form.name);
-            formData.append("price", form.price);
-            formData.append("rating", form.rating);
-            formData.append("description", form.description);
-            formData.append("short_description", form.short_description);
+            const fields = {
+              id: form.id,
+              price: form.price,
+              name: form.name,
+              rating: form.rating,
+              description: form.description,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
+
             try {
               let res = await this.$axios.post(`package/update`, formData);
               if (res.status == 200) {
@@ -314,11 +350,19 @@ export default {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-            formData.append("name", form.name);
-            formData.append("price", form.price);
-            formData.append("rating", form.rating);
-            formData.append("description", form.description);
-            formData.append("short_description", form.short_description);
+            const fields = {
+              price: form.price,
+              name: form.name,
+              rating: form.rating,
+              description: form.description,
+              short_description: form.short_description,
+            };
+
+            Object.entries(fields).forEach(([key, value]) => {
+              if (value) {
+                formData.append(key, value);
+              }
+            });
             try {
               let res = await this.$axios.post("package", formData);
 
@@ -351,6 +395,7 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
       this.form = {
         name: "",
         image: null,
@@ -362,13 +407,8 @@ export default {
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
-      this.form = {
-        id: val.id,
-        from: val.from.id,
-        to: val.to.id,
-        price: val.price,
-        car: val.car_id,
-      };
+      this.form = val;
+      this.form.rating = Number(val.rating);
       this.showModal();
     },
     async handleItemDelete(val) {

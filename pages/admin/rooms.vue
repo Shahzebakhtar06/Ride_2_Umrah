@@ -87,7 +87,12 @@
             </a-form-model-item>
             <a-form-model-item has-feedback label="Room Images" prop="images">
               <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
+                <input
+                  type="file"
+                  ref="room_images"
+                  @change="onFileChange"
+                  multiple
+                />
                 <div v-if="roomImages.length" class="images-box">
                   <h3>Selected Images:</h3>
                   <ul>
@@ -114,25 +119,25 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Hotel Name",
     dataIndex: "hotel.name",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Price",
     dataIndex: "price",
-    sorter: true,
+
     ellipsis: true,
   },
   {
     title: "Rating",
     dataIndex: "rating",
-    sorter: true,
+
     ellipsis: true,
   },
   {
@@ -171,6 +176,34 @@ export default {
             trigger: "blur",
           },
         ],
+        hotel_id: [
+          {
+            required: true,
+            message: "Hotel is required!",
+            trigger: "blur",
+          },
+        ],
+        rating: [
+          {
+            required: true,
+            message: "Room Rating is required!",
+            trigger: "blur",
+          },
+          {
+            type: "number",
+            max: 10,
+            required: true,
+            message: "Room Rating is should be between 0 to 10!",
+            trigger: "change",
+          },
+        ],
+        price: [
+          {
+            required: true,
+            message: "Room Price is required!",
+            trigger: "blur",
+          },
+        ],
       },
     };
   },
@@ -192,8 +225,8 @@ export default {
       }
     },
     async fetchHotels() {
-      let res = await this.$axios.get("hotel");
-      let hotels = res.data.data.response.data;
+      let res = await this.$axios.get("hotel/all");
+      let hotels = res.data.data.response.hotels;
       this.hotels = hotels;
     },
     handleTableChange(pagination, filters, sorter) {
@@ -211,16 +244,14 @@ export default {
     fetch(params = {}) {
       this.loading = true;
       this.queryData({
-        results: 10,
         ...params,
       }).then(({ data }) => {
         const pagination = { ...this.pagination };
         let result = data.data.response;
-        // Read total count from server
-        // pagination.total = data.totalCount;
-        pagination.total = result.meta.total_pages;
+        pagination.total = result.meta.total;
+        pagination.pageSize = result.meta.per_page;
+        pagination.page = result.meta.current_page;
         this.loading = false;
-        console.log(data.data.response.data);
         this.data = result.data;
         this.pagination = pagination;
       });
@@ -239,16 +270,24 @@ export default {
           if (this.renderingFor == "Edit") {
             try {
               const formData = new FormData();
-              formData.append("id", form.id);
+              const fields = {
+                id: form.id,
+                name: form.name,
+                hotel_id: form.hotel_id,
+                rating: form.rating,
+                price: form.price,
+              };
+              Object.entries(fields).forEach(([key, value]) => {
+                if (value) {
+                  formData.append(key, value);
+                }
+              });
               if (this.roomImages.length) {
                 this.roomImages.forEach((image, index) => {
                   formData.append(`images[${index}]`, image.file);
                 });
               }
-              formData.append("name", form.name);
-              formData.append("hotel_id", form.hotel_id);
-              formData.append("rating", form.rating);
-              formData.append("price", form.price);
+
               let res = await this.$axios.post(`room/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -269,23 +308,30 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-           
+
               this.handleCancel();
             }
           }
           if (this.renderingFor == "Add") {
             try {
               const formData = new FormData();
+
+              const fields = {
+                name: form.name,
+                hotel_id: form.hotel_id,
+                rating: form.rating,
+                price: form.price,
+              };
+              Object.entries(fields).forEach(([key, value]) => {
+                if (value) {
+                  formData.append(key, value);
+                }
+              });
               if (this.roomImages.length) {
                 this.roomImages.forEach((image, index) => {
                   formData.append(`images[${index}]`, image.file);
                 });
               }
-
-              formData.append("name", form.name);
-              formData.append("rating", form.rating);
-              formData.append("hotel_id", form.hotel_id);
-              formData.append("price", form.price);
               let res = await this.$axios.post(`room`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -306,7 +352,7 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-            
+
               this.handleCancel();
             }
           }
@@ -316,17 +362,22 @@ export default {
       });
     },
     handleCancel(e) {
+      this.$refs.loginForm.resetFields();
+      this.$refs.room_images.value = "";
       this.roomImages = [];
+
       this.form = {};
       this.visible = false;
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
+      this.form.rating = Number(val.rating);
       this.showModal();
     },
     async handleItemDelete(val) {
       if (val.id) {
+        let isDeleting = false;
         this.$confirm({
           title: "Are you sure delete this Room?",
           okText: "Yes",
@@ -350,6 +401,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
+            this.fetch()
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel
