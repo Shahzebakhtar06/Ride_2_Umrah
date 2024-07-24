@@ -251,6 +251,488 @@ export default {
         //   },
         // ],
       },
+      // dummyHotels: [
+      //   {
+      //     name: "Grand Islamabad",
+      //     short_description: "Luxurious hotel with modern amenities",
+      //     rating: 4.5,
+      //     featured_image: new File({
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Karachi Palace",
+      //     short_description: "Elegant rooms and top-notch services",
+      //     rating: 4.7,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Lahore Suites",
+      //     short_description: "Comfortable stay with excellent facilities",
+      //     rating: 4.3,
+      //     featured_image:new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //      }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Peshawar Inn",
+      //     short_description: "Cozy atmosphere with traditional decor",
+      //     rating: 4.1,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Quetta Comfort",
+      //     short_description: "Affordable and convenient location",
+      //     rating: 4.0,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Multan Serenity",
+      //     short_description: "Quiet and peaceful environment",
+      //     rating: 4.2,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Faisalabad Lodge",
+      //     short_description: "Budget-friendly with great amenities",
+      //     rating: 3.8,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Rawalpindi Residency",
+      //     short_description: "Modern hotel with excellent service",
+      //     rating: 4.4,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Sialkot Heritage",
+      //     short_description: "Historic charm with modern comforts",
+      //     rating: 4.1,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Hyderabad Harmony",
+      //     short_description: "Friendly staff and great location",
+      //     rating: 4.3,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Abbottabad Heights",
+      //     short_description: "Scenic views with comfortable rooms",
+      //     rating: 4.2,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Murree Hills Resort",
+      //     short_description: "Perfect getaway in the mountains",
+      //     rating: 4.6,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Skardu Serenity",
+      //     short_description: "Breathtaking landscapes and cozy stay",
+      //     rating: 4.8,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Gilgit Gateway",
+      //     short_description: "Adventure and relaxation combined",
+      //     rating: 4.5,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Sukkur Star",
+      //     short_description: "Convenient location with excellent services",
+      //     rating: 4.0,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Bahawalpur Oasis",
+      //     short_description: "Luxurious and serene environment",
+      //     rating: 4.3,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Gujranwala Comfort Inn",
+      //     short_description: "Friendly service with a homey feel",
+      //     rating: 3.9,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Jhelum River View",
+      //     short_description: "Picturesque setting with modern amenities",
+      //     rating: 4.4,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Sargodha Bloom",
+      //     short_description: "Affordable rates with excellent hospitality",
+      //     rating: 4.0,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Rahim Yar Khan Haven",
+      //     short_description: "Peaceful retreat with great facilities",
+      //     rating: 4.2,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Mardan Delight",
+      //     short_description: "Comfortable stay with friendly staff",
+      //     rating: 4.1,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Chitral Valley Inn",
+      //     short_description: "Nestled in nature with stunning views",
+      //     rating: 4.7,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Swat Pearl",
+      //     short_description: "Elegant and serene surroundings",
+      //     rating: 4.6,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Kohat Comfort",
+      //     short_description: "Modern amenities with a touch of tradition",
+      //     rating: 4.1,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Dera Ismail Khan Retreat",
+      //     short_description: "Cozy and budget-friendly",
+      //     rating: 3.8,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Larkana Elite",
+      //     short_description: "Top-notch services with luxurious rooms",
+      //     rating: 4.3,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Gwadar Bay Resort",
+      //     short_description: "Beachfront luxury with beautiful views",
+      //     rating: 4.5,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Mirpur AJK Serenity",
+      //     short_description: "Peaceful and scenic environment",
+      //     rating: 4.4,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Hunza Panorama",
+      //     short_description: "Spectacular views with excellent amenities",
+      //     rating: 4.8,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      //   {
+      //     name: "Ziarat Heritage Lodge",
+      //     short_description: "Historic charm in a beautiful setting",
+      //     rating: 4.2,
+      //     featured_image: new File( {
+      //       lastModified: 1721529346903,
+      //       lastModifiedDate: new Date(
+      //         "Sun Jul 21 2024 07:35:46 GMT+0500 (Pakistan Standard Time)"
+      //       ),
+      //       name: "ride2umrah-logo.jpg",
+      //       size: 50810,
+      //       type: "image/jpeg",
+      //       webkitRelativePath: "",
+      //     }),
+      //     city_id: 4,
+      //   },
+      // ],
     };
   },
   mounted() {
@@ -258,8 +740,16 @@ export default {
     this.fetch();
     this.fetchAmenities();
     this.fetchCities();
+    // this.addDummyHotels();
   },
   methods: {
+    addDummyHotels() {
+      console.log(this.dummyHotels);
+      // this.dummyHotels.forEach(async (el) => {
+      //   this.form = el;
+      //   // await this.handleOk();
+      // });
+    },
     async fetchAmenities() {
       let res = await this.$axios.get("amenity/all?type=hotel");
       let amenities = res.data.data.response.amenities;
@@ -277,6 +767,7 @@ export default {
     handleFeaturedImageChange(event) {
       this.form.featured_image = null;
       this.form.featured_image = event.target.files[0];
+      console.log(this.form.featured_image);
     },
     handleImagesChange(event) {
       this.hotelImages = event.target.files;
@@ -325,10 +816,10 @@ export default {
     showModal() {
       this.visible = true;
     },
-    handleOk(e) {
+    async handleOk(e) {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          let form=this.form
+          let form = this.form;
           this.confirmLoading = true;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
@@ -346,10 +837,11 @@ export default {
                 formData.append(key, value);
               }
             });
-
-            this.form.amenities.map((el, index) => {
-              formData.append(`amenities[${index}]`, el);
-            });
+            if (this.form.amenities) {
+              this.form.amenities.map((el, index) => {
+                formData.append(`amenities[${index}]`, el);
+              });
+            }
 
             if (this.hotelImages.length) {
               this.hotelImages.forEach((image, index) => {
@@ -365,7 +857,10 @@ export default {
                 });
               }
               this.handleCancel();
+              this.fetch();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Hotel Updating Failed";
               if (
                 e.response &&
@@ -388,10 +883,11 @@ export default {
                 formData.append(`images[${index}]`, image.file);
               });
             }
-
-            this.form.amenities.map((el, index) => {
-              formData.append(`amenities[${index}]`, el);
-            });
+            if (this.form.amenities) {
+              this.form.amenities.map((el, index) => {
+                formData.append(`amenities[${index}]`, el);
+              });
+            }
 
             const fields = {
               featured_image: form.featured_image,
@@ -414,8 +910,11 @@ export default {
                   message: "Hotel Created Successfully",
                 });
               }
+              this.fetch();
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Hotel Creation Failed";
               if (
                 e.response &&

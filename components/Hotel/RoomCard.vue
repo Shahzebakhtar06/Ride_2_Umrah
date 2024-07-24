@@ -51,7 +51,7 @@ export default {
   props: { details: Object },
   methods: {
     goToReservePage() {
-      this.$router.push("/room-reserve?id=" + 1);
+      this.$router.push("/hotels/room-reserve?id=" + 1);
     },
   },
 };

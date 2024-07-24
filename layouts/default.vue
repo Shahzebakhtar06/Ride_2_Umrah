@@ -8,7 +8,12 @@
               class="col"
               style="font-size: x-large; color: red; font-weight: 900"
             >
-              <small>Ride</small>2<small>Umrah</small>
+              <img
+                src="~/assets/svg/ride2umrah-logo-transparent.png"
+                width="80"
+                height="70"
+                alt=""
+              />
             </div>
             <div class="col fit-width">
               <a-button @click="$router.push('auth/login')">Sign In</a-button>

@@ -323,6 +323,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Visa Updating Failed";
               if (
                 e.response &&
@@ -370,6 +372,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Visa Creation Failed";
               if (
                 e.response &&

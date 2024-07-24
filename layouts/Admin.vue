@@ -1,7 +1,6 @@
 <template>
   <a-layout id="admin-layout">
-    <a-layout-sider v-model="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
+    <a-layout-sider>
       <a-menu theme="dark" mode="inline" v-model="selectedKey">
         <a-menu-item key="admin-hotels">
           <nuxt-link :to="{ name: 'admin-hotels' }">
@@ -68,6 +67,12 @@
               :type="collapsed ? 'menu-unfold' : 'menu-fold'"
               @click="() => (collapsed = !collapsed)"
             /> -->
+            <img
+              src="~/assets/svg/ride2umrah-logo-transparent.png"
+              width="100px"
+              height="80px"
+              alt=""
+            />
           </div>
           <div class="col fit-width">
             <a-button type="primary" @click="handleLogout()"> Logout </a-button>
@@ -82,6 +87,7 @@
 </template>
 <script>
 export default {
+  layout: "Admin",
   data() {
     return {
       collapsed: false,

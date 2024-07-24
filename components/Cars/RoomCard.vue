@@ -21,48 +21,26 @@
           </div>
         </a-carousel>
       </div>
-      <div class="details" @click="goToHotelDetails">
+      <div class="details" >
         <div>
           <div class="card-title">
             {{ details.hotel_name }}
           </div>
-          <p>
-            Islamabad
-            {{ details.city_name }}
-          </p>
-          <p v-if="details.guest_liked">
-            <i class="fa-solid fa-thumbs-up"></i> Guests liked: Friendly staff
-          </p>
-          <div>
-            <a class="reserve-now text-success" href="#"
-              >Reserve now, pay later</a
-            >
-            <div class="rating row">
-              <div class="rate col fit-width">
-                {{ details.rating.points }}
-              </div>
-              <div class="col px-1">
-                <div>
-                  <b>{{ details.rating.category }}</b>
-                </div>
-                <div>{{ details.rating.reviews }}</div>
-              </div>
-            </div>
+          <p>{{ details.rating }}</p>
+        </div>
+        <div>
+          <div class="hotel-amenities">
+            <h2>Popular amenities</h2>
+            <ul>
+              <li v-for="(amenity, index) in details.amenities" :key="index">
+                <i :class="amenity.icon"></i> {{ amenity.name }}
+              </li>
+            </ul>
           </div>
         </div>
-
-        <div class="reserve-details">
-          <div class="price-info">
-            <div class="availability bg-success" v-if="details.available > 0">
-              We have {{ details.available }} left at
-            </div>
-            <span class="price">$201 {{ details.price }}</span>
-            <span class="total-price">
-              ${{ details.total_price }} total <br />includes taxes & fees</span
-            >
-          </div>
-        </div>
+        <span class="price">Price {{ details.price }}</span>
       </div>
+      <a-button type="primary" @click="goToReservePage" class="reserve-btn"> Reserve </a-button>
     </div>
   </div>
 </template>
@@ -72,8 +50,8 @@ export default {
   name: "HotelCard",
   props: { details: Object },
   methods: {
-    goToHotelDetails() {
-      this.$router.push("/hotels/" + 1);
+    goToReservePage() {
+      this.$router.push("/hotels/room-reserve?id=" + 1);
     },
   },
 };
@@ -81,15 +59,12 @@ export default {
 
 <style scoped lang="scss">
 .hotel-card {
-  width: 100rem;
-  margin: auto;
-  margin-top: 2rem;
+  width: 300px;
+  margin: 2rem;
   padding: 0;
 
   border: none;
   .card-content {
-    display: flex;
-    flex-direction: row;
     border: 1px solid var(--theme-border-color);
     border-radius: 1.5rem;
     overflow: hidden;
@@ -98,7 +73,7 @@ export default {
       font-weight: 800;
     }
     .image-slider-wrapper {
-      width: 27rem;
+      width: 100%;
 
       .ant-carousel .custom-slick-arrow {
         width: 25px;
@@ -115,32 +90,36 @@ export default {
         opacity: 0.5;
       }
     }
+    .hotel-amenities {
+      width: 100%;
+
+      ul {
+        list-style: none;
+        padding: 0;
+        li {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+
+          i {
+            font-size: 20px;
+            margin-right: 10px;
+          }
+        }
+      }
+    }
     .details {
       padding: 1rem;
       width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 0.3fr;
-      gap: 10px;
-
-      .rating {
-        display: flex;
-        align-items: center;
-        .rate {
-          background: var(--theme-success-color);
-          color: #fff;
-          padding: 0.5rem 1rem;
-          border-radius: 0.5rem;
-        }
-      }
-      .reserve-details {
-        max-width: fit-content;
-        margin-left: auto;
-        margin-top: auto;
-      }
     }
   }
 }
-
+.reserve-btn {
+  margin: 1rem auto;
+  display: block;
+  font-size: large;
+  font-weight: 600;
+}
 .image-slider {
   width: 100%;
   height: 100%;

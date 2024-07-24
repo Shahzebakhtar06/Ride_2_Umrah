@@ -40,6 +40,9 @@
           placeholder="Phone Number"
         />
       </a-form-model-item>
+      <a-form-model-item  style="text-align: center;">
+        <a-button type="primary" > Book Now</a-button>
+      </a-form-model-item>
     </a-form-model>
   </div>
 </template>
@@ -66,12 +69,11 @@ export default {
 </script>
 
 <style lang="scss">
-.ant-input-number-handler-wrap{
+.ant-input-number-handler-wrap {
   display: none !important;
 }
 .reservation-details {
   width: 50%;
   padding: 20px;
 }
-
 </style>

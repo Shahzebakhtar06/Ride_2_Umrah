@@ -281,6 +281,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Fare Creation Failed";
               if (
                 e.response &&
@@ -319,6 +321,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Fare Updating Failed";
               if (
                 e.response &&
@@ -359,7 +363,7 @@ export default {
     },
     async handleItemDelete(val) {
       if (val.id) {
-        let isDeleting=false;
+        let isDeleting = false;
         this.$confirm({
           title: "Are you sure delete this Fare?",
           okText: "Yes",
@@ -383,7 +387,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
-            this.fetch()
+            this.fetch();
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel

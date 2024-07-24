@@ -87,6 +87,18 @@
                 <a-select-option value="auto"> auto </a-select-option>
               </a-select>
             </a-form-model-item>
+            <a-form-model-item has-feedback label="Amenities" prop="amenities">
+              <a-select
+                mode="multiple"
+                v-model="form.amenities"
+                style="width: 100%"
+                placeholder="Please select"
+              >
+                <a-select-option v-for="item in amenities" :key="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
             <a-form-model-item
               has-feedback
               label="Luggage Capacity"
@@ -198,6 +210,7 @@ export default {
       image: "",
       imgLoading: "",
       pagination: {},
+      amenities: [],
       loading: false,
       columns,
       renderingFor: "Add",
@@ -265,8 +278,14 @@ export default {
   mounted() {
     // console.log(this.$axios);
     this.fetch();
+    this.fetchAmenities();
   },
   methods: {
+    async fetchAmenities() {
+      let res = await this.$axios.get("amenity/all?type=car");
+      let amenities = res.data.data.response.amenities;
+      this.amenities = amenities;
+    },
     getImageUrl(imagePath) {
       let url =
         "https://expedia-api.savvyskymart.com/uploads/cars/" + imagePath;
@@ -335,6 +354,11 @@ export default {
                 formData.append(key, value);
               }
             });
+            if (this.form.amenities) {
+              this.form.amenities.map((el, index) => {
+                formData.append(`amenities[${index}]`, el);
+              });
+            }
             try {
               let res = await this.$axios.post(`car/update`, formData);
               if (res.status == 200) {
@@ -345,7 +369,10 @@ export default {
               this.handleCancel();
             } catch (e) {
               let errorMessage = "Car Updating Failed";
+              this.confirmLoading = false;
+
               if (
+                e &&
                 e.response &&
                 e.response.data &&
                 e.response.data.data.response
@@ -379,6 +406,12 @@ export default {
                 formData.append(key, value);
               }
             });
+            if (this.form.amenities) {
+              this.form.amenities.map((el, index) => {
+                formData.append(`amenities[${index}]`, el);
+              });
+            }
+
             try {
               let res = await this.$axios.post("car", formData);
 
@@ -389,6 +422,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Car Creation Failed";
               if (
                 e.response &&

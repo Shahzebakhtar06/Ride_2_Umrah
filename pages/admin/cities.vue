@@ -69,7 +69,7 @@ const columns = [
   {
     title: "Name",
     dataIndex: "name",
-    
+
     ellipsis: true,
   },
   {
@@ -157,15 +157,15 @@ export default {
               // ${form.id}?name=${this.form.name}
               const formData = new FormData();
               const fields = {
-              id: form.id,
-              name: form.name,
-            };
-            Object.entries(fields).forEach(([key, value]) => {
-              if (value) {
-                formData.append(key, value);
-              }
-            });
-         
+                id: form.id,
+                name: form.name,
+              };
+              Object.entries(fields).forEach(([key, value]) => {
+                if (value) {
+                  formData.append(key, value);
+                }
+              });
+
               let res = await this.$axios.post(`city/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
@@ -174,6 +174,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "City Updating Failed";
               if (
                 e.response &&
@@ -186,7 +188,7 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-            
+
               this.handleCancel();
             }
           }
@@ -200,6 +202,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "City Creation Failed";
               if (
                 e.response &&
@@ -212,7 +216,7 @@ export default {
               this.$notification.error({
                 message: errorMessage,
               });
-            
+
               this.handleCancel();
             }
           }
@@ -227,13 +231,13 @@ export default {
       this.visible = false;
     },
     handleItemEdit(val) {
-      this.renderingFor = "Edit"
+      this.renderingFor = "Edit";
       this.form = val;
       this.showModal();
     },
     async handleItemDelete(val) {
       if (val.id) {
-        let isDeleting=false;
+        let isDeleting = false;
         this.$confirm({
           title: "Are you sure delete this City?",
           okText: "Yes",
@@ -257,7 +261,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
-            this.fetch()
+            this.fetch();
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel

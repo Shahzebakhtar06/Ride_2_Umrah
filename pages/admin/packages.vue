@@ -326,7 +326,8 @@ export default {
                 });
               }
               this.handleCancel();
-            } catch (e) {
+            } catch (e) {              this.confirmLoading = false;
+
               let errorMessage = "Package Updating Failed";
               if (
                 e.response &&
@@ -372,7 +373,8 @@ export default {
                 });
               }
               this.handleCancel();
-            } catch (e) {
+            } catch (e) {              this.confirmLoading = false;
+
               let errorMessage = "Package Creation Failed";
               if (
                 e.response &&
@@ -432,7 +434,8 @@ export default {
                 });
               }
               this.fetch();
-            } catch (e) {
+            } catch (e) {              this.confirmLoading = false;
+
               console.log(e);
               this.$notification.error({
                 message: "Package Deletion Failed",

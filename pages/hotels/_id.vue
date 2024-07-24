@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-import RoomCard from "@/components/RoomCard.vue";
+import RoomCard from "@/components/Hotel/RoomCard.vue";
 export default {
   name: "HotelPage",
   components: {

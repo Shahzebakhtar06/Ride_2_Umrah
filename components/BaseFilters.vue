@@ -13,22 +13,21 @@
           </div>
 
           <div class="field">
-            <div class="label" v-if="formData[field.key]">
+            <div class="label">
               {{ field.label }}
             </div>
             <a-select
               :value="formData[field.key]"
-              placeholder="Select Location"
+              :placeholder="field.placeholder"
               style="width: 100%"
-              :filter-option="true"
+              option-filter-prop="children"
               :show-search="true"
-              :not-found-content="fetching ? undefined : null"
-              @search="fetchUser"
+              @search="handleFilterLocation"
               @change="(e, value) => handleLocationChange(e, field.key)"
             >
               <a-spin v-if="fetching" slot="notFoundContent" size="small" />
-              <a-select-option v-for="d in data" :key="d.value">
-                {{ d.text }}
+              <a-select-option v-for="d in filteredLocations" :key="d.id">
+                {{ d.name }}
               </a-select-option>
             </a-select>
           </div>
@@ -46,7 +45,7 @@
               :disabled-date="disabledDate"
               :value="formData[field.key] ? formData[field.key] : null"
               format="YYYY-MM-DD"
-              :placeholder="['Start Time', 'End Time']"
+              :placeholder="['Pick Up Date', 'Drop Off Date']"
               @change="(val, e) => onDateChange(field.key, val)"
             />
           </div>
@@ -81,7 +80,6 @@
 </template>
 
 <script>
-import debounce from "lodash/debounce";
 import moment from "moment";
 export default {
   props: {
@@ -92,16 +90,12 @@ export default {
   },
   data() {
     this.lastFetchId = 0;
-    this.fetchUser = debounce(this.fetchUser, 800);
     return {
       formData: {
         location: undefined,
       },
-      data: [
-        { text: "pakistan", value: "pakistan" },
-        { text: "islamabad", value: "islamabad" },
-        { text: "Rawalpindi", value: "Rawalpindi" },
-      ],
+      searchQuery: "",
+      locations: [],
       rules: {
         name: [
           {
@@ -117,8 +111,20 @@ export default {
           },
         ],
       },
+
       fetching: false,
     };
+  },
+  computed: {
+    filteredLocations() {
+      if (this.searchQuery) {
+        return this.locations.filter((option) =>
+          option.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      } else {
+        return this.locations;
+      }
+    },
   },
   watch: {
     fields: {
@@ -129,35 +135,32 @@ export default {
         });
       },
     },
-  },  
+  },
+  mounted() {
+    this.fetchLocations();
+  },
   methods: {
     disabledDate(current) {
       // Can not select days before today and today
       return current && current < moment().startOf("day");
     },
+    handleFilterLocation(val) {
+      this.searchQuery = val;
+    },
     submitForm() {
+      this.$store.commit("updateFilters", this.formData);
+      console.log(this.$store.state.activeFilters);
+
       this.$emit("submit", this.formData);
     },
-    fetchUser(value) {
-      console.log("fetching user", value);
-      this.lastFetchId += 1;
-      const fetchId = this.lastFetchId;
-      this.data = [];
+    async fetchLocations(value) {
+      this.locations = [];
       this.fetching = true;
-      fetch("https://randomuser.me/api/?results=5")
-        .then((response) => response.json())
-        .then((body) => {
-          if (fetchId !== this.lastFetchId) {
-            // for fetch callback order
-            return;
-          }
-          const data = body.results.map((user) => ({
-            text: `${user.name.first} ${user.name.last}`,
-            value: user.login.username,
-          }));
-          this.data = data;
-          this.fetching = false;
-        });
+      let endPoint = process.env.ApiBaseURL + "city/all";
+      let res = await this.$axios.get(endPoint);
+      let result = res.data.data.response.cities;
+      this.locations = result;
+      this.fetching = false;
     },
     handleLocationChange(value, fieldName) {
       Object.assign(this, {

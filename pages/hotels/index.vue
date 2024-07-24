@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import hotelsCard from "@/components/hotelsCard.vue";
+import hotelsCard from "@/components/Hotel/hotelsCard.vue";
 export default {
   components: {
     hotelsCard,

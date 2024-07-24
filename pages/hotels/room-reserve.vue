@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import ReserveFrom from "@/components/ReserveForm.vue";
-import ReserveRoomCard from "@/components/ReserveRoomCard.vue";
+import ReserveFrom from "@/components/Hotel/ReserveForm.vue";
+import ReserveRoomCard from "@/components/Hotel/ReserveRoomCard.vue";
 
 export default {
   name: "BookingContainer",
@@ -38,5 +38,6 @@ export default {
 <style scoped>
 .booking-container {
   display: flex;
+  justify-content: space-between;
 }
 </style>

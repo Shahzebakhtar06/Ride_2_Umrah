@@ -26,7 +26,9 @@
       </a-form-model-item>
     </a-form-model>
     <a-button @click="handleCancel()"> Cancel </a-button>
-    <a-button :loading="loadingBtn" type="primary" @click="handleLogin()"> login </a-button>
+    <a-button :loading="loadingBtn" type="primary" @click="handleLogin()">
+      login
+    </a-button>
 
     <br />
   </div>
@@ -61,16 +63,16 @@ export default {
   },
   mounted() {
     if (this.$auth.loggedIn) {
-      this.$router.push({ name: "admin-hotels" });
+      window.location.replace("/admin/hotels");
     }
   },
   methods: {
     async handleLogin() {
       this.$refs.loginForm.validate(async (valid) => {
         if (valid) {
-          let res={}
+          let res = {};
           try {
-            this.loadingBtn=true
+            this.loadingBtn = true;
             res = await this.$auth.loginWith("local", {
               data: {
                 email: this.form.email,
@@ -81,16 +83,18 @@ export default {
               this.$notification.success({
                 message: "User Login Successful",
               });
-              this.$router.push({ name: "admin-hotels" });
+              window.location.replace("/admin/hotels");
             } else {
               this.$notification.error({
                 message: "Error",
                 description: res.data.data.statusMessage,
               });
             }
-            this.loadingBtn=false
+            this.loadingBtn = false;
           } catch (e) {
-            console.log(res)
+            this.confirmLoading = false;
+
+            console.log(res);
             this.$notification.error({
               message: "Invalid Credentials",
             });

@@ -253,6 +253,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Addon Updating Failed";
               if (
                 e.response &&
@@ -292,6 +294,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Addon Creation Failed";
               if (
                 e.response &&

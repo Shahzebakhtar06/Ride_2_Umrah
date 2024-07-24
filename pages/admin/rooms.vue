@@ -62,9 +62,20 @@
                 v-model="form.hotel_id"
                 style="width: 100%"
                 placeholder="Please select"
-                @change="handleAmenitiesChange"
               >
                 <a-select-option v-for="item in hotels" :key="item.id">
+                  {{ item.name }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+            <a-form-model-item has-feedback label="Amenities" prop="amenities">
+              <a-select
+                mode="multiple"
+                v-model="form.amenities"
+                style="width: 100%"
+                placeholder="Please select"
+              >
+                <a-select-option v-for="item in amenities" :key="item.id">
                   {{ item.name }}
                 </a-select-option>
               </a-select>
@@ -164,7 +175,7 @@ export default {
       loading: false,
       columns,
       renderingFor: "Add",
-      ModalText: "Content of the modal",
+      amenities: [],
       visible: false,
       confirmLoading: false,
       form: {},
@@ -211,8 +222,14 @@ export default {
     // console.log(this.$axios);
     this.fetch();
     this.fetchHotels();
+    this.fetchAmenities();
   },
   methods: {
+    async fetchAmenities() {
+      let res = await this.$axios.get("amenity/all?type=room");
+      let amenities = res.data.data.response.amenities;
+      this.amenities = amenities;
+    },
     onFileChange(event) {
       const files = event.target.files;
       this.roomImages = []; // Clear previous images
@@ -282,6 +299,12 @@ export default {
                   formData.append(key, value);
                 }
               });
+              if (this.form.amenities) {
+                this.form.amenities.map((el, index) => {
+                  formData.append(`amenities[${index}]`, el);
+                });
+              }
+
               if (this.roomImages.length) {
                 this.roomImages.forEach((image, index) => {
                   formData.append(`images[${index}]`, image.file);
@@ -296,6 +319,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Room Updating Failed";
               if (
                 e.response &&
@@ -327,6 +352,9 @@ export default {
                   formData.append(key, value);
                 }
               });
+              this.form.amenities.map((el, index) => {
+                formData.append(`amenities[${index}]`, el);
+              });
               if (this.roomImages.length) {
                 this.roomImages.forEach((image, index) => {
                   formData.append(`images[${index}]`, image.file);
@@ -340,6 +368,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Room Creation Failed";
               if (
                 e.response &&
@@ -401,7 +431,7 @@ export default {
               });
             }
             isDeleting = false; // Set loading to true
-            this.fetch()
+            this.fetch();
           },
           onCancel() {
             isDeleting = false; // Ensure loading is reset on cancel

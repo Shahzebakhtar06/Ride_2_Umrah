@@ -45,7 +45,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: ["@/plugins/antd-ui",],
+  plugins: ["@/plugins/antd-ui", "@/plugins/persistedState"],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -54,7 +54,7 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "@nuxtjs/auth-next"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/auth-next", "@nuxtjs/dotenv"],
   auth: {
     strategies: {
       local: {
@@ -86,9 +86,6 @@ export default {
       // home: 'admin/dashboard',
     },
     fullPathRedirect: true,
-    token: {
-      prefix: "_token.",
-    },
   },
   axios: {
     baseURL: process.env.ApiBaseURL,

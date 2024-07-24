@@ -247,6 +247,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Amenity Updating Failed";
               if (
                 e.response &&
@@ -286,6 +288,8 @@ export default {
               }
               this.handleCancel();
             } catch (e) {
+              this.confirmLoading = false;
+
               let errorMessage = "Amenity Creation Failed";
               if (
                 e.response &&

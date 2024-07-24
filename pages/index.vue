@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 export default {
   name: "IndexPage",
   components: {},
@@ -36,7 +35,7 @@ export default {
           key: "dates",
           label: "Dates",
           type: "date",
-          value:null,
+          value: null,
           placeholder: "Search Date",
         },
         {
@@ -49,16 +48,22 @@ export default {
       ],
       carsFilters: [
         {
-          key: "location",
-          label: "Where to",
+          key: "from_location",
+          label: "Pick Up",
           type: "select",
-          placeholder: "Search Location",
+          placeholder: "Select Pickup Location",
+        },
+        {
+          key: "to_location",
+          label: "Drop Off",
+          type: "select",
+          placeholder: "Select Drop Off Location",
         },
         {
           key: "dates",
           label: "Dates",
           type: "date",
-          placeholder: "Search Date",
+          placeholder: "Select Date",
         },
       ],
       visaFilters: [
@@ -85,9 +90,18 @@ export default {
           from: formData.dates[0]?.format("YYYY-MM-DD"),
           to: formData.dates[1]?.format("YYYY-MM-DD"),
           rooms: JSON.stringify(formData?.room),
-        }
-        
-        this.$router.push({ name: "hotels", query: queryObj});
+        };
+
+        this.$router.push({ name: "hotels", query: queryObj });
+      } else if (this.activeTab == "cars") {
+        const queryObj = {
+          from_location: formData.from_location,
+          to_location: formData.to_location,
+          from: formData.dates[0]?.format("YYYY-MM-DD"),
+          to: formData.dates[1]?.format("YYYY-MM-DD"),
+        };
+
+        this.$router.push({ name: "cars", query: queryObj });
       }
     },
   },
