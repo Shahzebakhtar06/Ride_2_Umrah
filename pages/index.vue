@@ -8,6 +8,9 @@
         <a-tab-pane key="cars" tab="Cars" force-render>
           <BaseFilters :fields="carsFilters" @submit="handleSubmit" />
         </a-tab-pane>
+        <a-tab-pane key="packages" tab="Packages">
+          <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
+        </a-tab-pane>
         <a-tab-pane key="visa" tab="Visa">
           <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
         </a-tab-pane>
@@ -94,6 +97,15 @@ export default {
 
         this.$router.push({ name: "hotels", query: queryObj });
       } else if (this.activeTab == "cars") {
+        const queryObj = {
+          from_location: formData.from_location,
+          to_location: formData.to_location,
+          from: formData.dates[0]?.format("YYYY-MM-DD"),
+          to: formData.dates[1]?.format("YYYY-MM-DD"),
+        };
+
+        this.$router.push({ name: "cars", query: queryObj });
+      }else if (this.activeTab == "packages") {
         const queryObj = {
           from_location: formData.from_location,
           to_location: formData.to_location,
