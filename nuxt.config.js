@@ -38,9 +38,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     "ant-design-vue/dist/antd.css",
-    "~assets/scss/shortHandClasses.scss",
-    "~assets/scss/ant-design.scss",
-    "~assets/scss/htmlTags.scss",
+    "~/assets/scss/shortHandClasses.scss",
+    "~/assets/scss/ant-design.scss",
+    "~/assets/scss/htmlTags.scss",
     "ant-design-vue/dist/antd.less",
   ],
 

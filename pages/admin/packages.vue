@@ -81,10 +81,7 @@
               label="Description"
               prop="description"
             >
-              <a-textarea
-                v-model="form.description"
-                placeholder="Package Description"
-              />
+              <TextEditor v-model="form.description" />
             </a-form-model-item>
             <a-form-model-item
               has-feedback
@@ -125,6 +122,7 @@
 </template>
 
 <script>
+import TextEditor from "@/components/Custom/TextEditor.vue";
 const columns = [
   {
     title: "Name",
@@ -166,6 +164,7 @@ const columns = [
 export default {
   layout: "Admin",
   middleware: "checkAuth",
+  components: { TextEditor },
   computed: {
     modalTitle() {
       return this.renderingFor == "Add"
@@ -326,7 +325,8 @@ export default {
                 });
               }
               this.handleCancel();
-            } catch (e) {              this.confirmLoading = false;
+            } catch (e) {
+              this.confirmLoading = false;
 
               let errorMessage = "Package Updating Failed";
               if (
@@ -373,7 +373,8 @@ export default {
                 });
               }
               this.handleCancel();
-            } catch (e) {              this.confirmLoading = false;
+            } catch (e) {
+              this.confirmLoading = false;
 
               let errorMessage = "Package Creation Failed";
               if (
@@ -434,7 +435,8 @@ export default {
                 });
               }
               this.fetch();
-            } catch (e) {              this.confirmLoading = false;
+            } catch (e) {
+              this.confirmLoading = false;
 
               console.log(e);
               this.$notification.error({

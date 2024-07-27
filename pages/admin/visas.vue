@@ -78,10 +78,7 @@
               label="Description"
               prop="description"
             >
-              <a-textarea
-                v-model="form.description"
-                placeholder="Visa Description"
-              />
+              <TextEditor v-model="form.description" />
             </a-form-model-item>
             <a-form-model-item
               has-feedback
@@ -123,6 +120,8 @@
 </template>
 
 <script>
+import TextEditor from "@/components/Custom/TextEditor.vue";
+
 const columns = [
   {
     title: "Name",
@@ -159,6 +158,7 @@ const columns = [
 export default {
   layout: "Admin",
   middleware: "checkAuth",
+  components: { TextEditor },
   computed: {
     modalTitle() {
       return this.renderingFor == "Add" ? "Add New Visa" : "Edit Your Visa";
