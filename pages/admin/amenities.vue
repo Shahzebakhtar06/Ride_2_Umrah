@@ -34,7 +34,7 @@
               </div>
             </div>
             <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
+              <img :src="$global.imgBasePath + item" width="60" height="60" alt="" />
             </div>
           </a-table>
         </div>
@@ -176,10 +176,6 @@ export default {
     this.fetch();
   },
   methods: {
-    getImageUrl(imagePath) {
-      let url = "https://expedia-api.savvyskymart.com/" + imagePath;
-      return url;
-    },
     onFileChange(event) {
       this.form.image = event.target.files[0];
     },

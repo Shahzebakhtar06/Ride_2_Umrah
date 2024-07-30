@@ -170,11 +170,6 @@ export default {
     this.fetch();
   },
   methods: {
-    getImageUrl(imagePath) {
-      let url =
-        "https://expedia-api.savvyskymart.com/uploads/pakages/" + imagePath;
-      return url;
-    },
     onFileChange(event) {
       this.form.image = event.target.files[0];
     },

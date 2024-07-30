@@ -42,7 +42,7 @@
               </div>
             </div>
             <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
+              <img :src="$global.imgBasePath + item" width="60" height="60" alt="" />
             </div>
           </a-table>
         </div>
@@ -226,7 +226,7 @@ export default {
             type: "number",
             max: 7,
             min: 0,
-            message: "Package rating is Should be in 0 to 7s.",
+            message: "Package rating is Should be in 0 to 7 .",
             trigger: "blur",
           },
         ],
@@ -257,11 +257,6 @@ export default {
     this.fetch();
   },
   methods: {
-    getImageUrl(imagePath) {
-      let url =
-        "https://expedia-api.savvyskymart.com/uploads/pakages/" + imagePath;
-      return url;
-    },
     onFileChange(event) {
       const files = event.target.files;
       this.packageImages = []; // Clear previous images
@@ -328,7 +323,6 @@ export default {
               short_description: form.short_description,
               is_featured: form.is_featured,
             };
-
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
                 formData.append(key, value);

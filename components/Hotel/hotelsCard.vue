@@ -13,8 +13,8 @@
           <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
-          <div v-for="(src, index) in hotelImages" :key="index">
-            <img :src="imgBasePath + src" alt="Hotel Image" />
+          <div v-for="(img, index) in hotelImages" :key="index">
+            <img :src="$global.imgBasePath + img.name" alt="Hotel Image" />
           </div>
         </a-carousel>
       </div>
@@ -40,7 +40,9 @@
 
         <div class="reserve-details">
           <div class="price-info">
-            <span class="price"> {{ details.price }}</span>
+            <span class="price">
+              Total Price: {{ $global.priceSymbol }}{{ details.price }}
+            </span>
           </div>
         </div>
       </div>
@@ -53,9 +55,7 @@ export default {
   name: "HotelCard",
   props: { details: Object },
   data() {
-    return {
-      imgBasePath: "https://expedia-api.savvyskymart.com/",
-    };
+    return {};
   },
   computed: {
     hotelImages() {
@@ -98,8 +98,9 @@ export default {
         height: 2.5rem;
         font-size: 2.5rem;
         color: #fff;
-        background-color: rgba(31, 45, 61, 0.11);
-        opacity: 0.3;
+        background-color: rgb(31 45 61 / 77%);
+        opacity: 0.5;
+        border-radius: 50%;
       }
       .ant-carousel .custom-slick-arrow:before {
         display: none;
