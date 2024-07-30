@@ -19,6 +19,14 @@
             :loading="loading"
             @change="handleTableChange"
           >
+            <div slot="name" class="visa-name" slot-scope="item">
+              <span class="name">
+                {{ item.name }}
+              </span>
+              <span v-if="item.is_featured" class="featured-badge">
+                Featured</span
+              >
+            </div>
             <div slot="actions" slot-scope="item">
               <div class="row">
                 <div class="col pr-1">
@@ -58,7 +66,7 @@
               />
             </a-form-model-item>
             <a-form-model-item has-feedback label="Price" prop="price">
-              <a-input
+              <a-input-number
                 v-model="form.price"
                 type="text"
                 autocomplete="off"
@@ -78,7 +86,7 @@
               label="Description"
               prop="description"
             >
-              <TextEditor v-model="form.description" />
+              <TextEditor v-model="form.description" id="visas" />
             </a-form-model-item>
             <a-form-model-item
               has-feedback
@@ -112,6 +120,9 @@
                 </div>
               </div>
             </a-form-model-item>
+            <a-form-model-item label="Is Featured">
+              <a-switch v-model="form.is_featured" />
+            </a-form-model-item>
           </a-form-model>
         </a-modal>
       </div>
@@ -125,7 +136,9 @@ import TextEditor from "@/components/Custom/TextEditor.vue";
 const columns = [
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "",
+    scopedSlots: { customRender: "name" },
+
     ellipsis: true,
   },
   {
@@ -223,6 +236,11 @@ export default {
             message: "Visa price is required!",
             trigger: "blur",
           },
+          {
+            type: "number",
+            message: "Visa price is must be a number",
+            trigger: "blur",
+          },
         ],
         short_description: [
           {
@@ -307,10 +325,13 @@ export default {
               rating: form.rating,
               description: form.description,
               short_description: form.short_description,
+              is_featured: form.is_featured,
             };
 
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
+                formData.append(key, value);
+              } else if (key == "is_featured") {
                 formData.append(key, value);
               }
             });
@@ -354,10 +375,13 @@ export default {
               rating: form.rating,
               description: form.description,
               short_description: form.short_description,
+              is_featured: form.is_featured ? form.is_featured : false,
             };
 
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
+                formData.append(key, value);
+              } else if (key == "is_featured") {
                 formData.append(key, value);
               }
             });
@@ -411,7 +435,9 @@ export default {
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
+      this.form.is_featured = val.is_featured == 1 ? true : false;
       this.form.rating = Number(val.rating);
+      this.form.price = Number(val.price);
       this.showModal();
     },
     async handleItemDelete(val) {
@@ -455,6 +481,17 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
+.visa-name {
+  position: relative;
+  .featured-badge {
+    background: green;
+    color: #fff;
+    font-size: smaller;
+    padding: 2px 5px;
+    border-radius: 1rem;
+    margin-left: 1rem;
+  }
+}
 .images-box {
   ul {
     padding: 0.5rem;

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div id="add-edit-packages" class="admin-layout">
+    <div id="add-edit-blogs" class="admin-layout">
       <div class="page-header">
-        <div class="title">Manage Your Packages</div>
+        <div class="title">Manage Your Blogs</div>
         <div class="add-btn">
           <a-button type="primary" @click="showModal('Add')">
-            Add New Package
+            Add New Blog
           </a-button>
         </div>
       </div>
@@ -19,14 +19,6 @@
             :loading="loading"
             @change="handleTableChange"
           >
-            <div slot="name" class="package-name" slot-scope="item">
-              <span class="name">
-                {{ item.name }}
-              </span>
-              <span v-if="item.is_featured" class="featured-badge">
-                Featured</span
-              >
-            </div>
             <div slot="actions" slot-scope="item">
               <div class="row">
                 <div class="col pr-1">
@@ -40,9 +32,6 @@
                   /></a-button>
                 </div>
               </div>
-            </div>
-            <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
             </div>
           </a-table>
         </div>
@@ -60,36 +49,23 @@
             :labelCol="{ span: 24 }"
             :wrapperCol="{ span: 24 }"
           >
-            <a-form-model-item has-feedback label="Package Name" prop="name">
+            <a-form-model-item has-feedback label="blog Title" prop="title">
               <a-input
-                v-model="form.name"
+                v-model="form.title"
                 type="text"
                 autocomplete="off"
-                placeholder="Package Name"
+                placeholder="blog Title"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Price" prop="price">
-              <a-input-number
-                v-model="form.price"
-                type="text"
-                autocomplete="off"
-                placeholder="Package Price"
-              />
-            </a-form-model-item>
-            <a-form-model-item has-feedback label="rating" prop="rating">
-              <a-input-number
-                v-model="form.rating"
-                type="text"
-                autocomplete="off"
-                placeholder="Rating"
-              />
+            <a-form-model-item has-feedback label="Blog Image" prop="image">
+              <input type="file" ref="blog_image" @change="onFileChange" />
             </a-form-model-item>
             <a-form-model-item
               has-feedback
               label="Description"
               prop="description"
             >
-              <TextEditor v-model="form.description" id="packages" />
+              <TextEditor v-model="form.description" id="blogs" />
             </a-form-model-item>
             <a-form-model-item
               has-feedback
@@ -101,30 +77,6 @@
                 placeholder="short Description"
               />
             </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Package Images"
-              prop="images"
-            >
-              <div class="image-uploader">
-                <input type="file" @change="onFileChange" multiple />
-                <div v-if="packageImages.length" class="images-box">
-                  <h3>Selected Images:</h3>
-                  <ul>
-                    <li v-for="(image, index) in packageImages" :key="index">
-                      <img
-                        :src="image.url"
-                        :alt="'Image ' + (index + 1)"
-                        width="100"
-                      />
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </a-form-model-item>
-            <a-form-model-item label="Is Featured">
-              <a-switch v-model="form.is_featured" />
-            </a-form-model-item>
           </a-form-model>
         </a-modal>
       </div>
@@ -134,31 +86,21 @@
 
 <script>
 import TextEditor from "@/components/Custom/TextEditor.vue";
+
 const columns = [
   {
-    title: "Name",
-    dataIndex: "",
-    scopedSlots: { customRender: "name" },
-    ellipsis: true,
-  },
-  {
-    title: "Price",
-    dataIndex: "price",
+    title: "Title",
+    dataIndex: "title",
 
     ellipsis: true,
   },
-  {
-    title: "Rating",
-    dataIndex: "rating",
 
-    ellipsis: true,
-  },
   {
     title: "Short Description",
     dataIndex: "short_description",
-
     ellipsis: true,
   },
+
   {
     title: "Actions",
     dataIndex: "",
@@ -172,9 +114,7 @@ export default {
   components: { TextEditor },
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add"
-        ? "Add New Package"
-        : "Edit Your Package";
+      return this.renderingFor == "Add" ? "Add New Blog" : "Edit Your Blog";
     },
   },
   data() {
@@ -183,8 +123,6 @@ export default {
       image: "",
       imgLoading: "",
       pagination: {},
-      packageImages: [],
-
       loading: false,
       columns,
       renderingFor: "Add",
@@ -195,57 +133,32 @@ export default {
         image: null,
       },
       rules: {
-        name: [
+        title: [
           {
             required: true,
-            message: "Package Name is required!",
+            message: "blog title is required!",
             trigger: "blur",
           },
         ],
-        type: [
-          {
-            required: true,
-            message: "Package Type is required!",
-            trigger: "blur",
-          },
-        ],
+
         description: [
           {
             required: true,
-            message: "Package description is required!",
+            message: "blog description is required!",
             trigger: "blur",
           },
         ],
-        rating: [
+        image: [
           {
             required: true,
-            message: "Package Rating is required!",
-            trigger: "blur",
-          },
-          {
-            type: "number",
-            max: 7,
-            min: 0,
-            message: "Package rating is Should be in 0 to 7s.",
-            trigger: "blur",
-          },
-        ],
-        price: [
-          {
-            required: true,
-            message: "Package price is required!",
-            trigger: "blur",
-          },
-          {
-            type: "number",
-            message: "Package Price is must be a number.",
-            trigger: "blur",
+            message: "blog Image is required!",
+            trigger: "change",
           },
         ],
         short_description: [
           {
             required: true,
-            message: "Package Short Description is required!",
+            message: "blog Short Description is required!",
             trigger: "blur",
           },
         ],
@@ -263,26 +176,16 @@ export default {
       return url;
     },
     onFileChange(event) {
-      const files = event.target.files;
-      this.packageImages = []; // Clear previous images
-      for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.packageImages.push({ file: files[i], url: e.target.result });
-        };
-        reader.readAsDataURL(files[i]);
-      }
+      this.form.image = event.target.files[0];
     },
 
-    handleTableChange(pagination, filters, sorter) {
+    handleTableChange(pagination, filters) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
       this.pagination = pager;
       this.fetch({
         results: pagination.pageSize,
         page: pagination.current,
-        sortField: sorter.field,
-        sortOrder: sorter.order,
         ...filters,
       });
     },
@@ -302,7 +205,7 @@ export default {
       });
     },
     queryData(params) {
-      return this.$axios.get("package", { params: params });
+      return this.$axios.get("blog", { params: params });
     },
     showModal() {
       this.visible = true;
@@ -314,41 +217,33 @@ export default {
           let form = this.form;
           if (this.renderingFor == "Edit") {
             const formData = new FormData();
-            if (this.packageImages.length) {
-              this.packageImages.forEach((image, index) => {
-                formData.append(`images[${index}]`, image.file);
-              });
-            }
+
             const fields = {
               id: form.id,
-              price: form.price,
-              name: form.name,
-              rating: form.rating,
+              image: form.image,
+              title: form.title,
               description: form.description,
               short_description: form.short_description,
-              is_featured: form.is_featured,
             };
+            this.image;
 
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
                 formData.append(key, value);
-              } else if (key == "is_featured") {
-                formData.append(key, value);
               }
             });
-
             try {
-              let res = await this.$axios.post(`package/update`, formData);
+              let res = await this.$axios.post(`blog/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Package Updated Successfully",
+                  message: "blog Updated Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.confirmLoading = false;
 
-              let errorMessage = "Package Updating Failed";
+              let errorMessage = "blog Updating Failed";
               if (
                 e.response &&
                 e.response.data &&
@@ -366,42 +261,32 @@ export default {
           }
           if (this.renderingFor == "Add") {
             const formData = new FormData();
-            if (this.packageImages.length) {
-              this.packageImages.forEach((image, index) => {
-                formData.append(`images[${index}]`, image.file);
-              });
-            }
             const fields = {
-              price: form.price,
-              name: form.name,
-              rating: form.rating,
+              image: form.image,
+              title: form.title,
               description: form.description,
               short_description: form.short_description,
-              is_featured: form.is_featured ? form.is_featured : false,
             };
 
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
-                if (value) {
-                  formData.append(key, value);
-                } else if (key == "is_featured") {
-                  formData.append(key, value);
-                }
+                formData.append(key, value);
               }
             });
+
             try {
-              let res = await this.$axios.post("package", formData);
+              let res = await this.$axios.post("blog", formData);
 
               if (res.status == 201) {
                 this.$notification.success({
-                  message: "Package Created Successfully",
+                  message: "blog Created Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.confirmLoading = false;
 
-              let errorMessage = "Package Creation Failed";
+              let errorMessage = "blog Creation Failed";
               if (
                 e.response &&
                 e.response.data &&
@@ -424,28 +309,25 @@ export default {
     },
     handleCancel(e) {
       this.$refs.loginForm.resetFields();
+      this.$refs.blog_image.value = "";
       this.form = {
-        name: "",
+        title: "",
         image: null,
         description: "",
         id: undefined,
-        price: "",
       };
       this.visible = false;
     },
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
-      this.form.is_featured = val.is_featured == 1 ? true : false;
-      this.form.rating = Number(val.rating);
-      this.form.price = Number(val.price);
       this.showModal();
     },
     async handleItemDelete(val) {
       let isDeleting = false;
       if (val.id) {
         this.$confirm({
-          title: "Are you sure delete this Package?",
+          title: "Are you sure delete this blog?",
           okText: "Yes",
           okType: "danger",
           okButtonProps: {
@@ -455,19 +337,17 @@ export default {
           onOk: async () => {
             isDeleting = true; // Set loading to true
             try {
-              let res = await this.$axios.delete(`package/${val.id}`);
+              let res = await this.$axios.delete(`blog/${val.id}`);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "Package Deleted Successfully",
+                  message: "blog Deleted Successfully",
                 });
               }
               this.fetch();
             } catch (e) {
-              this.confirmLoading = false;
-
               console.log(e);
               this.$notification.error({
-                message: "Package Deletion Failed",
+                message: "blog Deletion Failed",
               });
             }
             isDeleting = false; // Set loading to true
@@ -484,17 +364,7 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
-.package-name {
-  position: relative;
-  .featured-badge {
-    background: green;
-    color: #fff;
-    font-size: smaller;
-    padding: 2px 5px;
-    border-radius: 1rem;
-    margin-left: 1rem;
-  }
-}
+
 .images-box {
   ul {
     padding: 0.5rem;

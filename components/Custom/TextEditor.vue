@@ -1,24 +1,35 @@
-<script setup>
-import Editor from "@tinymce/tinymce-vue";
-</script>
-
 <template>
   <main id="sample">
     <Editor
       api-key="46auy8pyr9e6dp5fpimr0lkujgjuccumkby3w9n3hs1x0yco"
+      :id="editorId"
       :init="config"
-      :value="value"
+      v-model="editorData"
     />
-    <!-- {{ config.toolbar }} -->
   </main>
 </template>
 
 <script>
 export default {
-  name: "EzEditor",
-
+  name: "TextEditor",
+  props: {
+    newConfig: {
+      type: Object,
+      default: () => ({}),
+    },
+    value: {
+      type: String,
+      default: "",
+    },
+    id: {
+      type: String,
+      default: () => `editor-${Math.random().toString(36).substring(2, 15)}`,
+    },
+  },
   data() {
     return {
+      editorData: this.value,
+      editorId: this.id,
       config: {
         toolbar_mode: "sliding",
         plugins:
@@ -34,33 +45,42 @@ export default {
       },
     };
   },
-  props: ["newConfig", "value"],
   watch: {
     newConfig: {
-      immediate: "true",
+      immediate: true,
       handler(val) {
-        this.config.toolbar.concat(val);
+        this.config.toolbar = this.config.toolbar.concat(val);
         console.log(this.config.toolbar, "toolbar");
       },
     },
+    value(newValue) {
+      if (newValue !== this.editorData) {
+        this.editorData = newValue;
+      }
+    },
+    editorData(newValue) {
+      this.$emit("input", newValue);
+    },
   },
-  mounted() {
-    // console.log(typeof A.className);
+  beforeDestroy() {
+    const editor = tinymce.get(this.editorId);
+    if (editor) {
+      editor.remove();
+    }
   },
   methods: {
     imageHandler(blobInfo, success, failure, progress) {
       const reader = new FileReader();
-
       reader.onload = (e) => {
         const dataUrl = e.target.result;
         success(dataUrl);
       };
-
       reader.readAsDataURL(blobInfo.blob());
     },
   },
 };
 </script>
+
 <style scoped lang="scss">
 #sample {
   width: 100%;

@@ -39,21 +39,33 @@
           </nuxt-link>
         </a-menu-item>
         <a-menu-item key="admin-packages">
-          <nuxt-link :to="{ name: 'admin-packages' }">
+          <a href="/admin/packages">
             <i class="fa-solid fa-box-open"></i>
             <span>Packages</span>
-          </nuxt-link>
+          </a>
         </a-menu-item>
         <a-menu-item key="admin-visas">
-          <nuxt-link :to="{ name: 'admin-visas' }">
+          <a href="/admin/visas">
             <i class="fa-brands fa-cc-visa"></i>
             <span>Visas</span>
-          </nuxt-link>
+          </a>
         </a-menu-item>
         <a-menu-item key="admin-fares">
           <nuxt-link :to="{ name: 'admin-fares' }">
             <i class="fa-solid fa-comment-dollar"></i>
             <span>Fares</span>
+          </nuxt-link>
+        </a-menu-item>
+        <a-menu-item key="admin-blogs">
+          <nuxt-link :to="{ name: 'admin-blogs' }">
+            <i class="fa-solid fa-comment-dollar"></i>
+            <span>Blogs</span>
+          </nuxt-link>
+        </a-menu-item>
+        <a-menu-item key="admin-faqs">
+          <nuxt-link :to="{ name: 'admin-faqs' }">
+            <i class="fa-solid fa-comment-dollar"></i>
+            <span>Faqs</span>
           </nuxt-link>
         </a-menu-item>
       </a-menu>
@@ -69,7 +81,7 @@
             /> -->
             <img
               src="~/assets/svg/ride2umrah-logo-transparent.png"
-              width="10rem"
+              width="100px"
               height="80px"
               alt=""
             />

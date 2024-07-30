@@ -80,16 +80,9 @@
                 </a-select-option>
               </a-select>
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Room Rating" prop="rating">
-              <a-input-number
-                style="width: 100%"
-                v-model="form.rating"
-                autocomplete="off"
-                placeholder="Hotel Rating"
-              />
-            </a-form-model-item>
+
             <a-form-model-item has-feedback label="Room Price" prop="price">
-              <a-input
+              <a-input-number
                 style="width: 100%"
                 v-model="form.price"
                 autocomplete="off"
@@ -146,12 +139,6 @@ const columns = [
     ellipsis: true,
   },
   {
-    title: "Rating",
-    dataIndex: "rating",
-
-    ellipsis: true,
-  },
-  {
     title: "Actions",
     dataIndex: "",
     width: "11rem",
@@ -192,20 +179,6 @@ export default {
             required: true,
             message: "Hotel is required!",
             trigger: "blur",
-          },
-        ],
-        rating: [
-          {
-            required: true,
-            message: "Room Rating is required!",
-            trigger: "blur",
-          },
-          {
-            type: "number",
-            max: 10,
-            required: true,
-            message: "Room Rating is should be between 0 to 10!",
-            trigger: "change",
           },
         ],
         price: [
@@ -291,7 +264,6 @@ export default {
                 id: form.id,
                 name: form.name,
                 hotel_id: form.hotel_id,
-                rating: form.rating,
                 price: form.price,
               };
               Object.entries(fields).forEach(([key, value]) => {
@@ -344,7 +316,6 @@ export default {
               const fields = {
                 name: form.name,
                 hotel_id: form.hotel_id,
-                rating: form.rating,
                 price: form.price,
               };
               Object.entries(fields).forEach(([key, value]) => {
@@ -402,7 +373,6 @@ export default {
     handleItemEdit(val) {
       this.renderingFor = "Edit";
       this.form = val;
-      this.form.rating = Number(val.rating);
       this.showModal();
     },
     async handleItemDelete(val) {
