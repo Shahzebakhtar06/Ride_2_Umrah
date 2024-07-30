@@ -1,4 +1,7 @@
 @import '../css/variables.css';
+.ant-layout-content{
+  min-height: 100vh !important;
+}
 .container{
   width: 65%;
   margin: auto;

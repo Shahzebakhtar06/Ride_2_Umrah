@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-layout>
+    <a-layout class="main-layout">
       <a-layout-header>
         <div class="container">
           <div class="row item-v-center">
