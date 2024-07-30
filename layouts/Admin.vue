@@ -58,13 +58,13 @@
         </a-menu-item>
         <a-menu-item key="admin-blogs">
           <nuxt-link :to="{ name: 'admin-blogs' }">
-            <i class="fa-solid fa-comment-dollar"></i>
+            <i class="fa-solid fa-display"></i>
             <span>Blogs</span>
           </nuxt-link>
         </a-menu-item>
         <a-menu-item key="admin-faqs">
           <nuxt-link :to="{ name: 'admin-faqs' }">
-            <i class="fa-solid fa-comment-dollar"></i>
+            <i class="fa-solid fa-question"></i>
             <span>Faqs</span>
           </nuxt-link>
         </a-menu-item>

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div id="add-edit-blogs" class="admin-layout">
+    <div id="add-edit-faqs" class="admin-layout">
       <div class="page-header">
-        <div class="title">Manage Your Blogs</div>
+        <div class="title">Manage Your Faqs</div>
         <div class="add-btn">
           <a-button type="primary" @click="showModal('Add')">
-            Add New Blog
+            Add New Faq
           </a-button>
         </div>
       </div>
@@ -49,33 +49,16 @@
             :labelCol="{ span: 24 }"
             :wrapperCol="{ span: 24 }"
           >
-            <a-form-model-item has-feedback label="blog Title" prop="title">
+            <a-form-model-item has-feedback label="question" prop="question">
               <a-input
-                v-model="form.title"
+                v-model="form.question"
                 type="text"
                 autocomplete="off"
-                placeholder="blog Title"
+                placeholder="question"
               />
             </a-form-model-item>
-            <a-form-model-item has-feedback label="Blog Image" prop="image">
-              <input type="file" ref="blog_image" @change="onFileChange" />
-            </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Description"
-              prop="description"
-            >
-              <TextEditor v-model="form.description" id="blogs" />
-            </a-form-model-item>
-            <a-form-model-item
-              has-feedback
-              label="Short Description"
-              prop="short_description"
-            >
-              <a-textarea
-                v-model="form.short_description"
-                placeholder="short Description"
-              />
+            <a-form-model-item has-feedback label="Answer" prop="answer">
+              <a-textarea v-model="form.answer" placeholder="Answer" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -85,19 +68,17 @@
 </template>
 
 <script>
-import TextEditor from "@/components/Custom/TextEditor.vue";
-
 const columns = [
   {
-    title: "Title",
-    dataIndex: "title",
+    title: "Question",
+    dataIndex: "question",
 
     ellipsis: true,
   },
 
   {
-    title: "Short Description",
-    dataIndex: "short_description",
+    title: "Answer",
+    dataIndex: "answer",
     ellipsis: true,
   },
 
@@ -111,17 +92,15 @@ const columns = [
 export default {
   layout: "Admin",
   middleware: "checkAuth",
-  components: { TextEditor },
   computed: {
     modalTitle() {
-      return this.renderingFor == "Add" ? "Add New Blog" : "Edit Your Blog";
+      return this.renderingFor == "Add" ? "Add New Faq" : "Edit Your Faq";
     },
   },
   data() {
     return {
       data: [],
-      image: "",
-      imgLoading: "",
+
       pagination: {},
       loading: false,
       columns,
@@ -130,35 +109,20 @@ export default {
       confirmLoading: false,
       form: {
         description: "",
-        image: null,
       },
       rules: {
-        title: [
+        question: [
           {
             required: true,
-            message: "blog title is required!",
+            message: "Question is required!",
             trigger: "blur",
           },
         ],
 
-        description: [
+        answer: [
           {
             required: true,
-            message: "blog description is required!",
-            trigger: "blur",
-          },
-        ],
-        image: [
-          {
-            required: true,
-            message: "blog Image is required!",
-            trigger: "change",
-          },
-        ],
-        short_description: [
-          {
-            required: true,
-            message: "blog Short Description is required!",
+            message: "Answer is required!",
             trigger: "blur",
           },
         ],
@@ -166,19 +130,9 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$axios);
     this.fetch();
   },
   methods: {
-    getImageUrl(imagePath) {
-      let url =
-        "https://expedia-api.savvyskymart.com/uploads/pakages/" + imagePath;
-      return url;
-    },
-    onFileChange(event) {
-      this.form.image = event.target.files[0];
-    },
-
     handleTableChange(pagination, filters) {
       const pager = { ...this.pagination };
       pager.current = pagination.current;
@@ -205,7 +159,7 @@ export default {
       });
     },
     queryData(params) {
-      return this.$axios.get("blog", { params: params });
+      return this.$axios.get("faq", { params: params });
     },
     showModal() {
       this.visible = true;
@@ -220,30 +174,26 @@ export default {
 
             const fields = {
               id: form.id,
-              image: form.image,
-              title: form.title,
-              description: form.description,
-              short_description: form.short_description,
+              answer: form.answer,
+              question: form.question,
             };
-            this.image;
-
             Object.entries(fields).forEach(([key, value]) => {
               if (value) {
                 formData.append(key, value);
               }
             });
             try {
-              let res = await this.$axios.post(`blog/update`, formData);
+              let res = await this.$axios.post(`faq/update`, formData);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "blog Updated Successfully",
+                  message: "faq Updated Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.confirmLoading = false;
 
-              let errorMessage = "blog Updating Failed";
+              let errorMessage = "faq Updating Failed";
               if (
                 e.response &&
                 e.response.data &&
@@ -262,10 +212,8 @@ export default {
           if (this.renderingFor == "Add") {
             const formData = new FormData();
             const fields = {
-              image: form.image,
-              title: form.title,
-              description: form.description,
-              short_description: form.short_description,
+              answer: form.answer,
+              question: form.question,
             };
 
             Object.entries(fields).forEach(([key, value]) => {
@@ -275,18 +223,18 @@ export default {
             });
 
             try {
-              let res = await this.$axios.post("blog", formData);
+              let res = await this.$axios.post("faq", formData);
 
               if (res.status == 201) {
                 this.$notification.success({
-                  message: "blog Created Successfully",
+                  message: "faq Created Successfully",
                 });
               }
               this.handleCancel();
             } catch (e) {
               this.confirmLoading = false;
 
-              let errorMessage = "blog Creation Failed";
+              let errorMessage = "faq Creation Failed";
               if (
                 e.response &&
                 e.response.data &&
@@ -308,12 +256,10 @@ export default {
       });
     },
     handleCancel(e) {
-      this.$refs.loginForm.resetFields();
-      this.$refs.blog_image.value = "";
       this.form = {
-        title: "",
-        image: null,
-        description: "",
+        question: "",
+        answer: "",
+
         id: undefined,
       };
       this.visible = false;
@@ -327,7 +273,7 @@ export default {
       let isDeleting = false;
       if (val.id) {
         this.$confirm({
-          title: "Are you sure delete this blog?",
+          title: "Are you sure delete this faq?",
           okText: "Yes",
           okType: "danger",
           okButtonProps: {
@@ -337,17 +283,17 @@ export default {
           onOk: async () => {
             isDeleting = true; // Set loading to true
             try {
-              let res = await this.$axios.delete(`blog/${val.id}`);
+              let res = await this.$axios.delete(`faq/${val.id}`);
               if (res.status == 200) {
                 this.$notification.success({
-                  message: "blog Deleted Successfully",
+                  message: "faq Deleted Successfully",
                 });
               }
               this.fetch();
             } catch (e) {
               console.log(e);
               this.$notification.error({
-                message: "blog Deletion Failed",
+                message: "faq Deletion Failed",
               });
             }
             isDeleting = false; // Set loading to true
@@ -364,31 +310,4 @@ export default {
 
 <style lang="scss">
 @import url("~/assets/scss/adminLayout.scss");
-
-.images-box {
-  ul {
-    padding: 0.5rem;
-    list-style: none;
-    display: flex;
-    max-width: 100%;
-    flex-wrap: wrap;
-    li {
-      margin: 1rem;
-
-      img {
-        box-shadow: -0.1rem 0px 0.5rem 0.6rem #cbc8c8;
-        width: 10rem;
-        height: 10rem;
-      }
-    }
-  }
-}
-.image-uploader {
-  padding: 2rem;
-  border: 0.1rem solid #ccc;
-  border-radius: 0.5rem;
-}
-.image-uploader img {
-  margin: 0.5rem;
-}
 </style>

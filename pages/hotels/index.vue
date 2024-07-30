@@ -50,74 +50,13 @@ export default {
         },
       ],
       selectedFilters: {},
-      hotels: [
-        {
-          hotel_name: "Grand Hotel",
-          city_name: "New York",
-          guest_liked: true,
-          rating: {
-            points: 9.0,
-            category: "Excellent",
-            reviews: 320,
-          },
-          available: 10,
-          price: 250,
-          total_price: 300,
-        },
-        {
-          hotel_name: "Ocean View Resort",
-          city_name: "Miami",
-          guest_liked: false,
-          rating: {
-            points: 7.5,
-            category: "Good",
-            reviews: 180,
-          },
-          available: 3,
-          price: 180,
-          total_price: 210,
-        },
-        {
-          hotel_name: "Mountain Lodge",
-          city_name: "Aspen",
-          guest_liked: true,
-          rating: {
-            points: 8.8,
-            category: "Excellent",
-            reviews: 250,
-          },
-          available: 8,
-          price: 300,
-          total_price: 350,
-        },
-        {
-          hotel_name: "Beachfront Inn",
-          city_name: "Maui",
-          guest_liked: true,
-          rating: {
-            points: 8.4,
-            category: "Very Good",
-            reviews: 200,
-          },
-          available: 5,
-          price: 400,
-          total_price: 450,
-        },
-        {
-          hotel_name: "City Lights Hotel",
-          city_name: "Paris",
-          guest_liked: true,
-          rating: {
-            points: 8.9,
-            category: "Excellent",
-            reviews: 300,
-          },
-          available: 12,
-          price: 180,
-          total_price: 210,
-        },
-      ],
+      hotels: [],
     };
+  },
+  computed: {
+    activeFilters() {
+      return this.$store.state.activeFilters;
+    },
   },
   watch: {
     $route: {
@@ -131,8 +70,7 @@ export default {
           rooms: JSON.parse(query.rooms),
           dates: [query.from, query.to],
         };
-
-        console.log(result);
+        this.fetchHotels();
         this.staysFilters.map((el) => {
           el.value = result[el.key];
         });
@@ -140,10 +78,15 @@ export default {
     },
   },
   methods: {
-    handleSubmit(formData) {
-      // let query = encodeURIComponent(formData);
-      // console.log(query);
-      // this.$router.push({ name: "hotels", query: query });
+    async handleSubmit(formData) {
+      this.$store.commit("updateFilters", formData);
+      await this.fetchHotels(formData);
+    },
+    async fetchHotels(query) {
+      let { location: city } = query || this.activeFilters;
+      let res = await this.$axios.post("hotel/filter", { city });
+
+      this.hotels = res.data.data.response.data;
     },
   },
 };

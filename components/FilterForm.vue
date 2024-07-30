@@ -10,7 +10,7 @@
         v-for="field in fields"
         :key="field.key"
         :required="field.required ? true : false"
-        :prop="field.key"
+        prop="location"
       >
         <div class="field-wrapper" v-if="field.type === 'select'">
           <div class="icon">
@@ -103,16 +103,10 @@ export default {
       searchQuery: "",
       locations: [],
       rules: {
-        name: [
+        location: [
           {
             required: true,
-            message: "Please input Activity name",
-            trigger: "blur",
-          },
-          {
-            min: 3,
-            max: 5,
-            message: "Length should be 3 to 5",
+            message: "location Filter is Required",
             trigger: "blur",
           },
         ],
@@ -163,7 +157,7 @@ export default {
       let endPoint = process.env.ApiBaseURL + "city/all";
       let res = await this.$axios.get(endPoint);
       let result = res.data.data.response.cities;
-      this.locations = result;
+      this.locations = result?.length ? result : [];
       this.fetching = false;
     },
     handleLocationChange(value, fieldName) {

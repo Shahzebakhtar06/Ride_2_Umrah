@@ -13,39 +13,26 @@
           <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
-          </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
+          <div v-for="(src, index) in hotelImages" :key="index">
+            <img :src="imgBasePath + src" alt="Hotel Image" />
           </div>
         </a-carousel>
       </div>
       <div class="details" @click="goToHotelDetails">
         <div>
           <div class="card-title">
-            {{ details.hotel_name }}
+            {{ details.name }}
           </div>
           <p>
-            Islamabad
-            {{ details.city_name }}
+            {{ details.city.name }}
           </p>
-          <p v-if="details.guest_liked">
-            <i class="fa-solid fa-thumbs-up"></i> Guests liked: Friendly staff
+          <p>
+            {{ details.short_description }}
           </p>
           <div>
-            <a class="reserve-now text-success" href="#"
-              >Reserve now, pay later</a
-            >
-            <div class="rating row">
-              <div class="rate col fit-width">
-                {{ details.rating.points }}
-              </div>
-              <div class="col px-1">
-                <div>
-                  <b>{{ details.rating.category }}</b>
-                </div>
-                <div>{{ details.rating.reviews }}</div>
+            <div class="rating">
+              <div class="rate fit-width">
+                {{ details.rating }}
               </div>
             </div>
           </div>
@@ -53,13 +40,7 @@
 
         <div class="reserve-details">
           <div class="price-info">
-            <div class="availability bg-success" v-if="details.available > 0">
-              We have {{ details.available }} left at
-            </div>
-            <span class="price">$201 {{ details.price }}</span>
-            <span class="total-price">
-              ${{ details.total_price }} total <br />includes taxes & fees</span
-            >
+            <span class="price"> {{ details.price }}</span>
           </div>
         </div>
       </div>
@@ -71,6 +52,17 @@
 export default {
   name: "HotelCard",
   props: { details: Object },
+  data() {
+    return {
+      imgBasePath: "https://expedia-api.savvyskymart.com/",
+    };
+  },
+  computed: {
+    hotelImages() {
+      let images = this.details.images || [];
+      return [...images, this.details.featured_image];
+    },
+  },
   methods: {
     goToHotelDetails() {
       this.$router.push("/hotels/" + 1);
