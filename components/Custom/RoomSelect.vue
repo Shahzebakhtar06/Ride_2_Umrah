@@ -118,8 +118,11 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 4px;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.4rem;
+  span{
+    line-height: 4rem;
+  }
 }
 .room-select-content {
   display: flex;
@@ -151,26 +154,26 @@ export default {
   }
 }
 .counter span {
-  margin: 0 8px;
+  margin: 0 0.8rem;
 }
 button {
   background: none;
-  border: 1px solid #ccc;
-  padding: 4px 8px;
+  border: 0.1rem solid #ccc;
+  padding: 0.4rem 0.8rem;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 0.4rem;
 }
 .add-room {
   color: blue;
   cursor: pointer;
-  margin-bottom: 16px;
+  margin-bottom: 1.6rem;
 }
 // .done-btn {
 //   background-color: blue;
 //   color: white;
 //   border: none;
-//   padding: 8px 16px;
+//   padding: 0.8rem 1.6rem;
 //   cursor: pointer;
-//   border-radius: 4px;
+//   border-radius: 0.4rem;
 // }
 </style>

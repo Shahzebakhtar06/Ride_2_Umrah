@@ -106,7 +106,7 @@ export default {
     background: #fff;
     display: flex;
     flex-direction: row;
-    border: 1px solid var(--theme-border-color);
+    border: 0.1rem solid var(--theme-border-color);
     align-items: center;
     border-radius: 1.5rem;
     overflow: hidden;
@@ -132,7 +132,7 @@ export default {
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 0.3fr;
-      gap: 10px;
+      gap: 1rem;
       .info {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -154,20 +154,20 @@ export default {
 
       h3 {
         margin: 0;
-        font-size: 20px;
+        font-size: 2rem;
       }
 
       p {
-        margin: 5px 0;
+        margin: 0.5rem 0;
       }
 
       .price-info {
-        margin: 10px 0;
+        margin: 1rem 0;
         text-align: end;
       }
 
       .price {
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
       }
 

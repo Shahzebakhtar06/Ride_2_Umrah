@@ -69,7 +69,7 @@
             /> -->
             <img
               src="~/assets/svg/ride2umrah-logo-transparent.png"
-              width="100px"
+              width="10rem"
               height="80px"
               alt=""
             />
@@ -121,9 +121,9 @@ export default {
 #admin-layout {
   height: 100vh;
   .trigger {
-    font-size: 18px;
-    line-height: 64px;
-    padding: 0 24px;
+    font-size: 1.8rem;
+    line-height: 6.4rem;
+    padding: 0 2.4rem;
     cursor: pointer;
     transition: color 0.3s;
   }
@@ -136,8 +136,8 @@ export default {
     }
   }
   .ant-layout-content {
-    margin: 24px 16px;
-    padding: 24px;
+    margin: 2.4rem 1.6rem;
+    padding: 2.4rem;
     background: #fff !important;
     min-height: 100%;
   }

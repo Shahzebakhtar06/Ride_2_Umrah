@@ -6,11 +6,11 @@
           <div
             slot="prevArrow"
             class="custom-slick-arrow"
-            style="left: 10px; z-index: 1"
+            style="left: 1rem; z-index: 1"
           >
             <a-icon type="left-circle" />
           </div>
-          <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
+          <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
           <div>
@@ -107,7 +107,7 @@ export default {
     background: #fff;
     display: flex;
     flex-direction: row;
-    border: 1px solid var(--theme-border-color);
+    border: 0.1rem solid var(--theme-border-color);
     border-radius: 1.5rem;
     overflow: hidden;
     margin-bottom: 1rem;
@@ -137,7 +137,7 @@ export default {
       width: 100%;
       display: grid;
       grid-template-columns: 1fr 0.3fr;
-      gap: 10px;
+      gap: 1rem;
       .info {
         display: flex;
         flex-flow: column;
@@ -161,16 +161,16 @@ export default {
       }
 
       p {
-        margin: 5px 0;
+        margin: 0.5rem 0;
       }
 
       .price-info {
-        margin: 10px 0;
+        margin: 1rem 0;
         text-align: end;
       }
 
       .price {
-        font-size: 24px;
+        font-size: 2.4rem;
         font-weight: bold;
       }
 

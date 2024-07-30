@@ -468,19 +468,19 @@ export default {
       margin: 1rem;
 
       img {
-        box-shadow: -1px 0px 5px 6px #cbc8c8;
-        width: 100px;
-        height: 100px;
+        box-shadow: -0.1rem 0px 0.5rem 0.6rem #cbc8c8;
+        width: 10rem;
+        height: 10rem;
       }
     }
   }
 }
 .image-uploader {
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  padding: 2rem;
+  border: 0.1rem solid #ccc;
+  border-radius: 0.5rem;
 }
 .image-uploader img {
-  margin: 5px;
+  margin: 0.5rem;
 }
 </style>

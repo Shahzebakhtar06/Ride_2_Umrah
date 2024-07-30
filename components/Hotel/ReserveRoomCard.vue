@@ -70,16 +70,16 @@ export default {
 <style lang="scss" scoped>
 .room-details {
   width: 30rem;
-  /* border: 1px solid var(--theme-border-color); */
-  padding: 20px;
+  /* border: 0.1rem solid var(--theme-border-color); */
+  padding: 2rem;
   .price-details {
     margin-top: 2rem;
   }
   .hotel-info {
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
 
     h3 {
-      margin-top: -27px;
+      margin-top: -2.7rem;
       color: #fff;
       font-weight: 500;
       padding: 0 0.5rem;
@@ -106,15 +106,15 @@ export default {
 
   .rating-score {
     font-weight: bold;
-    margin-right: 5px;
+    margin-right: 0.5rem;
   }
 
   .room-info {
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
   }
 
   .special-requests {
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
   }
 
   .booking-cta {
@@ -123,25 +123,25 @@ export default {
     button {
       background-color: #4caf50;
       color: white;
-      padding: 10px 20px;
+      padding: 1rem 2rem;
       border: none;
-      border-radius: 4px;
+      border-radius: 0.4rem;
       cursor: pointer;
     }
   }
 
   .price-row {
-    margin: 10px 0;
+    margin: 1rem 0;
   }
 
   .total-row {
     font-weight: bold;
-    margin: 20px 0 10px 0;
+    margin: 2rem 0 1rem 0;
   }
 
   .promo-link {
     display: block;
-    margin: 10px 0;
+    margin: 1rem 0;
     color: #1890ff;
     text-decoration: none;
 

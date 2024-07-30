@@ -6,11 +6,11 @@
           <div
             slot="prevArrow"
             class="custom-slick-arrow"
-            style="left: 10px; z-index: 1"
+            style="left: 1rem; z-index: 1"
           >
             <a-icon type="left-circle" />
           </div>
-          <div slot="nextArrow" class="custom-slick-arrow" style="right: 10px">
+          <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
           <div>
@@ -59,13 +59,13 @@ export default {
 
 <style scoped lang="scss">
 .hotel-card {
-  width: 300px;
+  width: 30rem;
   margin: 2rem;
   padding: 0;
 
   border: none;
   .card-content {
-    border: 1px solid var(--theme-border-color);
+    border: 0.1rem solid var(--theme-border-color);
     border-radius: 1.5rem;
     overflow: hidden;
     .card-title {
@@ -76,9 +76,9 @@ export default {
       width: 100%;
 
       .ant-carousel .custom-slick-arrow {
-        width: 25px;
-        height: 25px;
-        font-size: 25px;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 2.5rem;
         color: #fff;
         background-color: rgba(31, 45, 61, 0.11);
         opacity: 0.3;
@@ -99,11 +99,11 @@ export default {
         li {
           display: flex;
           align-items: center;
-          margin-bottom: 10px;
+          margin-bottom: 1rem;
 
           i {
-            font-size: 20px;
-            margin-right: 10px;
+            font-size: 2rem;
+            margin-right: 1rem;
           }
         }
       }
@@ -133,25 +133,25 @@ export default {
 
 .details h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 2rem;
 }
 
 .details p {
-  margin: 5px 0;
+  margin: 0.5rem 0;
 }
 
 .reserve-now {
-  margin: 10px 0;
+  margin: 1rem 0;
   display: block;
 }
 
 .price-info {
-  margin: 10px 0;
+  margin: 1rem 0;
   text-align: end;
 }
 
 .price {
-  font-size: 24px;
+  font-size: 2.4rem;
   font-weight: bold;
   /* color: #52c41a; */
 }

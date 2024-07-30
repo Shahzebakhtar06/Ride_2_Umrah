@@ -172,7 +172,7 @@ export default {
           display: grid;
           grid-template-columns: auto 1fr;
           list-style-type: none;
-          column-gap: 15px;
+          column-gap: 1.5rem;
           padding: 0;
 
           li {

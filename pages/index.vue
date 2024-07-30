@@ -85,6 +85,15 @@ export default {
       ],
     };
   },
+  watch: {
+    activeTab(val) {
+      if (val == "packages") {
+        this.$router.push("/packages");
+      } else if (val == "Visa") {
+        this.$router.push("/visas");
+      }
+    },
+  },
   methods: {
     handleSubmit(formData) {
       if (this.activeTab == "stays") {
@@ -105,7 +114,7 @@ export default {
         };
 
         this.$router.push({ name: "cars", query: queryObj });
-      }else if (this.activeTab == "packages") {
+      } else if (this.activeTab == "packages") {
         const queryObj = {
           from_location: formData.from_location,
           to_location: formData.to_location,
@@ -122,7 +131,7 @@ export default {
 <style lang="scss">
 .ant-tabs {
   text-align: center;
-  border: 1px solid var(--theme-border-color);
+  border: 0.1rem solid var(--theme-border-color);
   .ant-tabs-bar {
     margin: 0;
     margin-bottom: 1rem;

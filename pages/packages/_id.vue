@@ -40,7 +40,7 @@
     <a-modal
       v-model="showModal"
       title="Hotel Images"
-      width="800px"
+      width="80rem"
       :footer="null"
     >
       <a-carousel>
@@ -206,14 +206,14 @@ export default {
 
 <style lang="scss" scoped>
 .hotel-page {
-  padding: 20px;
+  padding: 2rem;
   .hotel-header {
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
 
     .hotel-images {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      margin-right: 20px;
+      margin-right: 2rem;
       max-height: 28rem;
 
       .feature-image {
@@ -221,7 +221,7 @@ export default {
           max-height: 28rem;
           width: 100%;
 
-          margin-bottom: 5px;
+          margin-bottom: 0.5rem;
         }
       }
 
@@ -255,7 +255,7 @@ export default {
         border-radius: 5rem;
 
         i {
-          margin-right: 5px;
+          margin-right: 0.5rem;
         }
 
         &:hover {
@@ -272,24 +272,24 @@ export default {
       }
 
       .hotel-rating {
-        font-size: 24px;
+        font-size: 2.4rem;
         color: #ffb700;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
       }
 
       .hotel-score {
         display: flex;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
 
         .score {
-          font-size: 24px;
+          font-size: 2.4rem;
           font-weight: bold;
-          margin-right: 10px;
+          margin-right: 1rem;
         }
 
         .score-label {
-          font-size: 16px;
+          font-size: 1.6rem;
         }
       }
 
@@ -297,13 +297,13 @@ export default {
         display: inline-block;
         color: #007bff;
         text-decoration: none;
-        margin-bottom: 20px;
+        margin-bottom: 2rem;
       }
     }
   }
 
   .hotel-details {
-    gap: 20px;
+    gap: 2rem;
     .rating {
       display: flex;
       align-items: center;
@@ -331,11 +331,11 @@ export default {
         li {
           display: flex;
           align-items: center;
-          margin-bottom: 10px;
+          margin-bottom: 1rem;
 
           i {
-            font-size: 20px;
-            margin-right: 10px;
+            font-size: 2rem;
+            margin-right: 1rem;
           }
         }
       }
@@ -357,7 +357,7 @@ export default {
       .hotel-map {
         width: 100%;
         height: auto;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
       }
 
       .nearby-locations {
@@ -367,11 +367,11 @@ export default {
         li {
           display: flex;
           align-items: center;
-          margin-bottom: 5px;
+          margin-bottom: 0.5rem;
 
           i {
-            font-size: 16px;
-            margin-right: 10px;
+            font-size: 1.6rem;
+            margin-right: 1rem;
           }
 
           .distance {
@@ -385,18 +385,18 @@ export default {
         display: inline-block;
         color: #007bff;
         text-decoration: none;
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
       }
     }
   }
 
   .hotel-navigation {
-    margin-top: 20px;
+    margin-top: 2rem;
 
     ul {
       list-style: none;
       display: flex;
-      gap: 10px;
+      gap: 1rem;
       padding: 0;
 
       li {

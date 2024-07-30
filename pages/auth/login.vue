@@ -120,11 +120,11 @@ export default {
   position: absolute;
   top: 20%;
   left: 30%;
-  width: 500px;
+  width: 50rem;
   text-align: center;
-  padding: 5px;
+  padding: 0.5rem;
   border-radius: 3rem;
-  box-shadow: 0px 0px 8px -5px #000000;
+  box-shadow: 0px 0px 0.8rem -0.5rem #000000;
   padding-top: 3%;
   padding-bottom: 5%;
   font-family: "Poppins", sans-serif;
