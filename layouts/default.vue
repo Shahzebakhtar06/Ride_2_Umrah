@@ -27,6 +27,9 @@
                   <nuxt-link to="/packages">Packages</nuxt-link>
                 </li>
                 <li>
+                  <nuxt-link to="/blogs">Blogs</nuxt-link>
+                </li>
+                <li>
                   <nuxt-link to="/contact-us">Contact US</nuxt-link>
                 </li>
               </ul>
