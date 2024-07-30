@@ -65,6 +65,14 @@
                 placeholder="Hotel Rating"
               />
             </a-form-model-item>
+            <a-form-model-item has-feedback label="Hotel Price" prop="price">
+              <a-input-number
+                v-model="form.price"
+                type="text"
+                autocomplete="off"
+                placeholder="Hotel Price"
+              />
+            </a-form-model-item>
             <a-form-model-item has-feedback label="Hotel City" prop="city_id">
               <a-select
                 v-model="form.city_id"
@@ -130,7 +138,6 @@
                   <h3>Selected Images:</h3>
                   <ul>
                     <li v-for="(image, index) in hotelImages" :key="index">
-                      <!-- getImageUrl(image.url) -->
                       <img
                         :src="image.url"
                         :alt="'Image ' + (index + 1)"
@@ -140,9 +147,6 @@
                   </ul>
                 </div>
               </div>
-            </a-form-model-item>
-            <a-form-model-item label="Is Featured">
-              <a-switch v-model="form.is_featured" />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -242,7 +246,7 @@ export default {
             type: "number",
             max: 7,
             min: 0,
-            message: "Hotel Rating should be between 0 to 10!",
+            message: "Hotel Rating should be between 0 to 7!",
             trigger: "change",
           },
         ],
@@ -264,10 +268,6 @@ export default {
       let res = await this.$axios.get("city/all");
       let cities = res.data.data.response.cities;
       this.cities = cities;
-    },
-    getImageUrl(imagePath) {
-      let url = "https://expedia-api.savvyskymart.com/public/" + imagePath;
-      return url;
     },
     handleFeaturedImageChange(event) {
       this.form.featured_image = null;
@@ -331,10 +331,10 @@ export default {
             const fields = {
               id: form.id,
               featured_image: form.featured_image,
+              price: form.price,
               city_id: form.city_id,
               name: form.name,
               rating: form.rating,
-              is_featured: form.is_featured,
               short_description: form.short_description,
             };
 
@@ -400,7 +400,7 @@ export default {
               city_id: form.city_id,
               name: form.name,
               rating: form.rating,
-              is_featured: form.is_featured,
+              price: form.price,
               short_description: form.short_description,
             };
 
@@ -455,7 +455,6 @@ export default {
         short_description: "",
         images: [],
         featured_image: null,
-        is_featured: false,
       };
       this.visible = false;
     },
@@ -465,6 +464,7 @@ export default {
         id: val.id,
         name: val.name,
         rating: Number(val.rating),
+        price: Number(val.price),
         city_id: val.city_id,
         amenities: val.amenities.map((el) => el.id),
         short_description: val.short_description,

@@ -34,7 +34,7 @@
               </div>
             </div>
             <div slot="image" slot-scope="item">
-              <img :src="getImageUrl(item)" width="60" height="60" alt="" />
+              <img :src="$global.imgBasePath + item" width="60" height="60" alt="" />
             </div>
           </a-table>
         </div>
@@ -285,11 +285,6 @@ export default {
       let res = await this.$axios.get("amenity/all?type=car");
       let amenities = res.data.data.response.amenities;
       this.amenities = amenities;
-    },
-    getImageUrl(imagePath) {
-      let url =
-        "https://expedia-api.savvyskymart.com/uploads/cars/" + imagePath;
-      return url;
     },
     onFileChange(event) {
       this.form.image = event.target.files[0];
