@@ -1,7 +1,9 @@
 <template>
-  <div class="booking-container">
-    <ReserveFrom :roomDetails="roomDetails" />
-    <ReserveRoomCard :roomDetails="roomDetails" />
+  <div class="container">
+    <div class="booking-container">
+      <ReserveFrom :roomDetails="roomDetails" />
+      <ReserveRoomCard :roomDetails="roomDetails" />
+    </div>
   </div>
 </template>
 
@@ -31,6 +33,9 @@ export default {
         reviewsCount: 221,
       },
     };
+  },
+  mounted() {
+    this.$store.commit("setBannerTitle", "Room Reserve");
   },
 };
 </script>

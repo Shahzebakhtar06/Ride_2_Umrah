@@ -18,7 +18,7 @@
           </div>
         </a-carousel>
       </div>
-      <div class="details" @click="goToHotelDetails">
+      <div class="details" @click="goToHotelDetails(details.id)">
         <div>
           <div class="card-title">
             {{ details.name }}
@@ -64,8 +64,8 @@ export default {
     },
   },
   methods: {
-    goToHotelDetails() {
-      this.$router.push("/hotels/" + 1);
+    goToHotelDetails(id) {
+      this.$router.push("/hotels/" + id);
     },
   },
 };

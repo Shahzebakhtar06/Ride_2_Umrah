@@ -246,7 +246,7 @@ export default {
 
               let errorMessage = "Amenity Updating Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -287,7 +287,7 @@ export default {
 
               let errorMessage = "Amenity Creation Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {

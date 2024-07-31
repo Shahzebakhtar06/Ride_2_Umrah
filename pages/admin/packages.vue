@@ -344,7 +344,7 @@ export default {
 
               let errorMessage = "Package Updating Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -397,7 +397,7 @@ export default {
 
               let errorMessage = "Package Creation Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {

@@ -1,4 +1,5 @@
 <template>
+  <div class="container">
   <div class="hotel-page">
     <div class="hotel-header">
       <div class="hotel-images">
@@ -49,6 +50,7 @@
         </div>
       </a-carousel>
     </a-modal>
+  </div>
   </div>
 </template>
 <script>
@@ -195,6 +197,9 @@ export default {
         ],
       },
     };
+  },
+  mounted() {
+    this.$store.commit("setBannerTitle", "Packages");
   },
   methods:{
     goToPackageReserve(){

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="filters">
       <BaseFilters
         :fields="carsFilters"
@@ -139,6 +139,10 @@ export default {
         }
       },
     },
+  },
+  mounted(){
+    this.$store.commit("setBannerTitle", "Cars");
+
   },
   methods: {
     handleSubmit(formData) {

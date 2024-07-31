@@ -197,11 +197,16 @@ export default {
   .field-wrapper {
     height: 50px;
     width: 30rem;
-    border: 0.1rem solid #969393;
+    border: 0.1rem solid black;
+    background: #fff;
     display: flex;
     align-items: center;
     border-radius: 0.5rem;
     transition: 0.5s all;
+    overflow: hidden;
+    *{
+      background: #fff;
+    }
     @media only screen and (max-width: 768px) {
       width: 100%;
     }
@@ -263,6 +268,7 @@ export default {
         line-height: normal;
         position: absolute;
         top: 0.3rem;
+        z-index:2;
         font-size: 11px;
       }
       height: -webkit-fill-available;

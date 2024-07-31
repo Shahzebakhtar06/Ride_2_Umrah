@@ -1,5 +1,6 @@
 <template>
-  <div class="car-page">
+  <div class="container">
+  <div class="car-page" >
     <div>
       <div class="car-card">
         <a-card>
@@ -82,6 +83,7 @@
       </a-card>
     </div>
   </div>
+  </div>
 </template>
 <script>
 import carCard from "../../components/Cars/carCard.vue";
@@ -127,6 +129,10 @@ export default {
         imageUrl: "/path/to/compact-car-image.png",
       },
     };
+  },
+  mounted(){
+    this.$store.commit("setBannerTitle", "Cars");
+
   },
   methods:{
     goToCarReserve(){

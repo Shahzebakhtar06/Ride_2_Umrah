@@ -1,20 +1,25 @@
 <template>
-  <div>
-    <div>
-      <a-tabs v-model="activeTab">
-        <a-tab-pane key="stays" tab="stays">
-          <BaseFilters :fields="staysFilters" @submit="handleSubmit" />
-        </a-tab-pane>
-        <a-tab-pane key="cars" tab="Cars" force-render>
-          <BaseFilters :fields="carsFilters" @submit="handleSubmit" />
-        </a-tab-pane>
-        <a-tab-pane key="packages" tab="Packages">
-          <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
-        </a-tab-pane>
-        <a-tab-pane key="visa" tab="Visa">
-          <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
-        </a-tab-pane>
-      </a-tabs>
+  <div id="welcome-page">
+    <div class="main-image">
+      <img src="~/static/images/banner1.jpg" alt="" />
+    </div>
+    <div class="container">
+      <div class="filter-wrapper container">
+        <a-tabs v-model="activeTab">
+          <a-tab-pane key="stays" tab="stays">
+            <BaseFilters :fields="staysFilters" @submit="handleSubmit" />
+          </a-tab-pane>
+          <a-tab-pane key="cars" tab="Cars" force-render>
+            <BaseFilters :fields="carsFilters" @submit="handleSubmit" />
+          </a-tab-pane>
+          <a-tab-pane key="packages" tab="Packages">
+            <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
+          </a-tab-pane>
+          <a-tab-pane key="visa" tab="Visa">
+            <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
+          </a-tab-pane>
+        </a-tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -94,6 +99,9 @@ export default {
       }
     },
   },
+  mounted() {
+    this.$store.commit("setBannerTitle", "");
+  },
   methods: {
     handleSubmit(formData) {
       if (this.activeTab == "stays") {
@@ -129,12 +137,39 @@ export default {
 };
 </script>
 <style lang="scss">
+#welcome-page {
+  .main-image {
+    img {
+      width: 100%;
+      object-fit: cover;
+      aspect-ratio: 10 / 4;
+    }
+  }
+
+  .filter-wrapper {
+    position: absolute;
+    z-index: 1;
+    background: #744970b4;
+    top: 30rem;
+    border-radius: 2rem;
+    overflow: hidden;
+  }
+}
+
 .ant-tabs {
   text-align: center;
-  border: 0.1rem solid var(--theme-border-color);
   .ant-tabs-bar {
     margin: 0;
     margin-bottom: 1rem;
+    border-color: var(--theme-primary-color);
+    .ant-tabs-tab{
+      color: #fff;
+    }
+    .ant-tabs-tab-active {
+      color: #fff;
+      background: #744970;
+      border-radius: 1rem;
+    }
   }
 }
 </style>

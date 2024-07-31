@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="packages">
       <a-tabs v-model="activeKey">
         <a-tab-pane v-for="(data, el) in packages" :key="el">
@@ -199,6 +199,9 @@ export default {
         }
       },
     },
+  },
+  mounted() {
+    this.$store.commit("setBannerTitle", "Packages");
   },
   methods: {
     handleSubmit(formData) {

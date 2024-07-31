@@ -285,7 +285,7 @@ export default {
 
               let errorMessage = "Fare Creation Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -325,7 +325,7 @@ export default {
 
               let errorMessage = "Fare Updating Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {

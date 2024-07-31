@@ -1,81 +1,83 @@
 <template>
-  <div class="hotel-page">
-    <div class="hotel-header">
-      <div class="hotel-images">
-        <div class="feature-image">
-          <img :src="featureImage" alt="Feature Image" />
-        </div>
-        <div class="other-images">
-          <img v-for="i in 4" :key="i" :src="otherImages[i]" alt="Image" />
-          <button
-            v-if="otherImages.length > 4"
-            class="more-images-btn"
-            @click="showModal = true"
-          >
-            <i class="fa-regular fa-images"></i> {{ otherImages.length - 4 }}
-            <i class="fa-regular fa-plus"></i>
-          </button>
+  <div class="container" :class="{ loader: fetchLoading }">
+    <div v-if="hotel" class="hotel-page">
+      <div class="hotel-header">
+        <div class="hotel-images">
+          <div class="feature-image">
+            <img :src="featureImage" alt="Feature Image" />
+          </div>
+          <div class="other-images">
+            <img v-for="i in 4" :key="i" :src="otherImages[i]" alt="Image" />
+            <button
+              v-if="otherImages.length > 4"
+              class="more-images-btn"
+              @click="showModal = true"
+            >
+              <i class="fa-regular fa-images"></i> {{ otherImages.length - 4 }}
+              <i class="fa-regular fa-plus"></i>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="hotel-navigation">
-      <ul>
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#amenities">Amenities</a></li>
-        <li><a href="#rooms">Rooms</a></li>
-        <li><a href="#accessibility">Accessibility</a></li>
-        <li><a href="#policies">Policies</a></li>
-      </ul>
-    </div>
-    <div class="hotel-details">
-      <div class="hotel-info">
-        <h1>{{ hotel.name }}</h1>
-        <div class="hotel-rating">★★★★★</div>
-        <p>{{ hotel.description }}</p>
-        <div class="rating row">
-          <div class="rate col fit-width">
-            {{ hotel.points }}
-          </div>
-          <div class="col px-1">
-            <div>
-              <b>{{ hotel.rating_category }}</b>
+      <div class="hotel-navigation">
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#amenities">Amenities</a></li>
+          <li><a href="#rooms">Rooms</a></li>
+          <li><a href="#accessibility">Accessibility</a></li>
+          <li><a href="#policies">Policies</a></li>
+        </ul>
+      </div>
+      <div class="hotel-details">
+        <div class="hotel-info">
+          <h1>{{ hotel.name }}</h1>
+          <div class="hotel-rating">★★★★★</div>
+          <p>{{ hotel.description }}</p>
+          <div class="rating row">
+            <div class="rate col fit-width">
+              {{ hotel.points }}
+            </div>
+            <div class="col px-1">
+              <div>
+                <b>{{ hotel.rating_category }}</b>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="hotel-amenities">
-        <h2>Popular amenities</h2>
-        <ul>
-          <li v-for="(amenity, index) in hotel.amenities" :key="index">
-            <i :class="amenity.icon"></i> {{ amenity.name }}
-          </li>
-        </ul>
-      </div>
-      <div></div>
-    </div>
-
-    <div class="rooms-wrapper">
-      <h1 style="text-align: center;">Chose your Room</h1>
-      <div class="rooms">
-        <room-card
-          v-for="(room, index) in hotel.rooms"
-          :key="index"
-          :details="room"
-        />
-      </div>
-    </div>
-    <a-modal
-      v-model="showModal"
-      title="Hotel Images"
-      width="80rem"
-      :footer="null"
-    >
-      <a-carousel>
-        <div v-for="(image, index) in allImages" :key="index">
-          <img :src="image" alt="Image" class="carousel-image" />
+        <div class="hotel-amenities">
+          <h2>Popular amenities</h2>
+          <ul>
+            <li v-for="(amenity, index) in hotel.amenities" :key="index">
+              <i :class="amenity.icon"></i> {{ amenity.name }}
+            </li>
+          </ul>
         </div>
-      </a-carousel>
-    </a-modal>
+        <div></div>
+      </div>
+
+      <div class="rooms-wrapper">
+        <h1 style="text-align: center">Chose your Room</h1>
+        <div class="rooms">
+          <room-card
+            v-for="(room, index) in hotel.rooms"
+            :key="index"
+            :details="room"
+          />
+        </div>
+      </div>
+      <a-modal
+        v-model="showModal"
+        title="Hotel Images"
+        width="80rem"
+        :footer="null"
+      >
+        <a-carousel>
+          <div v-for="(image, index) in allImages" :key="index">
+            <img :src="image" alt="Image" class="carousel-image" />
+          </div>
+        </a-carousel>
+      </a-modal>
+    </div>
   </div>
 </template>
 <script>
@@ -92,6 +94,7 @@ export default {
   },
   data() {
     return {
+      fetchLoading: true,
       showModal: false,
       featureImage: require("~/static/images/feature-image.avif"),
       otherImages: [
@@ -105,123 +108,30 @@ export default {
       ],
 
       mapImage: "/path/to/map-image.jpg",
-      hotel: {
-        name: "Islamabad Serena Hotel",
-
-        rating_category: "Excellent",
-        description: "Luxury hotel with 5 restaurants and a full-service spa",
-        points: 8.6,
-        guestsLiked: ["Friendly staff"],
-        amenities: [
-          { icon: "fas fa-utensils", name: "Breakfast included" },
-          { icon: "fas fa-snowflake", name: "Air conditioning" },
-          { icon: "fas fa-spa", name: "Spa" },
-          { icon: "fas fa-swimming-pool", name: "Pool" },
-          { icon: "fas fa-wifi", name: "Free WiFi" },
-          { icon: "fas fa-parking", name: "Parking included" },
-        ],
-        location:
-          "Khayaban-e-Suharwardy G-5/1, Islamabad, Federal Capital Territory, 44000",
-
-        rooms: [
-          {
-            image: "path/to/image1.jpg",
-            imageCount: 4,
-            title: "Deluxe Room, 2 Twin Beds",
-            rating: "8.5/10 Very Good",
-            amenities: [
-              { icon: "fas fa-utensils", name: "Breakfast included" },
-              { icon: "fas fa-snowflake", name: "Air conditioning" },
-              { icon: "fas fa-spa", name: "Spa" },
-              { icon: "fas fa-swimming-pool", name: "Pool" },
-              { icon: "fas fa-wifi", name: "Free WiFi" },
-              { icon: "fas fa-parking", name: "Parking included" },
-            ],
-            refundable: "Fully refundable Before Wed, Jul 24",
-            price: "$219",
-            total: "$267 total includes taxes & fees",
-            availability: "We have 5 left",
-            buttonText: "Reserve",
-          },
-          {
-            image: "path/to/image2.jpg",
-            imageCount: 5,
-            title: "King Suite, 1 King Bed",
-            rating: "9.0/10 Excellent",
-            amenities: [
-              { icon: "fas fa-utensils", name: "Breakfast included" },
-              { icon: "fas fa-snowflake", name: "Air conditioning" },
-              { icon: "fas fa-spa", name: "Spa" },
-              { icon: "fas fa-swimming-pool", name: "Pool" },
-              { icon: "fas fa-wifi", name: "Free WiFi" },
-              { icon: "fas fa-parking", name: "Parking included" },
-            ],
-            refundable: "Fully refundable Before Fri, Jul 26",
-            price: "$299",
-            total: "$365 total includes taxes & fees",
-            availability: "Only 2 left",
-            buttonText: "Reserve",
-          },
-          {
-            image: "path/to/image3.jpg",
-            imageCount: 6,
-            title: "Standard Room, 1 Queen Bed",
-            rating: "8.0/10 Good",
-            amenities: [
-              { icon: "fas fa-utensils", name: "Breakfast included" },
-              { icon: "fas fa-snowflake", name: "Air conditioning" },
-              { icon: "fas fa-spa", name: "Spa" },
-              { icon: "fas fa-swimming-pool", name: "Pool" },
-              { icon: "fas fa-wifi", name: "Free WiFi" },
-              { icon: "fas fa-parking", name: "Parking included" },
-            ],
-            refundable: "Fully refundable Before Mon, Jul 29",
-            price: "$150",
-            total: "$180 total includes taxes & fees",
-            availability: "Only 3 left",
-            buttonText: "Reserve",
-          },
-          {
-            image: "path/to/image4.jpg",
-            imageCount: 3,
-            title: "Family Room, 2 Double Beds",
-            rating: "8.7/10 Very Good",
-            amenities: [
-              { icon: "fas fa-utensils", name: "Breakfast included" },
-              { icon: "fas fa-snowflake", name: "Air conditioning" },
-              { icon: "fas fa-spa", name: "Spa" },
-              { icon: "fas fa-swimming-pool", name: "Pool" },
-              { icon: "fas fa-wifi", name: "Free WiFi" },
-              { icon: "fas fa-parking", name: "Parking included" },
-            ],
-            refundable: "Fully refundable Before Tue, Jul 23",
-            price: "$250",
-            total: "$300 total includes taxes & fees",
-            availability: "We have 4 left",
-            buttonText: "Reserve",
-          },
-          {
-            image: "path/to/image5.jpg",
-            imageCount: 8,
-            title: "Executive Suite, 1 King Bed",
-            rating: "9.5/10 Exceptional",
-            amenities: [
-              { icon: "fas fa-utensils", name: "Breakfast included" },
-              { icon: "fas fa-snowflake", name: "Air conditioning" },
-              { icon: "fas fa-spa", name: "Spa" },
-              { icon: "fas fa-swimming-pool", name: "Pool" },
-              { icon: "fas fa-wifi", name: "Free WiFi" },
-              { icon: "fas fa-parking", name: "Parking included" },
-            ],
-            refundable: "Fully refundable Before Thu, Jul 25",
-            price: "$350",
-            total: "$420 total includes taxes & fees",
-            availability: "Only 1 left",
-            buttonText: "Reserve",
-          },
-        ],
-      },
+      hotel:null,
     };
+  },
+  watch: {
+    $route: {
+      immediate: true,
+      deep: true,
+      handler(val) {
+        const id = val.params.id;
+        this.fetchSingleHotelDetails(id);
+      },
+    },
+  },
+  mounted() {
+    this.$store.commit("setBannerTitle", "Hotels");
+  },
+  methods: {
+    async fetchSingleHotelDetails(id) {
+      this.fetchLoading = true;
+      let res = await this.$axios.get("hotel/single/" + id);
+
+      this.blog = res.data.data.response.hotel;
+      this.fetchLoading = false;
+    },
   },
 };
 </script>

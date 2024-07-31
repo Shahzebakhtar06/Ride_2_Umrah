@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="filters">
+  <div class="container">
+    <div class="filters" :class="{ loader: fetchLoading }">
       <BaseFilters
         :fields="staysFilters"
         :fieldsValue="selectedFilters"
@@ -51,6 +51,7 @@ export default {
       ],
       selectedFilters: {},
       hotels: [],
+      fetchLoading: true,
     };
   },
   computed: {
@@ -77,6 +78,9 @@ export default {
       },
     },
   },
+  mounted() {
+    this.$store.commit("setBannerTitle", "Hotels");
+  },
   methods: {
     async handleSubmit(formData) {
       this.$store.commit("updateFilters", formData);
@@ -84,9 +88,11 @@ export default {
     },
     async fetchHotels(query) {
       let { location: city } = query || this.activeFilters;
+      this.fetchLoading = true;
       let res = await this.$axios.post("hotel/filter", { city });
 
       this.hotels = res.data.data.response.data;
+      this.fetchLoading = false;
     },
   },
 };

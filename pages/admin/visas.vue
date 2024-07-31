@@ -343,7 +343,7 @@ export default {
 
               let errorMessage = "Visa Updating Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -395,7 +395,7 @@ export default {
 
               let errorMessage = "Visa Creation Failed";
               if (
-                e.response &&
+                e && e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {

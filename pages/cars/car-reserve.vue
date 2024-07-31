@@ -1,5 +1,6 @@
 <template>
-  <div class="booking-container">
+  <div class="container">
+  <div class="booking-container ">
     <ReserveFrom />
     <a-card>
       <div>
@@ -32,6 +33,7 @@
         </div>
       </div>
     </a-card>
+  </div>
   </div>
 </template>
 
@@ -67,6 +69,10 @@ export default {
         total: 43242,
       },
     };
+  },
+  mounted(){
+    this.$store.commit("setBannerTitle", "Cars");
+
   },
 };
 </script>
