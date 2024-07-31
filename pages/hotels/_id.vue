@@ -4,7 +4,10 @@
       <div class="hotel-header">
         <div class="hotel-images">
           <div class="feature-image">
-            <img :src="featureImage" alt="Feature Image" />
+            <img
+              :src="$global.imgBasePath + hotel.featureImage"
+              alt="Feature Image"
+            />
           </div>
           <div class="other-images">
             <img v-for="i in 4" :key="i" :src="otherImages[i]" alt="Image" />
@@ -31,16 +34,11 @@
       <div class="hotel-details">
         <div class="hotel-info">
           <h1>{{ hotel.name }}</h1>
-          <div class="hotel-rating">★★★★★</div>
-          <p>{{ hotel.description }}</p>
-          <div class="rating row">
-            <div class="rate col fit-width">
-              {{ hotel.points }}
-            </div>
-            <div class="col px-1">
-              <div>
-                <b>{{ hotel.rating_category }}</b>
-              </div>
+          <!-- <div class="hotel-rating">★★★★★</div> -->
+          <p>{{ hotel.short_description }}</p>
+          <div class="rating">
+            <div class="rate fit-width">
+              {{ hotel.rating }}
             </div>
           </div>
         </div>
@@ -52,10 +50,10 @@
             </li>
           </ul>
         </div>
-        <div></div>
+        <div v-html="hotel.description"></div>
       </div>
 
-      <div class="rooms-wrapper">
+      <div class="rooms-wrapper" v-if="hotel.rooms.length">
         <h1 style="text-align: center">Chose your Room</h1>
         <div class="rooms">
           <room-card
@@ -73,7 +71,7 @@
       >
         <a-carousel>
           <div v-for="(image, index) in allImages" :key="index">
-            <img :src="image" alt="Image" class="carousel-image" />
+            <img :src="$global.imgBasePath + image" alt="Image" class="carousel-image" />
           </div>
         </a-carousel>
       </a-modal>
@@ -108,7 +106,7 @@ export default {
       ],
 
       mapImage: "/path/to/map-image.jpg",
-      hotel:null,
+      hotel: null,
     };
   },
   watch: {
@@ -129,7 +127,7 @@ export default {
       this.fetchLoading = true;
       let res = await this.$axios.get("hotel/single/" + id);
 
-      this.blog = res.data.data.response.hotel;
+      this.hotel = res.data.data.response.hotel;
       this.fetchLoading = false;
     },
   },
