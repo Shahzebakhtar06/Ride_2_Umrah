@@ -63,7 +63,7 @@ export default {
     return {};
   },
   mounted(){
-    this.$store.commit("setBannerTitle", "Contact Us");
+    this.$store.commit("SET_BANNER_TITLE", "Contact Us");
   },
   methods: {},
 };

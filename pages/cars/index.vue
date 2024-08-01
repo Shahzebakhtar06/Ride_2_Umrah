@@ -102,9 +102,9 @@ export default {
     };
   },
   computed: {
-    activeFilters() {
-      return this.$store.state.activeFilters;
-    },
+    // activeFilters() {
+    //   return this.$store.state.activeFilters;
+    // },
   },
   watch: {
     // $route: {
@@ -141,7 +141,7 @@ export default {
     },
   },
   mounted(){
-    this.$store.commit("setBannerTitle", "Cars");
+    this.$store.commit("SET_BANNER_TITLE", "Cars");
 
   },
   methods: {

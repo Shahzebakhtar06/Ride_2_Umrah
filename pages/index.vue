@@ -100,7 +100,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "");
+    this.$store.commit("SET_BANNER_TITLE", "");
   },
   methods: {
     handleSubmit(formData) {

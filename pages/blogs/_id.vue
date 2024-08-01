@@ -34,7 +34,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Blogs");
+    this.$store.commit("SET_BANNER_TITLE", "Blogs");
   },
   methods: {
     async fetchSingleBlogDetails(id) {

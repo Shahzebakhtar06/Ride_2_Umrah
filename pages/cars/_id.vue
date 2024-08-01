@@ -131,7 +131,7 @@ export default {
     };
   },
   mounted(){
-    this.$store.commit("setBannerTitle", "Cars");
+    this.$store.commit("SET_BANNER_TITLE", "Cars");
 
   },
   methods:{

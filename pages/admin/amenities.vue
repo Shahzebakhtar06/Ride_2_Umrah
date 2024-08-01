@@ -34,7 +34,12 @@
               </div>
             </div>
             <div slot="image" slot-scope="item">
-              <img :src="$global.imgBasePath + item" width="60" height="60" alt="" />
+              <img
+                :src="$global.imgBasePath + item"
+                width="60"
+                height="60"
+                alt=""
+              />
             </div>
           </a-table>
         </div>
@@ -67,7 +72,7 @@
                 <a-select-option value="hotel"> Hotel </a-select-option>
               </a-select>
             </a-form-model-item>
-            <a-form-model-item
+            <!-- <a-form-model-item
               has-feedback
               label="Amenity Description"
               prop="description"
@@ -76,9 +81,14 @@
                 v-model="form.description"
                 placeholder="Amenity Description"
               />
-            </a-form-model-item>
+            </a-form-model-item> -->
             <a-form-model-item has-feedback label="Amenity Image" prop="image">
-              <input type="file" ref="amenity_image" @change="onFileChange" />
+              <input
+                type="file"
+                ref="amenity_image"
+                @change="onFileChange"
+                accept="image/*"
+              />
             </a-form-model-item>
           </a-form-model>
         </a-modal>
@@ -101,12 +111,12 @@ const columns = [
 
     ellipsis: true,
   },
-  {
-    title: "Description",
-    dataIndex: "description",
+  // {
+  //   title: "Description",
+  //   dataIndex: "description",
 
-    ellipsis: true,
-  },
+  //   ellipsis: true,
+  // },
   {
     title: "Image",
     dataIndex: "image",
@@ -143,7 +153,7 @@ export default {
       visible: false,
       confirmLoading: false,
       form: {
-        description: "",
+        // description: "",
         image: null,
       },
       rules: {
@@ -224,7 +234,7 @@ export default {
               id: form.id,
               image: form.image,
               name: form.name,
-              description: form.description,
+              // description: form.description,
               type: form.type,
             };
             Object.entries(fields).forEach(([key, value]) => {
@@ -246,7 +256,8 @@ export default {
 
               let errorMessage = "Amenity Updating Failed";
               if (
-                e && e.response &&
+                e &&
+                e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -265,7 +276,7 @@ export default {
             const fields = {
               image: form.image,
               name: form.name,
-              description: form.description,
+              // description: form.description,
               type: form.type,
             };
             Object.entries(fields).forEach(([key, value]) => {
@@ -287,7 +298,8 @@ export default {
 
               let errorMessage = "Amenity Creation Failed";
               if (
-                e && e.response &&
+                e &&
+                e.response &&
                 e.response.data &&
                 e.response.data.data.response
               ) {
@@ -312,7 +324,7 @@ export default {
       this.form = {
         name: "",
         image: null,
-        description: "",
+        // description: "",
         id: undefined,
         price: "",
       };

@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Package Reservation");
+    this.$store.commit("SET_BANNER_TITLE", "Package Reservation");
   },
 };
 </script>

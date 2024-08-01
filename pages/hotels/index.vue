@@ -51,12 +51,14 @@ export default {
       ],
       selectedFilters: {},
       hotels: [],
-      fetchLoading: true,
+      fetchLoading: false,
     };
   },
   computed: {
     activeFilters() {
+      
       return this.$store.state.activeFilters;
+     
     },
   },
   watch: {
@@ -79,11 +81,12 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Hotels");
+    this.$store.commit("SET_BANNER_TITLE", "Hotels");
   },
   methods: {
     async handleSubmit(formData) {
-      this.$store.commit("updateFilters", formData);
+      let form=JSON.parse(JSON.stringify(formData))
+      this.$store.commit("UPDATE_FILTERS", form);
       await this.fetchHotels(formData);
     },
     async fetchHotels(query) {

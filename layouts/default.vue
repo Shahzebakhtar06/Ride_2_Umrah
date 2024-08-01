@@ -36,6 +36,10 @@
                   <nuxt-link to="/contact-us">Contact US</nuxt-link>
                 </li>
               </ul>
+              <a-button @click="$router.push('/reservation-page')"
+              class="add-to-cart"
+                ><i class="fa-solid fa-cart-shopping"></i
+              ></a-button>
               <a-button @click="$router.push('auth/login')">Sign In</a-button>
             </div>
           </div>
@@ -111,16 +115,22 @@ export default {
     align-items: center;
     margin: 0;
     margin-right: 7rem;
+    width: max-content;
     font-size: small;
     li {
       padding: 1rem;
+
       a {
         color: #000;
+        white-space: nowrap;
         &:hover {
           color: var(--theme-primary-color);
         }
       }
     }
+  }
+  .add-to-cart{
+    margin-right: 1rem;
   }
 }
 .banner {

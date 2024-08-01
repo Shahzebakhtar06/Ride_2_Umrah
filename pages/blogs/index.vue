@@ -33,7 +33,7 @@ export default {
   },
   mounted() {
     this.fetchBlogs();
-    this.$store.commit("setBannerTitle", "Blogs");
+    this.$store.commit("SET_BANNER_TITLE", "Blogs");
   },
   methods: {
     goToBlogDetail(id) {

@@ -22,7 +22,7 @@
               {{ field.label }}
             </div>
             <a-select
-              :value="formData[field.key]"
+              :value="Number(formData[field.key])"
               :placeholder="field.placeholder"
               style="width: 100%"
               option-filter-prop="children"
@@ -127,11 +127,19 @@ export default {
     },
   },
   watch: {
+    fieldsValue: {
+      immediate: true,
+      handler(newFieldsValue) {
+        this.formData = { ...newFieldsValue };
+      },
+    },
     fields: {
       immediate: true,
       handler(newFields) {
-        newFields.forEach((field) => {
-          this.$set(this.formData, field.key, field.value || "");
+        newFields.forEach((el) => {
+          if (!this.formData[el.key]) {
+            this.$set(this.formData, el.key, el.value || "");
+          }
         });
       },
     },
@@ -147,7 +155,7 @@ export default {
       this.searchQuery = val;
     },
     submitForm() {
-      this.$store.commit("updateFilters", this.formData);
+      this.$store.commit("UPDATE_FILTERS", this.formData);
 
       this.$emit("submit", this.formData);
     },
@@ -204,7 +212,7 @@ export default {
     border-radius: 0.5rem;
     transition: 0.5s all;
     overflow: hidden;
-    *{
+    * {
       background: #fff;
     }
     @media only screen and (max-width: 768px) {
@@ -268,7 +276,7 @@ export default {
         line-height: normal;
         position: absolute;
         top: 0.3rem;
-        z-index:2;
+        z-index: 2;
         font-size: 11px;
       }
       height: -webkit-fill-available;

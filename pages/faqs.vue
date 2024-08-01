@@ -24,7 +24,7 @@ export default {
   },
   mounted() {
     this.fetchFaqs();
-    this.$store.commit("setBannerTitle", "FAQs");
+    this.$store.commit("SET_BANNER_TITLE", "FAQs");
   },
   methods: {
     async fetchFaqs() {

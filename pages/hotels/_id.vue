@@ -1,22 +1,27 @@
 <template>
   <div class="container" :class="{ loader: fetchLoading }">
     <div v-if="hotel" class="hotel-page">
-      <div class="hotel-header">
+      <div class="hotel-header" id="overview">
         <div class="hotel-images">
           <div class="feature-image">
             <img
-              :src="$global.imgBasePath + hotel.featureImage"
+              :src="$global.imgBasePath + hotel.featured_image"
               alt="Feature Image"
             />
           </div>
           <div class="other-images">
-            <img v-for="i in 4" :key="i" :src="otherImages[i]" alt="Image" />
+            <img
+              v-for="i in 4"
+              :key="i"
+              :src="$global.imgBasePath + hotel.images[i].name"
+              alt="Image"
+            />
             <button
-              v-if="otherImages.length > 4"
+              v-if="hotel.images.length > 4"
               class="more-images-btn"
               @click="showModal = true"
             >
-              <i class="fa-regular fa-images"></i> {{ otherImages.length - 4 }}
+              <i class="fa-regular fa-images"></i> {{ hotel.images.length - 4 }}
               <i class="fa-regular fa-plus"></i>
             </button>
           </div>
@@ -27,14 +32,11 @@
           <li><a href="#overview">Overview</a></li>
           <li><a href="#amenities">Amenities</a></li>
           <li><a href="#rooms">Rooms</a></li>
-          <li><a href="#accessibility">Accessibility</a></li>
-          <li><a href="#policies">Policies</a></li>
         </ul>
       </div>
       <div class="hotel-details">
         <div class="hotel-info">
           <h1>{{ hotel.name }}</h1>
-          <!-- <div class="hotel-rating">★★★★★</div> -->
           <p>{{ hotel.short_description }}</p>
           <div class="rating">
             <div class="rate fit-width">
@@ -42,18 +44,31 @@
             </div>
           </div>
         </div>
-        <div class="hotel-amenities">
+        <div id="amenities" class="hotel-amenities">
           <h2>Popular amenities</h2>
           <ul>
-            <li v-for="(amenity, index) in hotel.amenities" :key="index">
-              <i :class="amenity.icon"></i> {{ amenity.name }}
+            <li v-for="(amenity, index) in visibleAmenities" :key="index">
+              <img
+                :src="$global.imgBasePath + amenity.image"
+                width="30"
+                alt=""
+              />
+              {{ amenity.name }}
             </li>
           </ul>
+          <a-button
+            v-if="hotel.amenities.length > maxVisibleAmenities"
+            type="link"
+            class="amenities-see-more-bnt"
+            @click="toggleAmenities"
+          >
+            {{ showMoreAmenities ? "See Less Amenities" : "See All Amenities" }}
+          </a-button>
         </div>
         <div v-html="hotel.description"></div>
       </div>
 
-      <div class="rooms-wrapper" v-if="hotel.rooms.length">
+      <div id="rooms" class="rooms-wrapper" v-if="hotel.rooms.length">
         <h1 style="text-align: center">Chose your Room</h1>
         <div class="rooms">
           <room-card
@@ -67,11 +82,26 @@
         v-model="showModal"
         title="Hotel Images"
         width="80rem"
+        class="hotel-all-images-modal"
         :footer="null"
       >
-        <a-carousel>
-          <div v-for="(image, index) in allImages" :key="index">
-            <img :src="$global.imgBasePath + image" alt="Image" class="carousel-image" />
+        <a-carousel arrows class="image-slider">
+          <div
+            slot="prevArrow"
+            class="custom-slick-arrow"
+            style="left: 1rem; z-index: 1"
+          >
+            <a-icon type="left-circle" />
+          </div>
+          <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
+            <a-icon type="right-circle" />
+          </div>
+          <div v-for="(img, index) in allImages" :key="index">
+            <img
+              :src="$global.imgBasePath + img.name"
+              class="carousel-image"
+              alt="Hotel Image"
+            />
           </div>
         </a-carousel>
       </a-modal>
@@ -87,26 +117,24 @@ export default {
   },
   computed: {
     allImages() {
-      return [...this.featureImage, ...this.otherImages];
+      return [
+        { id: 999999999, name: this.hotel.featured_image },
+        ...this.hotel.images,
+      ];
+    },
+    visibleAmenities() {
+      return this.showMoreAmenities
+        ? this.hotel.amenities
+        : this.hotel.amenities.slice(0, this.maxVisibleAmenities);
     },
   },
   data() {
     return {
       fetchLoading: true,
       showModal: false,
-      featureImage: require("~/static/images/feature-image.avif"),
-      otherImages: [
-        require("~/static/images/1.avif"),
-        require("~/static/images/2.avif"),
-        require("~/static/images/3.avif"),
-        require("~/static/images/4.avif"),
-        require("~/static/images/5.avif"),
-        require("~/static/images/6.avif"),
-        require("~/static/images/7.avif"),
-      ],
-
-      mapImage: "/path/to/map-image.jpg",
       hotel: null,
+      maxVisibleAmenities: 6,
+      showMoreAmenities: false,
     };
   },
   watch: {
@@ -120,7 +148,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Hotels");
+    this.$store.commit("SET_BANNER_TITLE", "Hotels");
   },
   methods: {
     async fetchSingleHotelDetails(id) {
@@ -130,11 +158,14 @@ export default {
       this.hotel = res.data.data.response.hotel;
       this.fetchLoading = false;
     },
+    toggleAmenities() {
+      this.showMoreAmenities = !this.showMoreAmenities;
+    },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .hotel-page {
   padding: 2rem;
   .hotel-header {
@@ -244,6 +275,7 @@ export default {
         border-radius: 0.5rem;
       }
     }
+
     .hotel-amenities {
       margin-top: 2rem;
       width: 60rem;
@@ -263,59 +295,15 @@ export default {
           align-items: center;
           margin-bottom: 1rem;
 
-          i {
-            font-size: 2rem;
+          img {
             margin-right: 1rem;
           }
         }
       }
 
-      .view-all-amenities {
-        display: inline-block;
-        color: #007bff;
-        text-decoration: none;
-      }
-    }
-
-    .hotel-location {
-      flex: 1;
-
-      h2 {
-        margin: 0;
-      }
-
-      .hotel-map {
-        width: 100%;
-        height: auto;
-        margin-bottom: 1rem;
-      }
-
-      .nearby-locations {
-        list-style: none;
-        padding: 0;
-
-        li {
-          display: flex;
-          align-items: center;
-          margin-bottom: 0.5rem;
-
-          i {
-            font-size: 1.6rem;
-            margin-right: 1rem;
-          }
-
-          .distance {
-            margin-left: auto;
-          }
-        }
-      }
-
-      .view-map,
-      .view-more {
-        display: inline-block;
-        color: #007bff;
-        text-decoration: none;
-        margin-bottom: 1rem;
+      .amenities-see-more-bnt {
+        margin: 1rem 0;
+        padding-left: 0;
       }
     }
   }
@@ -341,13 +329,35 @@ export default {
       }
     }
   }
-  .rooms {
-    display: flex;
-    flex-wrap: wrap;
+  .rooms-wrapper {
+    h2 {
+      font-size: 1.75rem;
+    }
+    .rooms {
+      display: flex;
+      flex-wrap: wrap;
+    }
   }
+}
+.hotel-all-images-modal {
   .carousel-image {
     width: 100%;
     height: auto;
+  }
+  .ant-carousel .custom-slick-arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2.5rem;
+    color: #fff;
+    background-color: rgb(31 45 61 / 77%);
+    opacity: 0.5;
+    border-radius: 50%;
+  }
+  .ant-carousel .custom-slick-arrow:before {
+    display: none;
+  }
+  .ant-carousel .custom-slick-arrow:hover {
+    opacity: 0.5;
   }
 }
 </style>

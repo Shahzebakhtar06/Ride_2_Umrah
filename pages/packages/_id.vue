@@ -199,7 +199,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Packages");
+    this.$store.commit("SET_BANNER_TITLE", "Packages");
   },
   methods:{
     goToPackageReserve(){

@@ -19,7 +19,7 @@
         </a-carousel>
       </div>
       <div class="details" @click="goToHotelDetails(details.id)">
-        <div>
+        <div class="hotel-info">
           <div class="card-title">
             {{ details.name }}
           </div>
@@ -77,7 +77,7 @@ export default {
   margin: auto;
   margin-top: 2rem;
   padding: 0;
-
+  height: 20rem;
   border: none;
   .card-content {
     background: #fff;
@@ -86,6 +86,12 @@ export default {
     border: 0.1rem solid var(--theme-border-color);
     border-radius: 1.5rem;
     overflow: hidden;
+    height: 100%;
+    .hotel-info {
+      display: flex;
+      flex-flow: column;
+      justify-content: space-around;
+    }
     .card-title {
       font-size: 2.4rem;
       font-weight: 800;

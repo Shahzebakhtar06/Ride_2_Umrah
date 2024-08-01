@@ -35,7 +35,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.commit("setBannerTitle", "Room Reserve");
+    this.$store.commit("SET_BANNER_TITLE", "Room Reserve");
   },
 };
 </script>

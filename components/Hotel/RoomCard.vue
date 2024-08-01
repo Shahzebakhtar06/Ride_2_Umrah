@@ -1,7 +1,7 @@
 <template>
-  <div class="hotel-card">
+  <div class="room-card">
     <div class="card-content">
-      <div class="image-slider-wrapper">
+      <div class="images-wrapper">
         <a-carousel arrows class="image-slider">
           <div
             slot="prevArrow"
@@ -13,52 +13,141 @@
           <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
-          </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
+          <div v-for="(img, index) in details.images" :key="index">
+            <img
+              :src="$global.imgBasePath + img.name"
+              class="carousel-image"
+              alt="room Image"
+            />
           </div>
         </a-carousel>
       </div>
-      <div class="details" >
+
+      <div class="details">
         <div>
           <div class="card-title">
-            {{ details.hotel_name }}
+            {{ details.name }}
           </div>
           <p>{{ details.rating }}</p>
         </div>
-        <div>
-          <div class="hotel-amenities">
-            <h2>Popular amenities</h2>
+
+        <div v-if="visibleRoomAmenities?.length > 0" class="room-amenities">
+          <h4>Popular amenities</h4>
+          <ul>
+            <li v-for="(amenity, index) in visibleRoomAmenities" :key="index">
+              <img
+                :src="$global.imgBasePath + amenity.image"
+                width="30"
+                alt=""
+              />{{ amenity.name }}
+            </li>
+          </ul>
+        </div>
+        <a-button type="link" @click="handelDetailsModal" block>
+          See Details
+        </a-button>
+        <span class="price">Price : {{ details.price }}</span>
+      </div>
+      <a-button
+        type="primary"
+        @click="reserveRoom(details)"
+        class="reserve-btn"
+      >
+        Reserve
+      </a-button>
+    </div>
+    <a-modal
+      v-model="showDetailsModal"
+      title="Room Details"
+      width="80rem"
+      class="room-details-modal"
+      :footer="null"
+    >
+      <div class="card-content">
+        <div class="images-wrapper">
+          <a-carousel arrows class="image-slider">
+            <div
+              slot="prevArrow"
+              class="custom-slick-arrow"
+              style="left: 1rem; z-index: 1"
+            >
+              <a-icon type="left-circle" />
+            </div>
+            <div
+              slot="nextArrow"
+              class="custom-slick-arrow"
+              style="right: 1rem"
+            >
+              <a-icon type="right-circle" />
+            </div>
+            <div v-for="(img, index) in details.images" :key="index">
+              <img
+                :src="$global.imgBasePath + img.name"
+                class="carousel-image"
+                alt="room Image"
+              />
+            </div>
+          </a-carousel>
+        </div>
+
+        <div class="details">
+          <div>
+            <div class="card-title">
+              {{ details.name }}
+            </div>
+            <p>{{ details.rating }}</p>
+          </div>
+
+          <div v-if="details.amenities?.length > 0" class="room-amenities">
+            <h4>Popular amenities</h4>
             <ul>
               <li v-for="(amenity, index) in details.amenities" :key="index">
-                <i :class="amenity.icon"></i> {{ amenity.name }}
+                <img
+                  :src="$global.imgBasePath + amenity.image"
+                  width="30"
+                  alt=""
+                />{{ amenity.name }}
               </li>
             </ul>
           </div>
+          <span class="price">Price : {{ details.price }}</span>
         </div>
-        <span class="price">Price {{ details.price }}</span>
+        <a-button type="cancel" @click="handelDetailsModal"> Cancel </a-button>
       </div>
-      <a-button type="primary" @click="goToReservePage" class="reserve-btn"> Reserve </a-button>
-    </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  name: "HotelCard",
+  name: "roomCard",
   props: { details: Object },
+  data() {
+    return {
+      showDetailsModal: false,
+    };
+  },
+  computed: {
+    visibleRoomAmenities() {
+      return this.details.amenities.slice(0, 6);
+    },
+  },
   methods: {
-    goToReservePage() {
-      this.$router.push("/hotels/room-reserve?id=" + 1);
+    ...mapActions(["addToCart"]),
+    reserveRoom(details) {
+      this.addToCart({ type: "Room", data: details });
+      this.$notification.success({ message: "AddToCart successfully" });
+    },
+    handelDetailsModal() {
+      this.showDetailsModal = !this.showDetailsModal;
     },
   },
 };
 </script>
 
-<style scoped lang="scss">
-.hotel-card {
+<style lang="scss">
+.room-card {
   width: 30rem;
   margin: 2rem;
   padding: 0;
@@ -69,30 +158,15 @@ export default {
     border-radius: 1.5rem;
     overflow: hidden;
     .card-title {
-      font-size: 2.4rem;
+      font-size: 1.6rem;
       font-weight: 800;
     }
-    .image-slider-wrapper {
+    .room-amenities {
       width: 100%;
-
-      .ant-carousel .custom-slick-arrow {
-        width: 2.5rem;
-        height: 2.5rem;
-        font-size: 2.5rem;
-        color: #fff;
-        background-color: rgba(31, 45, 61, 0.11);
-        opacity: 0.3;
+      h4 {
+        font-size: 1.6rem;
+        font-weight: 500;
       }
-      .ant-carousel .custom-slick-arrow:before {
-        display: none;
-      }
-      .ant-carousel .custom-slick-arrow:hover {
-        opacity: 0.5;
-      }
-    }
-    .hotel-amenities {
-      width: 100%;
-
       ul {
         list-style: none;
         padding: 0;
@@ -101,8 +175,7 @@ export default {
           align-items: center;
           margin-bottom: 1rem;
 
-          i {
-            font-size: 2rem;
+          img {
             margin-right: 1rem;
           }
         }
@@ -112,62 +185,113 @@ export default {
       padding: 1rem;
       width: 100%;
     }
+    .images-wrapper {
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .ant-carousel .custom-slick-arrow {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 2.5rem;
+        color: #fff;
+        background-color: var(--theme-primary-color);
+        opacity: 0.5;
+        border-radius: 50%;
+      }
+      .ant-carousel .custom-slick-arrow:before {
+        display: none;
+      }
+      .ant-carousel .custom-slick-arrow:hover {
+        opacity: 0.5;
+      }
+    }
+  }
+  .price {
+    font-size: 1.7rem;
+    font-weight: bold;
+    /* color: #52c41a; */
+  }
+  .reserve-btn {
+    margin: 1rem auto;
+    display: block;
+    font-size: large;
+    font-weight: 600;
+  }
+
+  .details {
+    h3 {
+      margin: 0;
+      font-size: 2rem;
+    }
+    p {
+      margin: 0.5rem 0;
+    }
   }
 }
-.reserve-btn {
-  margin: 1rem auto;
-  display: block;
-  font-size: large;
-  font-weight: 600;
-}
-.image-slider {
-  width: 100%;
-  height: 100%;
-}
 
-.image-slider img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.room-details-modal {
+  .card-content {
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+    }
+    .room-amenities {
+      width: 100%;
+      h4 {
+        font-size: 1.6rem;
+        font-weight: 500;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        li {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1rem;
 
-.details h3 {
-  margin: 0;
-  font-size: 2rem;
-}
-
-.details p {
-  margin: 0.5rem 0;
-}
-
-.reserve-now {
-  margin: 1rem 0;
-  display: block;
-}
-
-.price-info {
-  margin: 1rem 0;
-  text-align: end;
-}
-
-.price {
-  font-size: 2.4rem;
-  font-weight: bold;
-  /* color: #52c41a; */
-}
-
-.total-price {
-  display: block;
-  color: gray;
-}
-
-.availability {
-  border: none;
-  color: white;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  width: fit-content;
-  border-radius: 0.5rem;
-  margin-left: auto;
+          img {
+            margin-right: 1rem;
+          }
+        }
+      }
+    }
+    .details {
+      padding: 1rem;
+      width: 100%;
+    }
+    .images-wrapper {
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 1rem;
+      }
+      .ant-carousel .custom-slick-arrow {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 2.5rem;
+        color: #fff;
+        background-color: var(--theme-primary-color);
+        opacity: 0.5;
+        border-radius: 50%;
+      }
+      .ant-carousel .custom-slick-arrow:before {
+        display: none;
+      }
+      .ant-carousel .custom-slick-arrow:hover {
+        opacity: 0.5;
+      }
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+  }
 }
 </style>
