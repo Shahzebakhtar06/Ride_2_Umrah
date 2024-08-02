@@ -2,15 +2,10 @@
   <div class="room-details">
     <div>
       <div class="featured-image">
-        <img src="/images/feature-image.avif" alt="" />
+        <img :src="$global.imgBasePath + details.images[0].name" alt="" />
       </div>
       <div class="hotel-info">
-        <h3>Islamabad Marriott Hotel</h3>
-        <div class="rating">
-          <div class="rate fit-width">
-            {{ details.rating }}
-          </div>
-        </div>
+        <h3>I{{ details.name }}</h3>
       </div>
       <div class="room-info">
         <a-row
@@ -32,8 +27,13 @@
           <a-col span="10">{{ getLocationName(details.location) }}</a-col>
         </a-row>
         <a-row justify="space-between">
-          <a-col span="10"><strong>{{ details.rooms.length }} Rooms</strong></a-col>
-          <a-col span="10">4 children and 4 Adult 3 x Night</a-col>
+          <a-col span="10"
+            ><strong>{{ details.rooms.length }} Rooms</strong></a-col
+          >
+          <a-col span="10"
+            >{{ totalsPeople.children }} children and
+            {{ totalsPeople.adults }} Adult {{ totalNights }} Nights</a-col
+          >
         </a-row>
         <a-row justify="space-between">
           <a-col span="10"><strong>Rooms Price</strong></a-col>
@@ -42,15 +42,17 @@
       </div>
 
       <a-row justify="space-between" class="total-price">
-        <a-col span="10"><strong>Total</strong></a-col>
-        <a-col span="10"><strong>$662.76</strong></a-col>
+        <a-col span="10"><strong>Grand Total</strong></a-col>
+        <a-col span="10"
+          ><strong>{{ grandTotal }}</strong></a-col
+        >
       </a-row>
     </div>
   </div>
 </template>
 
 <script>
-
+import moment from "moment";
 export default {
   name: "details",
   props: {
@@ -58,9 +60,31 @@ export default {
       type: Object,
     },
     getLocationName: Function,
-    formattedDate:Function
+    formattedDate: Function,
   },
+  computed: {
+    totalsPeople() {
+      return this.details.rooms.reduce(
+        (acc, item) => {
+          acc.adults += item.adults;
+          acc.children += item.children;
+          return acc;
+        },
+        { adults: 0, children: 0 }
+      );
+    },
+    totalNights() {
+      const startDate = moment(this.details.dates[0]);
+      const endDate = moment(this.details.dates[1]);
 
+      // Calculate the difference in days
+      const daysDifference = endDate.diff(startDate, "days");
+      return daysDifference;
+    },
+    grandTotal() {
+      return this.details.price * this.totalNights;
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -75,26 +99,16 @@ export default {
   }
   .hotel-info {
     margin-bottom: 0.5rem;
-
     h3 {
       margin-top: -2.7rem;
       color: #fff;
       font-weight: 500;
       padding: 0 0.5rem;
       margin-bottom: 2rem;
+      text-shadow: 1px -1px 10px #080808;
     }
 
-    .rating {
-      display: flex;
-      align-items: center;
-
-      .rate {
-        background: var(--theme-success-color);
-        color: #fff;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
-      }
-    }
+  
   }
   .total-price {
     margin: 1rem 0rem;

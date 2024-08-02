@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="reservation-page">
     <div class="container">
       <div class="card-wrapper">
         <div v-for="(item, index) in cartItems" :key="index" class="card">
@@ -109,14 +109,20 @@ export default {
             entity_id: el.id,
           };
           if (el.cartType.toLowerCase() == "room") {
-            obj.from = el.dates?.length ? el.dates[0] : 0;
+            el.rooms.forEach((item) => {
+              let roomObj = {
+                type: el.cartType.toLowerCase(),
+                entity_id: el.id,
+              };
 
-            obj.to = el.dates?.length ? el.dates[1] : 0;
-            
-            el.rooms?.forEach((rm) => {
-              obj.adult = rm.adults;
-              obj.children = rm.children;
-              items.push(obj);
+              roomObj.from = el.dates?.length ? el.dates[0] : 0;
+
+              roomObj.to = el.dates?.length ? el.dates[1] : 0;
+
+              roomObj.adult = item.adults;
+              roomObj.children = item.children;
+            items.push(roomObj);
+
             });
           }
           if (el.cartType.toLowerCase() == "car") {
@@ -130,6 +136,7 @@ export default {
             items.push(obj);
           }
         });
+        console.log(items)
         this.bookingItems = items;
       },
     },
@@ -166,29 +173,31 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.card-wrapper {
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  .card {
-    width: 35rem;
-    margin: 0.5rem;
-    .ant-card {
-      height: 100%;
+<style lang="scss">
+.reservation-page {
+  .card-wrapper {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    .card {
+      width: 35rem;
+      margin: 0.5rem;
+      .ant-card {
+        height: 100%;
 
-      display: flex;
-      flex-flow: column;
-      justify-content: space-between;
-      .ant-card-actions {
-        height: 5rem;
+        display: flex;
+        flex-flow: column;
+        .ant-card-actions {
+          margin-top: auto !important;
+          height: 5rem;
+        }
       }
     }
   }
-}
-.reserve-form {
-  width: 60rem;
-  margin: auto;
-  margin-top: 5rem;
+  .reserve-form {
+    width: 60rem;
+    margin: auto;
+    margin-top: 5rem;
+  }
 }
 </style>

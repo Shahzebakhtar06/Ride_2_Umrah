@@ -96,7 +96,7 @@ export default {
     activeTab(val) {
       if (val == "packages") {
         this.$router.push("/packages");
-      } else if (val == "Visa") {
+      } else if (val == "visa") {
         this.$router.push("/visas");
       }
     },
