@@ -6,72 +6,66 @@
       </div>
       <div class="hotel-info">
         <h3>Islamabad Marriott Hotel</h3>
-        <div class="rating row">
-          <div class="rate col fit-width">
-            <!-- {{ details.rating.points }} -->
-            8.3
-          </div>
-          <div class="col px-1">
-            <div>
-              <b>Good</b>
-              <!-- <b>{{ details.rating.category }}</b> -->
-            </div>
+        <div class="rating">
+          <div class="rate fit-width">
+            {{ details.rating }}
           </div>
         </div>
       </div>
-      <!-- <div class="room-info">
-        <p>
-          <strong>1 Room:</strong>
-          {{ details.roomType }}, {{ details.beds }}
-        </p>
-        <p><strong>Check-in:</strong> {{ details.checkInDate }}</p>
-        <p><strong>Check-out:</strong> {{ details.checkOutDate }}</p>
-        <p>
-          <strong>1-night stay</strong>
-        </p>
-      </div> -->
-    </div>
-    <div title="Price details" class="price-details">
-      <a-row justify="space-between" class="price-row">
-        <a-col span="16">1 room x 2 nights</a-col>
-        <a-col span="8">$544.14</a-col>
-      </a-row>
-      <a-row justify="start" class="price-row">
-        <a-col span="16">$272.07 average per night</a-col>
-      </a-row>
-      <a-row justify="space-between" class="price-row">
-        <a-col span="16">
-          Taxes and fees
-          <a-tooltip title="Includes service fees and other charges">
-            <a-icon type="info-circle" />
-          </a-tooltip>
-        </a-col>
-        <a-col span="8">$118.62</a-col>
-      </a-row>
-      <a-row justify="space-between" class="total-row">
-        <a-col span="16">Total</a-col>
-        <a-col span="8">$662.76</a-col>
+      <div class="room-info">
+        <a-row
+          justify="space-between"
+          v-if="details.dates?.length && details.dates[0]"
+        >
+          <a-col span="10"><strong>Check-in Date</strong></a-col>
+          <a-col span="10">{{ formattedDate(details.dates[0]) }}</a-col>
+        </a-row>
+        <a-row
+          justify="space-between"
+          v-if="details.dates?.length && details.dates[1]"
+        >
+          <a-col span="10"><strong>Check-out Date</strong></a-col>
+          <a-col span="10">{{ formattedDate(details.dates[1]) }}</a-col>
+        </a-row>
+        <a-row justify="space-between">
+          <a-col span="10"><strong>Location</strong></a-col>
+          <a-col span="10">{{ getLocationName(details.location) }}</a-col>
+        </a-row>
+        <a-row justify="space-between">
+          <a-col span="10"><strong>{{ details.rooms.length }} Rooms</strong></a-col>
+          <a-col span="10">4 children and 4 Adult 3 x Night</a-col>
+        </a-row>
+        <a-row justify="space-between">
+          <a-col span="10"><strong>Rooms Price</strong></a-col>
+          <a-col span="10">{{ details.price }} per night</a-col>
+        </a-row>
+      </div>
+
+      <a-row justify="space-between" class="total-price">
+        <a-col span="10"><strong>Total</strong></a-col>
+        <a-col span="10"><strong>$662.76</strong></a-col>
       </a-row>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: "details",
   props: {
     details: {
       type: Object,
     },
+    getLocationName: Function,
+    formattedDate:Function
   },
+
 };
 </script>
 <style lang="scss" scoped>
 .room-details {
   width: 100%;
-  .price-details {
-    margin-top: 0.5rem;
-  }
   .featured-image {
     img {
       width: 100%;
@@ -102,61 +96,11 @@ export default {
       }
     }
   }
-
-  .rating {
-    display: flex;
-    align-items: center;
+  .total-price {
+    margin: 1rem 0rem;
   }
-
-  .rating-score {
-    font-weight: bold;
-    margin-right: 0.5rem;
-  }
-
-  .room-info {
-    margin-bottom: 2rem;
-  }
-
-  .special-requests {
-    margin-bottom: 2rem;
-  }
-
-  .booking-cta {
-    text-align: center;
-
-    button {
-      background-color: #4caf50;
-      color: white;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 0.4rem;
-      cursor: pointer;
-    }
-  }
-
-  .price-row {
-    margin: 1rem 0;
-  }
-
-  .total-row {
-    font-weight: bold;
-    margin: 2rem 0 1rem 0;
-  }
-
-  .promo-link {
-    display: block;
-    margin: 1rem 0;
-    color: #1890ff;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  .disclaimer {
-    font-size: 0.8em;
-    color: #666;
+  .ant-row {
+    margin: 2rem 0;
   }
 }
 </style>

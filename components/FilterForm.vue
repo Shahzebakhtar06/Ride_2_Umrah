@@ -1,7 +1,7 @@
 <template>
   <div id="base-filters">
     <a-form-model
-      ref="ruleForm"
+      ref="filterForm"
       :model="formData"
       :rules="rules"
       :wrapper-col="wrapperCol"
@@ -9,8 +9,7 @@
       <a-form-model-item
         v-for="field in fields"
         :key="field.key"
-        :required="field.required ? true : false"
-        prop="location"
+        :prop="field.key"
       >
         <div class="field-wrapper" v-if="field.type === 'select'">
           <div class="icon">
@@ -21,8 +20,11 @@
             <div class="label">
               {{ field.label }}
             </div>
+
             <a-select
-              :value="Number(formData[field.key])"
+              :value="
+                formData[field.key] ? Number(formData[field.key]) : undefined
+              "
               :placeholder="field.placeholder"
               style="width: 100%"
               option-filter-prop="children"
@@ -46,11 +48,21 @@
             <div class="label" v-if="formData[field.key]">
               {{ field.label }}
             </div>
-            <a-range-picker
+            <a-date-picker
+              v-if="field.date_type && field.date_type == 'single'"
               :disabled-date="disabledDate"
               :value="formData[field.key] ? formData[field.key] : null"
               format="YYYY-MM-DD"
-              :placeholder="['Pick Up Date', 'Drop Off Date']"
+              :placeholder="field.placeholder"
+              @change="(val, e) => onDateChange(field.key, val)"
+            />
+
+            <a-range-picker
+              v-else
+              :disabled-date="disabledDate"
+              :value="formData[field.key] ? formData[field.key] : null"
+              format="YYYY-MM-DD"
+              :placeholder="field.placeholder"
               @change="(val, e) => onDateChange(field.key, val)"
             />
           </div>
@@ -86,6 +98,7 @@
 
 <script>
 import moment from "moment";
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "FilterForm",
   props: {
@@ -97,9 +110,7 @@ export default {
   data() {
     return {
       wrapperCol: { span: 24 },
-      formData: {
-        location: undefined,
-      },
+      formData: {},
       searchQuery: "",
       locations: [],
       rules: {
@@ -107,7 +118,33 @@ export default {
           {
             required: true,
             message: "location Filter is Required",
-            trigger: "blur",
+            trigger: "change",
+          },
+        ],
+        dates: [
+          {
+            required: true,
+            message: "Date Filter is Required",
+            trigger: "change",
+          },
+          {
+            type: "array",
+            message: "Date Filter is Required",
+            trigger: "change",
+          },
+        ],
+        from_location: [
+          {
+            required: true,
+            message: "From Location Filter is Required",
+            trigger: "change",
+          },
+        ],
+        to_location: [
+          {
+            required: true,
+            message: "To Location Filter is Required",
+            trigger: "change",
           },
         ],
       },
@@ -127,20 +164,21 @@ export default {
     },
   },
   watch: {
-    fieldsValue: {
-      immediate: true,
-      handler(newFieldsValue) {
-        this.formData = { ...newFieldsValue };
-      },
-    },
     fields: {
       immediate: true,
       handler(newFields) {
-        newFields.forEach((el) => {
-          if (!this.formData[el.key]) {
-            this.$set(this.formData, el.key, el.value || "");
+        this.rules = newFields.reduce((acc, field) => {
+          if (field.key) {
+            acc[field.key] = field.rules || [];
           }
-        });
+          return acc;
+        }, {});
+        this.formData = newFields.reduce((acc, field) => {
+          if (field.key) {
+            acc[field.key] = field.value || "";
+          }
+          return acc;
+        }, {});
       },
     },
   },
@@ -148,6 +186,7 @@ export default {
     this.fetchLocations();
   },
   methods: {
+    ...mapActions(["setLocations", "updateFilters"]),
     disabledDate(current) {
       return current && current < moment().startOf("day");
     },
@@ -155,9 +194,16 @@ export default {
       this.searchQuery = val;
     },
     submitForm() {
-      this.$store.commit("UPDATE_FILTERS", this.formData);
+      this.$refs.filterForm.validate((valid) => {
+        if (valid) {
+          this.updateFilters(this.formData);
 
-      this.$emit("submit", this.formData);
+          this.$emit("submit", this.formData);
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
     async fetchLocations(value) {
       this.locations = [];
@@ -166,6 +212,7 @@ export default {
       let res = await this.$axios.get(endPoint);
       let result = res.data.data.response.cities;
       this.locations = result?.length ? result : [];
+      this.setLocations(result?.length ? result : []);
       this.fetching = false;
     },
     handleLocationChange(value, fieldName) {

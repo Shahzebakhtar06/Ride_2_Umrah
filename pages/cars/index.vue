@@ -15,12 +15,14 @@
 
 <script>
 import carsCard from "@/components/Cars/carCard.vue";
+import { pick } from "lodash";
 export default {
   components: {
     carsCard,
   },
   data() {
     return {
+      fetchLoading: true,
       carsFilters: [
         {
           key: "from_location",
@@ -37,99 +39,40 @@ export default {
           placeholder: "Select Drop Off Location",
         },
         {
-          key: "dates",
+          key: "pick_up_date",
+          date_type: "single",
           label: "Dates",
           type: "date",
-          value: [],
-          placeholder: "Select Date",
+          value: null,
+          placeholder: "Select Pick Up Date",
         },
       ],
       selectedFilters: {},
-      cars: [
-        {
-          id: 1,
-          type: "Compact",
-          model: "Toyota Corolla or similar",
-          price: 35,
-          transmission: "Manual",
-          seats: 5,
-          luggage: 4,
-          mileage: "622 free miles/day",
-          pickUpLocation: {
-            city: "Islamabad",
-            distanceFromCityCenter: "5.1 mi",
-            address: "Plot D-14, Feroz Centre, 5th Floor Haq Road Blue Area",
-          },
-          dropOffLocation: {
-            city: "Islamabad",
-            distanceFromCityCenter: "1.5 mi",
-            address: "Plot D-14, Feroz Centre, 5th Floor Haq Road Blue Area",
-          },
-          dealType: "Great Deal",
-          cancellation: "Free cancellation",
-          paymentMethod: "Pay at pick-up",
-          company: "Hertz",
-          totalPrice: 35,
-          imageUrl: "/path/to/compact-car-image.png",
-        },
-        {
-          id: 2,
-          type: "Midsize",
-          model: "Honda Civic or similar",
-          price: 49,
-          transmission: "Manual",
-          seats: 5,
-          luggage: 4,
-          mileage: "622 free miles/day",
-          pickUpLocation: {
-            city: "Islamabad",
-            distanceFromCityCenter: "5.1 mi",
-            address: "Plot D-14, Feroz Centre, 5th Floor Haq Road Blue Area",
-          },
-          dropOffLocation: {
-            city: "Islamabad",
-            distanceFromCityCenter: "1.5 mi",
-            address: "Plot D-14, Feroz Centre, 5th Floor Haq Road Blue Area",
-          },
-          dealType: "Great Deal",
-          cancellation: "Free cancellation",
-          paymentMethod: "Pay at pick-up",
-          company: "Hertz",
-          totalPrice: 49,
-          imageUrl: "/path/to/midsize-car-image.png",
-        },
-      ],
+      cars: [],
     };
   },
   computed: {
-    // activeFilters() {
-    //   return this.$store.state.activeFilters;
-    // },
+    activeFilters() {
+      return this.$store.state.activeFilters;
+    },
   },
   watch: {
-    // $route: {
-    //   immediate: true,
-    //   deep: true,
-    //   handler(val) {
-    //     const query = val.query;
-
-    //     let result = {
-    //       location: query.location,
-    //       dates: [query.from, query.to],
-    //     };
-
-    //     this.carsFilters.map((el) => {
-    //       el.value = result[el.key];
-    //     });
-    //   },
-    // },
+    $route: {
+      immediate: true,
+      deep: true,
+      handler() {
+        this.carsFilters.map((el) => {
+          el.value = this.activeFilters[el.key];
+        });
+        this.fetchCars();
+      },
+    },
     activeFilters: {
       deep: true,
       immediate: true,
       handler(val) {
         if (val != undefined) {
           const data = JSON.parse(JSON.stringify(val));
-          debugger;
           this.carsFilters.map(({ key }) => {
             let index = this.carsFilters.findIndex((item) => item.key == key);
             if (index > 0) {
@@ -140,15 +83,22 @@ export default {
       },
     },
   },
-  mounted(){
+  mounted() {
     this.$store.commit("SET_BANNER_TITLE", "Cars");
-
   },
   methods: {
-    handleSubmit(formData) {
-      // let query = encodeURIComponent(formData);
-      // console.log(query);
-      // this.$router.push({ name: "cars", query: query });
+    async handleSubmit(formData) {
+      let form = JSON.parse(JSON.stringify(formData));
+      this.$store.commit("UPDATE_FILTERS", form);
+      await this.fetchCars(formData);
+    },
+    async fetchCars(form) {
+      let { from_location: from, to_location: to } = form || this.activeFilters;
+      this.fetchLoading = true;
+      let res = await this.$axios.post("car/filter", { from, to });
+
+      this.cars = res.data.data.response.data;
+      this.fetchLoading = false;
     },
   },
 };

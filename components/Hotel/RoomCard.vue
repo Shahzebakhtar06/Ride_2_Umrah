@@ -51,6 +51,7 @@
       <a-button
         type="primary"
         @click="reserveRoom(details)"
+        :loading="reserveBtnLoading"
         class="reserve-btn"
       >
         Reserve
@@ -119,12 +120,13 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "roomCard",
   props: { details: Object },
   data() {
     return {
+      reserveBtnLoading:false,
       showDetailsModal: false,
     };
   },
@@ -132,12 +134,21 @@ export default {
     visibleRoomAmenities() {
       return this.details.amenities.slice(0, 6);
     },
+    ...mapState(["activeFilters"]),
   },
   methods: {
     ...mapActions(["addToCart"]),
     reserveRoom(details) {
-      this.addToCart({ type: "Room", data: details });
-      this.$notification.success({ message: "AddToCart successfully" });
+      this.reserveBtnLoading = true;
+      setTimeout(() => {
+        this.addToCart({
+          cartType: "Room",
+          ...details,
+          ...this.activeFilters,
+        });
+        this.$notification.success({ message: "AddToCart successfully" });
+        this.reserveBtnLoading = false;
+      }, 2000);
     },
     handelDetailsModal() {
       this.showDetailsModal = !this.showDetailsModal;

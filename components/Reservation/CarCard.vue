@@ -2,56 +2,50 @@
   <div>
     <div>
       <div class="car-card">
-        <a-card>
-          <div class="card-content">
-            <div class="details">
-              <div class="great-deal">Great Deal</div>
-
-              <!-- <div class="card-title">{{ details.type }}</div>
-              <p>{{ details.model }}</p> -->
-
-              <!-- <ul class="car-amenities">
-                <li v-for="(amenity, index) in car.amenities" :key="index">
-                  <i :class="amenity.icon"></i> {{ amenity.amenity }}
-                </li>
-              </ul> -->
-            </div>
-            <div class="image-slider-wrapper">
-              <img src="~/static/images/car.png" alt="Car Image" />
-            </div>
+        <div class="card-content">
+          <div class="image-wrapper">
+            <img src="~/static/images/car.png" alt="Car Image" />
           </div>
-        </a-card>
+        </div>
       </div>
-      <div class="rental-Location">
-        <a-card>
-          <div class="card-content">
-            <h2>Car rental location</h2>
-            <strong>Pickup & Drop-off</strong>
-            <div>
-              <span></span>
-              <span>Wed, Aug 7, 10:30am - Thu, Aug 8, 10:30am</span>
-            </div>
-            <div>
-              <span></span>
-              <span
+
+      <div>
+        <div class="card-content">
+          <h2>{{ details.type }}</h2>
+          <h3>{{ details.model }}</h3>
+          <a-row justify="space-between" class="total-price">
+            <a-col span="8"><strong>Pickup Date</strong></a-col>
+            <a-col span="16">Wed, Aug 7, 10:30am - Thu, Aug 8, 10:30am</a-col>
+          </a-row>
+          <a-row justify="space-between" class="total-price">
+            <a-col span="8"><strong>Pickup & Drop-off Location</strong></a-col>
+            <a-col span="16"
+              >ISP Airport 150 Arrival Ave Islip Airprt Enterprise Rentca,
+              Ronkonkoma, New York, United States 11779</a-col
+            >
+          </a-row>
+          <a-row justify="space-between" class="total-price">
+            <a-col span="8"><strong>Total</strong></a-col>
+            <a-col span="16"
+              ><strong
                 >ISP Airport 150 Arrival Ave Islip Airprt Enterprise Rentca,
-                Ronkonkoma, New York, United States 11779</span
-              >
-            </div>
-          </div>
-        </a-card>
+                Ronkonkoma, New York, United States 11779</strong
+              ></a-col
+            >
+          </a-row>
+        </div>
       </div>
     </div>
-    <div>
-      <a-card>
+    <!-- <div>
+      <div>
         <span>
           <h2 style="display: inline">$80</h2>
         </span>
         <span>
           <small>per day</small>
         </span>
-      </a-card>
-      <a-card class="price-card">
+      </div>
+      <div class="price-card">
         <h2>Price Details</h2>
         <p>Pay at Pickup</p>
         <a-row>
@@ -71,8 +65,8 @@
           <a-col span="12">Pay at pick-up</a-col>
           <a-col span="12">$34.86</a-col>
         </a-row>
-      </a-card>
-    </div>
+      </div>
+    </div> -->
   </div>
 </template>
 
@@ -80,8 +74,23 @@
 export default {
   props: {
     details: Object,
+    getLocationName: Function,
+    formattedDate: Function,
   },
 };
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.card-content {
+  .image-wrapper {
+    img {
+      width: 100%;
+      aspect-ratio: 4 / 2;
+      object-fit: cover;
+    }
+  }
+}
+.ant-row {
+  margin: 2rem 0;
+}
+</style>

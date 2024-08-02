@@ -2,8 +2,7 @@
   <div class="car-card">
     <div class="card-content">
       <div class="image-slider-wrapper">
-        <!-- <img :src="details.imageUrl" alt="Car Image" /> -->
-        <img src="~/static/images/car.png" alt="Car Image" />
+        <img :src="$global.imgBasePath + details.image" alt="Car Image" />
       </div>
       <div class="details" @click="goToCarDetails(details.id)">
         <div class="info fit-width">
@@ -17,9 +16,9 @@
                 <i class="fa-solid fa-user" style="margin-right: 0.5rem"></i
                 >{{ details.seats }}
               </div>
-
               <div class="col p-1">
-                <i class="fa-solid fa-gears"></i>{{ details.transmission }}
+                <i class="fa-solid fa-suitcase-rolling"></i
+                >{{ details.luggage_capacity }}
               </div>
             </div>
 
@@ -29,18 +28,23 @@
             </div>
             <div class="mb-1">
               <i class="fa-solid fa-location-dot"></i>
-              {{ details.pickUpLocation.city }}
+              {{ locationName(details.from) }}
             </div>
           </div>
           <div class="mb-1" style="margin-top: auto">
             <i class="fa-solid fa-location-dot"></i>
-            {{ details.dropOffLocation.city }}
+            {{ locationName(details.to) }}
+          </div>
+          <div class="rating" v-if="details.rating">
+            <div class="rate fit-width">
+              {{ details.rating }}
+            </div>
           </div>
         </div>
+
         <div class="reserve-details mb-1">
           <div class="price-info">
             <span class="price">${{ details.price }}</span>
-            <span class="total-price">${{ details.totalPrice }} total</span>
           </div>
           <a-button type="primary" shape="round"> Reserve</a-button>
         </div>
@@ -50,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "CarCard",
   props: {
@@ -87,9 +92,15 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters(["getLocations"]),
+  },
   methods: {
     goToCarDetails(id) {
       this.$router.push("/cars/" + id);
+    },
+    locationName(id) {
+      return this.getLocations.find((el) => el.id == id)?.name;
     },
   },
 };
@@ -133,6 +144,9 @@ export default {
       display: grid;
       grid-template-columns: 1fr 0.3fr;
       gap: 1rem;
+      i {
+        margin-right: 1rem;
+      }
       .info {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -146,7 +160,17 @@ export default {
           font-size: smaller;
         }
       }
+      .rating {
+        display: flex;
+        align-items: center;
 
+        .rate {
+          background: var(--theme-success-color);
+          color: #fff;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+        }
+      }
       .reserve-details {
         max-width: fit-content;
         margin-left: auto;

@@ -13,11 +13,12 @@
           <div slot="nextArrow" class="custom-slick-arrow" style="right: 1rem">
             <a-icon type="right-circle" />
           </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
-          </div>
-          <div>
-            <img src="https://via.placeholder.com/600x400" alt="Hotel Image" />
+          <div v-for="(img, index) in details.images" :key="index">
+            <img
+              :src="$global.imgBasePath + img.name"
+              class="carousel-image"
+              alt="Hotel Image"
+            />
           </div>
         </a-carousel>
       </div>
@@ -25,23 +26,17 @@
         <div class="info fit-width">
           <div>
             <div class="card-title">{{ details.name }}</div>
-            <p>{{ details.shortDescription }}</p>
+            <p>{{ details.short_description }}</p>
           </div>
           <div class="rating row">
             <div class="rate col fit-width">
-              {{ details.rating.points }}
-            </div>
-            <div class="col px-1">
-              <div>
-                <b>{{ details.rating.category }}</b>
-              </div>
+              {{ details.rating }}
             </div>
           </div>
         </div>
         <div class="reserve-details mb-1">
           <div class="price-info">
             <span class="price">${{ details.price }}</span>
-            <span class="total-price">${{ details.totalPrice }} total</span>
           </div>
           <a-button type="primary" shape="round"> Reserve</a-button>
         </div>
@@ -57,36 +52,7 @@ export default {
     details: Object,
   },
   data() {
-    return {
-      carRentals: [
-        {
-          id: 1,
-          type: "Compact",
-          model: "Toyota Corolla or similar",
-          price: 35,
-          rating: {
-            points: 8.3,
-            category: "Great Deal",
-            reviews: 120,
-          },
-          totalPrice: 35,
-          imageUrl: "/path/to/compact-car-image.png",
-        },
-        {
-          id: 2,
-          type: "Midsize",
-          model: "Honda Civic or similar",
-          price: 49,
-          rating: {
-            points: 8.0,
-            category: "Great Deal",
-            reviews: 100,
-          },
-          totalPrice: 49,
-          imageUrl: "/path/to/midsize-car-image.png",
-        },
-      ],
-    };
+    return {};
   },
   methods: {
     goToCarDetails(id) {
@@ -115,20 +81,30 @@ export default {
     .card-title {
       font-size: 1.8rem;
       font-weight: 500;
+      text-align: left;
     }
 
     .image-slider-wrapper {
       display: block;
       width: 27rem;
-      .image-slider {
+      .carousel-image {
         width: 100%;
         height: 100%;
-
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+      }
+      .ant-carousel .custom-slick-arrow {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 2.5rem;
+        color: #fff;
+        background-color: rgb(31 45 61 / 77%);
+        opacity: 0.5;
+        border-radius: 50%;
+      }
+      .ant-carousel .custom-slick-arrow:before {
+        display: none;
+      }
+      .ant-carousel .custom-slick-arrow:hover {
+        opacity: 0.5;
       }
     }
 

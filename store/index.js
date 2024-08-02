@@ -5,6 +5,7 @@ export default {
       activeFilters: {},
       cart: [],
       bannerTitle: "",
+      locations: [],
     };
   },
   mutations: {
@@ -14,6 +15,9 @@ export default {
     SET_BANNER_TITLE(state, payload) {
       state.bannerTitle = payload;
     },
+    SET_LOCATIONS(state, payload) {
+      state.locations = payload;
+    },
     ADD_TO_CART(state, item) {
       state.cart.push(item);
     },
@@ -22,6 +26,12 @@ export default {
     },
   },
   actions: {
+    updateFilters({ commit }, payload) {
+      commit("UPDATE_FILTERS", payload);
+    },
+    setLocations({ commit }, payload) {
+      commit("SET_LOCATIONS", payload);
+    },
     addToCart({ commit }, item) {
       commit("ADD_TO_CART", item);
     },
@@ -31,5 +41,6 @@ export default {
   },
   getters: {
     cartItems: (state) => state.cart,
+    getLocations: (state) => state.locations,
   },
 };

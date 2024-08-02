@@ -36,15 +36,14 @@ export default {
           key: "location",
           label: "Location",
           type: "select",
-          value: "pakistan",
+          value: "",
           placeholder: "Search Location",
         },
         {
           key: "dates",
           label: "Dates",
           type: "date",
-          value: null,
-          placeholder: "Search Date",
+          placeholder: "Select Booking Date",
         },
         {
           key: "room",
@@ -67,11 +66,14 @@ export default {
           type: "select",
           placeholder: "Select Drop Off Location",
         },
+
         {
-          key: "dates",
+          key: "pick_up_date",
+          date_type: "single",
           label: "Dates",
           type: "date",
-          placeholder: "Select Date",
+          value: null,
+          placeholder: "Select Pick Up Date",
         },
       ],
       visaFilters: [
@@ -104,6 +106,8 @@ export default {
   },
   methods: {
     handleSubmit(formData) {
+      let form = JSON.parse(JSON.stringify(formData));
+      this.$store.commit("UPDATE_FILTERS", form);
       if (this.activeTab == "stays") {
         const queryObj = {
           location: formData.location,
@@ -117,20 +121,19 @@ export default {
         const queryObj = {
           from_location: formData.from_location,
           to_location: formData.to_location,
-          from: formData.dates[0]?.format("YYYY-MM-DD"),
-          to: formData.dates[1]?.format("YYYY-MM-DD"),
+          pick_up_date: formData.pick_up_date?.format("YYYY-MM-DD"),
         };
 
         this.$router.push({ name: "cars", query: queryObj });
       } else if (this.activeTab == "packages") {
-        const queryObj = {
-          from_location: formData.from_location,
-          to_location: formData.to_location,
-          from: formData.dates[0]?.format("YYYY-MM-DD"),
-          to: formData.dates[1]?.format("YYYY-MM-DD"),
-        };
+        // const queryObj = {
+        //   from_location: formData.from_location,
+        //   to_location: formData.to_location,
+        //   from: formData.dates[0]?.format("YYYY-MM-DD"),
+        //   to: formData.dates[1]?.format("YYYY-MM-DD"),
+        // };
 
-        this.$router.push({ name: "cars", query: queryObj });
+        this.$router.push({ name: "cars" });
       }
     },
   },
@@ -162,7 +165,7 @@ export default {
     margin: 0;
     margin-bottom: 1rem;
     border-color: var(--theme-primary-color);
-    .ant-tabs-tab{
+    .ant-tabs-tab {
       color: #fff;
     }
     .ant-tabs-tab-active {

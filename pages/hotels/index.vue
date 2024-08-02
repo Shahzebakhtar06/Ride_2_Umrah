@@ -38,7 +38,7 @@ export default {
           label: "Dates",
           type: "date",
           value: [],
-          placeholder: "Search Date",
+          placeholder: ['check-in date','check-out date'],
         },
         {
           key: "rooms",
@@ -67,12 +67,13 @@ export default {
       deep: true,
       handler(val) {
         const query = val.query;
-
         let result = {
           location: query.location,
           rooms: JSON.parse(query.rooms),
           dates: [query.from, query.to],
         };
+        this.$store.commit("UPDATE_FILTERS", result);
+
         this.fetchHotels();
         this.staysFilters.map((el) => {
           el.value = result[el.key];
