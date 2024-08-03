@@ -12,3 +12,9 @@ h1 {
   font-weight: 700;
   margin-bottom: 0% !important;
 }
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 5.33px;
+  }
+}

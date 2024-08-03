@@ -3,7 +3,7 @@
     <a-layout class="main-layout">
       <a-layout-header>
         <div class="container">
-          <div class="row item-v-center">
+          <div class="header-wrapper item-v-center">
             <div
               class="col"
               style="font-size: x-large; color: red; font-weight: 900"
@@ -15,8 +15,8 @@
                 alt=""
               />
             </div>
-            <div class="col row h-100 item-v-center fit-width">
-              <ul class="row h-100 item-v-center nav-menu">
+            <div class="col nav h-100 item-v-center fit-width">
+              <ul class="h-100 item-v-center nav-menu">
                 <li>
                   <nuxt-link to="/">Home</nuxt-link>
                 </li>
@@ -36,11 +36,14 @@
                   <nuxt-link to="/contact-us">Contact US</nuxt-link>
                 </li>
               </ul>
-              <a-button @click="$router.push('/reservation-page')"
-              class="add-to-cart"
-                ><i class="fa-solid fa-cart-shopping"></i
-              ></a-button>
-              <a-button @click="$router.push('auth/login')">Sign In</a-button>
+              <div class="actions">
+                <a-button
+                  @click="$router.push('/reservation-page')"
+                  class="add-to-cart"
+                  ><i class="fa-solid fa-cart-shopping"></i
+                ></a-button>
+                <a-button @click="$router.push('auth/login')">Sign In</a-button>
+              </div>
             </div>
           </div>
         </div>
@@ -107,6 +110,29 @@ export default {
   background-color: var(--theme-secondary-bg-color);
   padding: 0;
   height: 5.5rem;
+
+  .header-wrapper {
+    display: flex;
+  }
+  .nav {
+    display: flex;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    height: fit-content;
+    padding: 1rem 0;
+    .header-wrapper,
+    .nav {
+      display: flex;
+      flex-flow: column;
+    }
+    .nav-menu {
+      display: flex;
+    }
+  }
   .container > .row {
     height: 5.5rem;
   }
@@ -129,7 +155,7 @@ export default {
       }
     }
   }
-  .add-to-cart{
+  .add-to-cart {
     margin-right: 1rem;
   }
 }

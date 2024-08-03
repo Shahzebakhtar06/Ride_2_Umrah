@@ -1,6 +1,9 @@
 <template>
   <div id="base-filters">
-    <a-button type="primary" @click="openFilterModal" v-if="mobileView"
+    <a-button
+      type="primary"
+      @click="openFilterModal"
+      v-if="response && mobileView"
       >Filters</a-button
     >
     <filter-form
@@ -24,6 +27,10 @@ export default {
     fields: {
       type: Array,
       required: true,
+    },
+    response: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {

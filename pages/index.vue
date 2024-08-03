@@ -3,20 +3,36 @@
     <div class="main-image">
       <img src="~/static/images/banner1.jpg" alt="" />
     </div>
-    <div class="container">
+    <div class="container" >
       <div class="filter-wrapper container">
         <a-tabs v-model="activeTab">
           <a-tab-pane key="stays" tab="stays">
-            <BaseFilters :fields="staysFilters" @submit="handleSubmit" />
+            <BaseFilters
+              :fields="staysFilters"
+              :response="false"
+              @submit="handleSubmit"
+            />
           </a-tab-pane>
           <a-tab-pane key="cars" tab="Cars" force-render>
-            <BaseFilters :fields="carsFilters" @submit="handleSubmit" />
+            <BaseFilters
+              :response="false"
+              :fields="carsFilters"
+              @submit="handleSubmit"
+            />
           </a-tab-pane>
           <a-tab-pane key="packages" tab="Packages">
-            <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
+            <BaseFilters
+              :response="false"
+              :fields="visaFilters"
+              @submit="handleSubmit"
+            />
           </a-tab-pane>
           <a-tab-pane key="visa" tab="Visa">
-            <BaseFilters :fields="visaFilters" @submit="handleSubmit" />
+            <BaseFilters
+              :response="false"
+              :fields="visaFilters"
+              @submit="handleSubmit"
+            />
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -43,7 +59,7 @@ export default {
           key: "dates",
           label: "Dates",
           type: "date",
-          placeholder: ['Start date','End date'],
+          placeholder: ["Start date", "End date"],
         },
         {
           key: "room",
@@ -150,6 +166,7 @@ export default {
   }
 
   .filter-wrapper {
+    display: none;
     position: absolute;
     z-index: 1;
     background: #744970b4;
