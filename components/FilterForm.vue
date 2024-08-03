@@ -2,8 +2,8 @@
   <div id="base-filters">
     <a-form-model
       ref="filterForm"
+      :rules="filterRules"
       :model="formData"
-      :rules="rules"
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item
@@ -113,42 +113,6 @@ export default {
       formData: {},
       searchQuery: "",
       locations: [],
-      rules: {
-        location: [
-          {
-            required: true,
-            message: "location Filter is Required",
-            trigger: "change",
-          },
-        ],
-        dates: [
-          {
-            required: true,
-            message: "Date Filter is Required",
-            trigger: "change",
-          },
-          {
-            type: "array",
-            message: "Date Filter is Required",
-            trigger: "change",
-          },
-        ],
-        from_location: [
-          {
-            required: true,
-            message: "From Location Filter is Required",
-            trigger: "change",
-          },
-        ],
-        to_location: [
-          {
-            required: true,
-            message: "To Location Filter is Required",
-            trigger: "change",
-          },
-        ],
-      },
-
       fetching: false,
     };
   },
@@ -161,6 +125,18 @@ export default {
       } else {
         return this.locations;
       }
+    },
+    filterRules() {
+      let fromRules = {};
+      this.fields.forEach((el) => {
+        fromRules[el.key] = [];
+        fromRules[el.key].push({
+          required: true,
+          message: `${el.name} field is required`,
+          trigger: "blur",
+        });
+      });
+      return fromRules;
     },
   },
   watch: {
@@ -190,6 +166,18 @@ export default {
     disabledDate(current) {
       return current && current < moment().startOf("day");
     },
+    setFormRules() {
+      let fromRules = {};
+      this.fields.forEach((el) => {
+        fromRules[el.key] = [];
+        fromRules[el.key].push({
+          required: true,
+          message: `${el.name} field is required`,
+          trigger: "blur",
+        });
+      });
+      this.$refs.filterForm.rules = fromRules;
+    },
     handleFilterLocation(val) {
       this.searchQuery = val;
     },
@@ -197,10 +185,11 @@ export default {
       this.$refs.filterForm.validate((valid) => {
         if (valid) {
           this.updateFilters(this.formData);
-
           this.$emit("submit", this.formData);
         } else {
-          console.log("error submit!!");
+          this.$notification.error({
+            message: "All Filters are Required",
+          });
           return false;
         }
       });
