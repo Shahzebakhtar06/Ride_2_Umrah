@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div v-if="packageDetails" class="package-details">
+    <div v-if="visa" class="package-details">
       <a-row>
         <a-col :span="12"
-          ><h1>{{ packageDetails.name }}</h1></a-col
+          ><h1>{{ visa.name }}</h1></a-col
         >
-        <a-col :span="12">{{ packageDetails.short_description }}</a-col>
+        <a-col :span="12">{{ visa.short_description }}</a-col>
       </a-row>
       <div>
         <div class="image-slider-wrapper">
@@ -24,7 +24,7 @@
             >
               <a-icon type="right-circle" />
             </div>
-            <div v-for="(img, index) in packageDetails.images" :key="index">
+            <div v-for="(img, index) in visa.images" :key="index">
               <img
                 :src="$global.imgBasePath + img.name"
                 class="carousel-image"
@@ -34,14 +34,14 @@
           </a-carousel>
         </div>
       </div>
-      <div v-html="packageDetails.description" />
+      <div v-html="visa.description" />
       <div class="reserve-btn">
         <a-button
           style="width: 100%; margin: 1rem 0"
           type="primary"
           shape="round"
           :loading="reserveBtnLoading"
-          @click="reservePackage(packageDetails)"
+          @click="reservePackage(visa)"
         >
           Reserve</a-button
         >
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       reserveBtnLoading:false,
-      packageDetails: null,
+      visa: null,
     };
   },
   watch: {
@@ -66,7 +66,7 @@ export default {
       deep: true,
       handler(val) {
         const id = val.params.id;
-        this.fetchSinglePackageDetails(id);
+        this.fetchSingleVisa(id);
       },
     },
   },
@@ -75,9 +75,9 @@ export default {
   },
   methods: {
     ...mapActions(["addToCart"]),
-    async fetchSinglePackageDetails(id) {
-      let res = await this.$axios.get("packages/" + id);
-      this.packageDetails = res.data.data.response.package;
+    async fetchSingleVisa(id) {
+      let res = await this.$axios.get("visas/" + id);
+      this.visa = res.data.data.response.visa;
     },
     reservePackage(details) {
       this.reserveBtnLoading = true;

@@ -27,139 +27,9 @@ export default {
   },
   data() {
     return {
-      activeKey: "1.0",
-      fetchLoading:true,
-      packages: {
-        // 1: [
-        //   {
-        //     name: "Saja Al Madinah Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.0,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1173,
-        //     price: 586,
-        //   },
-        //   {
-        //     name: "Pullman Zamzam Madina",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.2,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1257,
-        //     reviews: 1004,
-        //     price: 628,
-        //   },
-        //   {
-        //     name: "Intercontinental Madinah - Dar Al Iman, an IHG Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.8,
-        //       category: "Excellent",
-        //     },
-        //     totalPrice: 1857,
-        //     price: 670,
-        //   },
-        //   {
-        //     name: "Anwar Al Madinah Mövenpick Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 6.8,
-        //       category: "Good",
-        //     },
-        //     totalPrice: 1657,
-        //     price: 629,
-        //   },
-        // ],
-        // 2: [
-        //   {
-        //     name: "Saja Al Madinah Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.0,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1173,
-        //     price: 586,
-        //   },
-        //   {
-        //     name: "Pullman Zamzam Madina",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.2,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1257,
-        //     reviews: 1004,
-        //     price: 628,
-        //   },
-        //   {
-        //     name: "Intercontinental Madinah - Dar Al Iman, an IHG Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.8,
-        //       category: "Excellent",
-        //     },
-        //     totalPrice: 1857,
-        //     price: 670,
-        //   },
-        //   {
-        //     name: "Anwar Al Madinah Mövenpick Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 6.8,
-        //       category: "Good",
-        //     },
-        //     totalPrice: 1657,
-        //     price: 629,
-        //   },
-        // ],
-        // 3: [
-        //   {
-        //     name: "Saja Al Madinah Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.0,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1173,
-        //     price: 586,
-        //   },
-        //   {
-        //     name: "Pullman Zamzam Madina",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.2,
-        //       category: "Very Good",
-        //     },
-        //     totalPrice: 1257,
-        //     reviews: 1004,
-        //     price: 628,
-        //   },
-        //   {
-        //     name: "Intercontinental Madinah - Dar Al Iman, an IHG Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 8.8,
-        //       category: "Excellent",
-        //     },
-        //     totalPrice: 1857,
-        //     price: 670,
-        //   },
-        //   {
-        //     name: "Anwar Al Madinah Mövenpick Hotel",
-        //     shortDescription: "Madinah City Center",
-        //     rating: {
-        //       points: 6.8,
-        //       category: "Good",
-        //     },
-        //     totalPrice: 1657,
-        //     price: 629,
-        //   },
-        // ],
-      },
+      activeKey: "1",
+      fetchLoading: true,
+      packages: {},
     };
   },
   watch: {
@@ -168,9 +38,8 @@ export default {
       deep: true,
       handler(val) {
         const id = val.params.id;
-    
+
         this.fetchPackages(id);
-       
       },
     },
   },
@@ -194,9 +63,9 @@ export default {
   .ant-tabs-nav-wrap {
     text-align: center;
   }
-  .ant-tabs-tab{
+  .ant-tabs-tab {
     color: #000 !important;
-    &.ant-tabs-tab-active{
+    &.ant-tabs-tab-active {
       color: #fff !important;
     }
   }

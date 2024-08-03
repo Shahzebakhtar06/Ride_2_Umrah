@@ -43,7 +43,7 @@ export default {
           key: "dates",
           label: "Dates",
           type: "date",
-          placeholder: "Select Booking Date",
+          placeholder: ['Start date','End date'],
         },
         {
           key: "room",

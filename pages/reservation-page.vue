@@ -20,7 +20,7 @@
       </div>
       <div class="reserve-form">
         <a-form-model
-          ref="loginForm"
+          ref="bookNowForm"
           :model="form"
           :rules="rules"
           :labelCol="{ span: 5 }"
@@ -50,10 +50,13 @@
               placeholder="Phone Number"
             />
           </a-form-model-item>
-          <a-form-model-item style="text-align: center">
-            <a-button type="primary" @click="bookNow"> Book Now</a-button>
-          </a-form-model-item>
         </a-form-model>
+        <div class="book-now-btn">
+          <a-button :loading="bookNowBtnLoading" block type="primary" @click="bookNow">
+          Book Now</a-button
+        >
+        </div>
+     
       </div>
     </div>
   </div>
@@ -78,6 +81,7 @@ export default {
   data() {
     return {
       form: {},
+      bookNowBtnLoading: false,
       rules: {
         name: [
           {
@@ -103,46 +107,46 @@ export default {
       deep: true,
       handler(val) {
         let items = [];
-        val.forEach((el) => {
-          let obj = {
-            type: el.cartType.toLowerCase(),
-            entity_id: el.id,
-          };
-          if (el.cartType.toLowerCase() == "room") {
-            el.rooms.forEach((item) => {
-              let roomObj = {
-                type: el.cartType.toLowerCase(),
-                entity_id: el.id,
-              };
+        if (val && val.length > 0) {
+          val.forEach((el) => {
+            let obj = {
+              type: el.cartType.toLowerCase(),
+              entity_id: el.id,
+            };
+            if (el.cartType.toLowerCase() == "room") {
+              el.rooms.forEach((item) => {
+                let roomObj = {
+                  type: el.cartType.toLowerCase(),
+                  entity_id: el.id,
+                };
 
-              roomObj.from = el.dates?.length ? el.dates[0] : 0;
+                roomObj.from = el.dates?.length ? el.dates[0] : 0;
 
-              roomObj.to = el.dates?.length ? el.dates[1] : 0;
+                roomObj.to = el.dates?.length ? el.dates[1] : 0;
 
-              roomObj.adult = item.adults;
-              roomObj.children = item.children;
-            items.push(roomObj);
-
-            });
-          }
-          if (el.cartType.toLowerCase() == "car") {
-            obj.from_id = el.from_location;
-            obj.to_id = el.to_location;
-            obj.pick_up = el.pick_up_date
-              ? moment(el.pick_up_date).format("YYYY-MM-DD")
-              : 0;
-          }
-          if (el.cartType.toLowerCase() !== "room") {
-            items.push(obj);
-          }
-        });
-        console.log(items)
+                roomObj.adult = item.adults;
+                roomObj.children = item.children;
+                items.push(roomObj);
+              });
+            }
+            if (el.cartType.toLowerCase() == "car") {
+              obj.from_id = el.from_location;
+              obj.to_id = el.to_location;
+              obj.pick_up = el.pick_up_date
+                ? moment(el.pick_up_date).format("YYYY-MM-DD")
+                : 0;
+            }
+            if (el.cartType.toLowerCase() !== "room") {
+              items.push(obj);
+            }
+          });
+        }
         this.bookingItems = items;
       },
     },
   },
   methods: {
-    ...mapActions(["removeFromCart"]),
+    ...mapActions(["removeFromCart", "resetAddToCarts"]),
     getComponentName({ cartType }) {
       if (cartType) {
         let name = cartType;
@@ -165,9 +169,42 @@ export default {
         contact: form.phone,
         items: this.bookingItems,
       };
-      console.log(obj);
-      // let res = await this.$axios.post("booking", obj);
-      this.$notification.success({ message: "Booking successful" });
+      this.$refs.bookNowForm.validate(async (valid) => {
+        if (valid) {
+          try {
+            this.bookNowBtnLoading = true;
+
+            let res = await this.$axios.post("booking", obj);
+            if (res.status == 200) {
+              this.bookNowBtnLoading = false;
+            }
+            this.$notification.success({ message: "Booking successful" });
+            this.resetAddToCarts();
+            this.form = {};
+          } catch (e) {
+            this.bookNowBtnLoading = false;
+            this.form = {};
+
+            let errorMessage = "Please Fill Name and Phone number";
+            if (
+              e &&
+              e.response &&
+              e.response.data &&
+              e.response.data.data.response
+            ) {
+              errorMessage = e.response.data.data.response.join(", \n");
+            }
+
+            this.$notification.error({
+              message: errorMessage,
+            });
+          }
+          this.resetAddToCarts();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     },
   },
 };
@@ -195,9 +232,22 @@ export default {
     }
   }
   .reserve-form {
+    color: #fff;
+    background: #744970b4;
+    border-radius: 2rem;
+    padding: 1rem;
     width: 60rem;
     margin: auto;
     margin-top: 5rem;
+    .ant-form-item-label label {
+      color: #fff;
+    }
+    .book-now-btn{
+      text-align: center;
+      .ant-btn{
+        width: 20rem;
+      }
+    }
   }
 }
 </style>

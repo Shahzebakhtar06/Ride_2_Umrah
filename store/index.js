@@ -3,7 +3,7 @@ export default {
     return {
       user: {},
       activeFilters: {},
-      cart: [],
+      carts: [],
       bannerTitle: "",
       locations: [],
     };
@@ -19,10 +19,13 @@ export default {
       state.locations = payload;
     },
     ADD_TO_CART(state, item) {
-      state.cart.push(item);
+      state.carts.push(item);
     },
     REMOVE_FROM_CART(state, index) {
-      state.cart.splice(index, 1);
+      state.carts.splice(index, 1);
+    },
+    RESET_ADD_TO_CART_CARTS(state) {
+      state.carts = [];
     },
   },
   actions: {
@@ -38,9 +41,12 @@ export default {
     removeFromCart({ commit }, index) {
       commit("REMOVE_FROM_CART", index);
     },
+    resetAddToCarts({ commit }) {
+      commit("RESET_ADD_TO_CART_CARTS");
+    },
   },
   getters: {
-    cartItems: (state) => state.cart,
+    cartItems: (state) => state.carts,
     getLocations: (state) => state.locations,
   },
 };
