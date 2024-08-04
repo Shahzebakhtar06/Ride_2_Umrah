@@ -1,22 +1,22 @@
 <template>
   <div>
-    <a-layout class="main-layout">
+    <a-layout class="main-layout" :class="{ 'mobile-view': mobileView }">
       <a-layout-header>
         <div class="container">
-          <div class="row item-v-center">
+          <div class="header-wrapper item-v-center">
             <div
               class="col"
               style="font-size: x-large; color: red; font-weight: 900"
             >
-              <img
-                src="~/assets/svg/ride2umrah-logo-transparent.png"
-                width="80"
-                height="70"
-                alt=""
-              />
+              <div class="logo">
+                <img
+                  src="~/assets/svg/ride2umrah-logo-transparent.png"
+                  alt=""
+                />
+              </div>
             </div>
-            <div class="col row h-100 item-v-center fit-width">
-              <ul class="row h-100 item-v-center nav-menu">
+            <div class="col nav h-100 item-v-center fit-width">
+              <ul class="h-100 item-v-center nav-menu">
                 <li>
                   <nuxt-link to="/">Home</nuxt-link>
                 </li>
@@ -36,11 +36,14 @@
                   <nuxt-link to="/contact-us">Contact US</nuxt-link>
                 </li>
               </ul>
-              <a-button @click="$router.push('/reservation-page')"
-              class="add-to-cart"
-                ><i class="fa-solid fa-cart-shopping"></i
-              ></a-button>
-              <a-button @click="$router.push('auth/login')">Sign In</a-button>
+              <div class="actions">
+                <a-button
+                  @click="$router.push('/reservation-page')"
+                  class="add-to-cart"
+                  ><i class="fa-solid fa-cart-shopping"></i
+                ></a-button>
+                <a-button @click="$router.push('auth/login')">Sign In</a-button>
+              </div>
             </div>
           </div>
         </div>
@@ -64,9 +67,9 @@
           >Send Enquiry</a-button
         >
       </div>
-      <!-- <a-layout-footer>
-        <div class="container">Footer</div>
-      </a-layout-footer> -->
+      <a-layout-footer>
+        <Footer />
+      </a-layout-footer>
     </a-layout>
     <contact-modal
       :showContactModal="showContactModal"
@@ -77,9 +80,11 @@
 
 <script>
 import contactModal from "@/components/contact-modal.vue";
+import Footer from "@/components/Layouts/Footer.vue";
 export default {
   components: {
     contactModal,
+    Footer,
   },
   computed: {
     bannerTitle() {
@@ -88,10 +93,20 @@ export default {
   },
   data() {
     return {
+      mobileView: false,
       showContactModal: false,
     };
   },
+  created() {
+    this.handleView();
+    window.addEventListener("resize", this.handleView);
+  },
+
   methods: {
+    handleView() {
+      this.mobileView = window.innerWidth <= 768;
+      this.$store.commit("UPDATE_VIEW", this.mobileView);
+    },
     handleOpenContactModal() {
       this.showContactModal = true;
     },
@@ -99,6 +114,9 @@ export default {
       this.showContactModal = false;
     },
   },
+  // beforeDestroy() {
+  //   window.removeEventListener("resize", this.handleView);
+  // },
 };
 </script>
 
@@ -106,7 +124,30 @@ export default {
 .ant-layout-header {
   background-color: var(--theme-secondary-bg-color);
   padding: 0;
-  height: 5.5rem;
+  height: auto;
+  line-height: auto;
+
+  .header-wrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  .nav,
+  .nav-menu {
+    display: flex;
+    align-items: center;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+  }
+  .logo {
+    width: 17rem;
+    img {
+      width: 100%;
+      aspect-ratio: 15 / 7;
+    }
+  }
+
   .container > .row {
     height: 5.5rem;
   }
@@ -129,7 +170,7 @@ export default {
       }
     }
   }
-  .add-to-cart{
+  .add-to-cart {
     margin-right: 1rem;
   }
 }
@@ -144,7 +185,7 @@ export default {
     width: 100%;
     display: block;
 
-    object-position: 0px -43rem;
+    // object-position: 0px -43rem;
   }
 
   .overlay {
@@ -178,5 +219,35 @@ export default {
 .ant-layout-footer {
   padding-left: 0;
   padding-right: 0;
+}
+@media (max-width: 768px) {
+  .ant-layout-header {
+    height: fit-content;
+    padding: 1rem 0;
+    .header-wrapper,
+    .nav {
+      display: flex;
+      flex-flow: column;
+      width: fit-content;
+      flex-flow: column-reverse;
+      width: 80%;
+      margin: auto;
+    }
+    .nav-menu {
+      display: flex;
+      padding: 0;
+      margin: 0 !important;
+    }
+    .logo {
+      display: none;
+    }
+    .actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  #contact-us-fixed-btn {
+    display: none;
+  }
 }
 </style>

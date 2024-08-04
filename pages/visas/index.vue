@@ -1,64 +1,56 @@
 <template>
   <div class="container">
     <div :class="{ loader: fetchLoading }">
-      <div v-if="visas.length">
-        <a-row :gutter="[16]">
-          <a-col
-            :span="18"
-            :md="8"
-            :lg="8"
-            v-for="visa in visas"
-            :key="visa.id"
-          >
-            <div class="card">
-              <div class="images-wrapper">
-                <a-carousel arrows class="image-slider">
-                  <div
-                    slot="prevArrow"
-                    class="custom-slick-arrow"
-                    style="left: 1rem; z-index: 1"
-                  >
-                    <a-icon type="left-circle" />
-                  </div>
-                  <div
-                    slot="nextArrow"
-                    class="custom-slick-arrow"
-                    style="right: 1rem"
-                  >
-                    <a-icon type="right-circle" />
-                  </div>
-                  <div v-for="(img, index) in visa.images" :key="index">
-                    <img
-                      :src="$global.imgBasePath + img.name"
-                      class="carousel-image"
-                      alt="room Image"
-                    />
-                  </div>
-                </a-carousel>
-              </div>
-              <div class="card-body">
-                <h3>{{ visa.name }}</h3>
-
-                <p>
-                  {{ visa.short_description }}
-                </p>
-              </div>
-              <a-row>
-                <a-col :span="16">
-                  <strong>Price</strong>
-                </a-col>
-                <a-col :span="8">
-                  <strong>{{ price }}</strong>
-                </a-col>
-              </a-row>
-              <div class="card-footer">
-                <a-button type="primary" @click="goToVisaDetail(visa.id)"
-                  >Read More</a-button
+      <div class="card-container">
+        <div v-for="visa in visas" :key="visa.id">
+          <div class="card">
+            <div class="images-wrapper">
+              <a-carousel arrows class="image-slider">
+                <div
+                  slot="prevArrow"
+                  class="custom-slick-arrow"
+                  style="left: 1rem; z-index: 1"
                 >
-              </div>
+                  <a-icon type="left-circle" />
+                </div>
+                <div
+                  slot="nextArrow"
+                  class="custom-slick-arrow"
+                  style="right: 1rem"
+                >
+                  <a-icon type="right-circle" />
+                </div>
+                <div v-for="(img, index) in visa.images" :key="index">
+                  <img
+                    :src="$global.imgBasePath + img.name"
+                    class="carousel-image"
+                    alt="room Image"
+                  />
+                </div>
+              </a-carousel>
             </div>
-          </a-col>
-        </a-row>
+            <div class="card-body">
+              <h3>{{ visa.name }}</h3>
+
+              <p>
+                {{ visa.short_description }}
+              </p>
+            </div>
+            <a-row>
+              <a-col :span="16">
+                <strong>Price</strong>
+              </a-col>
+              <a-col :span="8">
+                <strong>{{ price }}</strong>
+              </a-col>
+            </a-row>
+            <div class="card-footer">
+              <a-button type="primary" @click="goToVisaDetail(visa.id)"
+                >Read More</a-button
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -90,19 +82,46 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.card {
-  border-radius: 1rem;
-  padding: 1rem;
-  width: 100%;
-  background-color: white;
-  margin: 1rem;
-  height: 50rem;
+.mobile-view {
+  .car-card {
+    height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 50rem;
+    margin: 3rem;
+    height: auto;
+    .card-content {
+      flex-direction: column;
+      .image-slider-wrapper {
+        width: auto;
+      }
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+.card-container {
   display: flex;
-  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  .card {
+    border-radius: 20px;
+    padding: 2rem;
+    width: 50rem;
+    background-color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 }
 .card-body {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .card-footer {
   display: flex;

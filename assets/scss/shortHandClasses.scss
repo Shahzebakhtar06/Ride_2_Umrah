@@ -1,10 +1,13 @@
-@import '../css/variables.css';
-.ant-layout-content{
+@import "../css/variables.css";
+.ant-layout-content {
   min-height: 100vh !important;
 }
-.container{
+.container {
   width: 65%;
   margin: auto;
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 }
 .pointer {
   cursor: pointer;
@@ -152,7 +155,6 @@
   height: 100%;
 }
 
-
 .d-inline {
   display: inline-block;
 }
@@ -168,18 +170,17 @@
 .text-uppercase {
   text-transform: uppercase;
 }
-.text-success{
-  color: var(--theme-success-color) ;
+.text-success {
+  color: var(--theme-success-color);
 }
-.bg-success{
-  background-color: var(--theme-success-color) ;
+.bg-success {
+  background-color: var(--theme-success-color);
 }
 .col-divider-v {
   > div:not(:last-child) {
     padding-right: 2rem;
     margin-top: 0.3rem;
   }
-
 }
 
 .form-group {
@@ -200,8 +201,6 @@
     }
   }
 }
-
-
 
 .text-center {
   text-align: center;
@@ -239,8 +238,6 @@
   background-color: var(--theme-primary-bg-color);
 }
 
-
-
 .bg-netral-green {
   background-color: #4caba6;
 }
@@ -260,12 +257,12 @@
   }
 
   &::before {
-    background-image: url('~assets/svg/loader.svg');
+    background-image: url("~assets/svg/loader.svg");
     background-repeat: no-repeat;
     background-size: cover;
     height: 5rem;
     width: 5rem;
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     z-index: 99999;

@@ -1,6 +1,9 @@
 <template>
   <div id="base-filters">
-    <a-button type="primary" @click="openFilterModal" v-if="mobileView"
+    <a-button
+      type="primary"
+      @click="openFilterModal"
+      v-if="response && isMobileView"
       >Filters</a-button
     >
     <filter-form
@@ -8,7 +11,11 @@
       v-else
       @submit="(val) => $emit('submit', val)"
     ></filter-form>
-    <a-modal :visible="showFilterModal" @cancel="cancelFilterModal">
+    <a-modal
+      :visible="showFilterModal"
+      @cancel="cancelFilterModal"
+      :footer="false"
+    >
       <filter-form :fields="fields"></filter-form>
     </a-modal>
   </div>
@@ -25,31 +32,28 @@ export default {
       type: Array,
       required: true,
     },
+    response: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
-      mobileView: true,
       showFilterModal: false,
     };
   },
-  watch: {},
-  methods: {
-    handleView() {
-      this.mobileView = window.innerWidth <= 768;
+  computed: {
+    isMobileView() {
+      return this.$store.state.mobileView;
     },
+  },
+  methods: {
     cancelFilterModal() {
       this.showFilterModal = false;
     },
     openFilterModal() {
       this.showFilterModal = true;
     },
-  },
-  created() {
-    this.handleView();
-    window.addEventListener("resize", this.handleView);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleView);
   },
 };
 </script>

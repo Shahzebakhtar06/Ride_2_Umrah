@@ -72,7 +72,27 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.mobile-view {
+  .hotel-card {
+    height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 50rem;
+    margin: 3rem;
+    height: auto;
+    .card-content {
+      flex-direction: column;
+      .image-slider-wrapper {
+        width: auto;
+      }
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
 .hotel-card {
+  text-align: left;
   width: 100rem;
   margin: auto;
   margin-top: 2rem;
@@ -121,7 +141,6 @@ export default {
       display: grid;
       grid-template-columns: 1fr 0.3fr;
       gap: 1rem;
-
       .rating {
         display: flex;
         align-items: center;
