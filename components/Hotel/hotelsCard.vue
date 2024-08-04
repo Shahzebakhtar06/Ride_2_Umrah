@@ -77,7 +77,8 @@ export default {
     height: auto;
     display: inline-flex;
     flex-wrap: wrap;
-    width: 50rem;
+    width: 100%;
+    min-width: 100%;
     margin: 3rem;
     height: auto;
     .card-content {
