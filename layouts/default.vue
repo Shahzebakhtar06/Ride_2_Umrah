@@ -67,9 +67,9 @@
           >Send Enquiry</a-button
         >
       </div>
-      <!-- <a-layout-footer>
-        <div class="container">Footer</div>
-      </a-layout-footer> -->
+      <a-layout-footer>
+        <Footer />
+      </a-layout-footer>
     </a-layout>
     <contact-modal
       :showContactModal="showContactModal"
@@ -80,9 +80,11 @@
 
 <script>
 import contactModal from "@/components/contact-modal.vue";
+import Footer from "@/components/Layouts/Footer.vue";
 export default {
   components: {
     contactModal,
+    Footer,
   },
   computed: {
     bannerTitle() {
