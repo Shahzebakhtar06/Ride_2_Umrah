@@ -7,7 +7,7 @@
         @submit="handleSubmit"
       />
     </div>
-    <div>
+    <div class="hotel-card-wrapper">
       <hotels-card
         v-for="(hotel, index) in hotels"
         :key="index"
@@ -102,4 +102,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.mobile-view{
+  .hotel-card-wrapper{
+    text-align: center;
+  }
+}
+</style>

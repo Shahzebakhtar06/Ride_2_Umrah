@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div :class="{ loader: fetchLoading }">
-      <a-row>
-        <a-col :span="8" v-for="blog in blogs" :key="blog.id">
+      <div class="card-container">
+        <div v-for="blog in blogs" :key="blog.id">
           <div class="card">
             <img :src="$global.imgBasePath + blog.image" alt="my image" />
             <div class="card-body">
@@ -18,8 +18,8 @@
               >
             </div>
           </div>
-        </a-col>
-      </a-row>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,14 +49,44 @@ export default {
   },
 };
 </script>
-<style scoped>
-.card {
-  border-radius: 20px;
-  padding: 20px;
-  width: 100%;
-  background-color: white;
-  margin: 20px 0;
+<style scoped lang="scss">
+.mobile-view {
+  .car-card {
+    height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 50rem;
+    margin: 3rem;
+    height: auto;
+    .card-content {
+      flex-direction: column;
+      .image-slider-wrapper {
+        width: auto;
+      }
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
 }
+.card-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  .card {
+    border-radius: 20px;
+    padding: 2rem;
+    width: 50rem;
+    background-color: white;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
 .card img {
   width: 100%;
   aspect-ratio: 6 / 4;

@@ -166,13 +166,21 @@ export default {
   }
 
   .filter-wrapper {
-    display: none;
     position: absolute;
     z-index: 1;
     background: #744970b4;
     top: 30rem;
     border-radius: 2rem;
     overflow: hidden;
+  }
+  @media (max-width:768px){
+    .main-image{
+      height: 80vh;
+      img{
+        height: 100%;
+      }
+    }
+  
   }
 }
 
@@ -189,6 +197,12 @@ export default {
       color: #fff;
       background: #744970;
       border-radius: 1rem;
+    }
+  }
+  @media (max-width:768px) {
+    .ant-tabs-nav-scroll{
+      overflow: auto;
+      
     }
   }
 }

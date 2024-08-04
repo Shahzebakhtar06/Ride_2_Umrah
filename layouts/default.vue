@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-layout class="main-layout">
+    <a-layout class="main-layout" :class="{ 'mobile-view': mobileView }">
       <a-layout-header>
         <div class="container">
           <div class="header-wrapper item-v-center">
@@ -8,12 +8,12 @@
               class="col"
               style="font-size: x-large; color: red; font-weight: 900"
             >
-              <img
-                src="~/assets/svg/ride2umrah-logo-transparent.png"
-                width="80"
-                height="70"
-                alt=""
-              />
+              <div class="logo">
+                <img
+                  src="~/assets/svg/ride2umrah-logo-transparent.png"
+                  alt=""
+                />
+              </div>
             </div>
             <div class="col nav h-100 item-v-center fit-width">
               <ul class="h-100 item-v-center nav-menu">
@@ -91,10 +91,20 @@ export default {
   },
   data() {
     return {
+      mobileView: false,
       showContactModal: false,
     };
   },
+  created() {
+    this.handleView();
+    window.addEventListener("resize", this.handleView);
+  },
+
   methods: {
+    handleView() {
+      this.mobileView = window.innerWidth <= 768;
+      this.$store.commit("UPDATE_VIEW", this.mobileView);
+    },
     handleOpenContactModal() {
       this.showContactModal = true;
     },
@@ -102,6 +112,9 @@ export default {
       this.showContactModal = false;
     },
   },
+  // beforeDestroy() {
+  //   window.removeEventListener("resize", this.handleView);
+  // },
 };
 </script>
 
@@ -109,30 +122,30 @@ export default {
 .ant-layout-header {
   background-color: var(--theme-secondary-bg-color);
   padding: 0;
-  height: 5.5rem;
+  height: auto;
+  line-height: auto;
 
   .header-wrapper {
     display: flex;
+    justify-content: space-between;
   }
-  .nav {
+  .nav,
+  .nav-menu {
     display: flex;
+    align-items: center;
   }
   .actions {
     display: flex;
     align-items: center;
   }
-  @media (max-width: 768px) {
-    height: fit-content;
-    padding: 1rem 0;
-    .header-wrapper,
-    .nav {
-      display: flex;
-      flex-flow: column;
-    }
-    .nav-menu {
-      display: flex;
+  .logo {
+    width: 17rem;
+    img {
+      width: 100%;
+      aspect-ratio: 15 / 7;
     }
   }
+
   .container > .row {
     height: 5.5rem;
   }
@@ -170,7 +183,7 @@ export default {
     width: 100%;
     display: block;
 
-    object-position: 0px -43rem;
+    // object-position: 0px -43rem;
   }
 
   .overlay {
@@ -204,5 +217,35 @@ export default {
 .ant-layout-footer {
   padding-left: 0;
   padding-right: 0;
+}
+@media (max-width: 768px) {
+  .ant-layout-header {
+    height: fit-content;
+    padding: 1rem 0;
+    .header-wrapper,
+    .nav {
+      display: flex;
+      flex-flow: column;
+      width: fit-content;
+      flex-flow: column-reverse;
+      width: 80%;
+      margin: auto;
+    }
+    .nav-menu {
+      display: flex;
+      padding: 0;
+      margin: 0 !important;
+    }
+    .logo {
+      display: none;
+    }
+    .actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+  #contact-us-fixed-btn {
+    display: none;
+  }
 }
 </style>

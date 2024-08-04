@@ -132,7 +132,7 @@ export default {
         fromRules[el.key] = [];
         fromRules[el.key].push({
           required: true,
-          message: `${el.name} field is required`,
+          message: `${el.label} field is required`,
           trigger: "blur",
         });
       });
@@ -165,18 +165,6 @@ export default {
     ...mapActions(["setLocations", "updateFilters"]),
     disabledDate(current) {
       return current && current < moment().startOf("day");
-    },
-    setFormRules() {
-      let fromRules = {};
-      this.fields.forEach((el) => {
-        fromRules[el.key] = [];
-        fromRules[el.key].push({
-          required: true,
-          message: `${el.name} field is required`,
-          trigger: "blur",
-        });
-      });
-      this.$refs.filterForm.rules = fromRules;
     },
     handleFilterLocation(val) {
       this.searchQuery = val;

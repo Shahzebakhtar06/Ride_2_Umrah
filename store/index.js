@@ -6,6 +6,7 @@ export default {
       carts: [],
       bannerTitle: "",
       locations: [],
+      mobileView: false,
     };
   },
   mutations: {
@@ -26,6 +27,9 @@ export default {
     },
     RESET_ADD_TO_CART_CARTS(state) {
       state.carts = [];
+    },
+    UPDATE_VIEW(state,payload) {
+      state.mobileView = payload;
     },
   },
   actions: {

@@ -63,6 +63,25 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.mobile-view {
+  .car-card {
+    height: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    width: 50rem;
+    margin: 3rem;
+    height: auto;
+    .card-content {
+      flex-direction: column;
+      .image-slider-wrapper {
+        width: auto;
+      }
+      .details {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
 .car-card {
   width: 100rem;
   margin: 2rem auto 0;
