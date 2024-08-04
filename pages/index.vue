@@ -161,26 +161,25 @@ export default {
     img {
       width: 100%;
       object-fit: cover;
-      aspect-ratio: 10 / 4;
+      aspect-ratio: 11 / 6;
     }
   }
 
   .filter-wrapper {
     position: absolute;
     z-index: 1;
-    background: #744970b4;
+    background: var(--theme-light-primary-bg-color);
     top: 30rem;
     border-radius: 2rem;
     overflow: hidden;
   }
-  @media (max-width:768px){
-    .main-image{
+  @media (max-width: 768px) {
+    .main-image {
       height: 80vh;
-      img{
+      img {
         height: 100%;
       }
     }
-  
   }
 }
 
@@ -199,10 +198,9 @@ export default {
       border-radius: 1rem;
     }
   }
-  @media (max-width:768px) {
-    .ant-tabs-nav-scroll{
+  @media (max-width: 768px) {
+    .ant-tabs-nav-scroll {
       overflow: auto;
-      
     }
   }
 }

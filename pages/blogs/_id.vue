@@ -13,17 +13,6 @@
           <img :src="$global.imgBasePath + blog.image" alt="" />
         </div>
         <div v-html="blog.description" />
-        <div class="reserve-btn">
-          <a-button
-            style="width: 100%; margin: 1rem 0"
-            type="primary"
-            shape="round"
-            :loading="reserveBtnLoading"
-            @click="reserveVisa(visa)"
-          >
-            Reserve</a-button
-          >
-        </div>
       </div>
     </div>
   </div>

@@ -51,12 +51,12 @@
 </template>
 
 <script>
-import { mapActions} from "vuex";
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
-      reserveBtnLoading:false,
+      reserveBtnLoading: false,
       visa: null,
     };
   },
@@ -88,6 +88,7 @@ export default {
         });
         this.$notification.success({ message: "AddToCart successfully" });
         this.reserveBtnLoading = false;
+        this.$store.dispatch("showConfirmModal", true);
       }, 2000);
     },
   },
@@ -95,34 +96,32 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.package-details{
-
-.image-slider-wrapper {
-  display: block;
-  .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.package-details {
+  .image-slider-wrapper {
+    display: block;
+    .carousel-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .ant-carousel .custom-slick-arrow {
+      width: 2.5rem;
+      height: 2.5rem;
+      font-size: 2.5rem;
+      color: #fff;
+      background-color: rgb(31 45 61 / 77%);
+      opacity: 0.5;
+      border-radius: 50%;
+    }
+    .ant-carousel .custom-slick-arrow:before {
+      display: none;
+    }
+    .ant-carousel .custom-slick-arrow:hover {
+      opacity: 0.5;
+    }
   }
-  .ant-carousel .custom-slick-arrow {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 2.5rem;
-    color: #fff;
-    background-color: rgb(31 45 61 / 77%);
-    opacity: 0.5;
-    border-radius: 50%;
-  }
-  .ant-carousel .custom-slick-arrow:before {
-    display: none;
-  }
-  .ant-carousel .custom-slick-arrow:hover {
-    opacity: 0.5;
+  .reserve-btn {
+    margin: 2rem 0rem;
   }
 }
-.reserve-btn{
-margin: 2rem 0rem;
-}
-}
-
 </style>

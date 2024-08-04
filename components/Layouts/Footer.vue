@@ -191,7 +191,7 @@ export default {
 
 <style lang="scss">
 #footer {
-  background: #744970b4;
+  background: var(--theme-light-primary-bg-color);
   color: #fff;
 
   .content-wrapper {

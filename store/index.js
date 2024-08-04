@@ -7,6 +7,7 @@ export default {
       bannerTitle: "",
       locations: [],
       mobileView: false,
+      confirmModal: false,
     };
   },
   mutations: {
@@ -28,8 +29,11 @@ export default {
     RESET_ADD_TO_CART_CARTS(state) {
       state.carts = [];
     },
-    UPDATE_VIEW(state,payload) {
+    UPDATE_VIEW(state, payload) {
       state.mobileView = payload;
+    },
+    SHOW_CONFIRM_MODAL(state, payload) {
+      state.confirmModal = payload;
     },
   },
   actions: {
@@ -47,6 +51,9 @@ export default {
     },
     resetAddToCarts({ commit }) {
       commit("RESET_ADD_TO_CART_CARTS");
+    },
+    showConfirmModal({ commit }, payload) {
+      commit("SHOW_CONFIRM_MODAL", payload);
     },
   },
   getters: {

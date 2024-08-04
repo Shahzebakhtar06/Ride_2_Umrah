@@ -148,6 +148,8 @@ export default {
         });
         this.$notification.success({ message: "AddToCart successfully" });
         this.reserveBtnLoading = false;
+        this.$store.dispatch("showConfirmModal", true);
+
       }, 2000);
     },
     handelDetailsModal() {

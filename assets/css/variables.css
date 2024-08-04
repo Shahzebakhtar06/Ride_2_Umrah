@@ -1,6 +1,7 @@
 :root {
     --theme-primary-color: #744970;
     --theme-primary-bg-color: #744970;
+    --theme-light-primary-bg-color: #744970b4;
     --theme-secondary-bg-color: #fff;
     --theme-success-color: #227950;
     --theme-border-color: #b9b8b8;
